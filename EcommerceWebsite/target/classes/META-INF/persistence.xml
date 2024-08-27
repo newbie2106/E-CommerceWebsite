@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="com.tth_EcommerceWebsite_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.tth.pojo.TagProduct</class>
+    <class>com.tth.pojo.Branch</class>
+    <class>com.tth.pojo.Carrier</class>
+    <class>com.tth.pojo.AdministrativeRegions</class>
+    <class>com.tth.pojo.AdministrativeUnits</class>
+    <class>com.tth.pojo.Category</class>
+    <class>com.tth.pojo.Wards</class>
+    <class>com.tth.pojo.Brand</class>
+    <class>com.tth.pojo.Districts</class>
+    <class>com.tth.pojo.Image</class>
+    <class>com.tth.pojo.Role</class>
+    <class>com.tth.pojo.Shipment</class>
+    <class>com.tth.pojo.Wishlist</class>
+    <class>com.tth.pojo.OrderDetails</class>
+    <class>com.tth.pojo.User</class>
+    <class>com.tth.pojo.Inventory</class>
+    <class>com.tth.pojo.Product</class>
+    <class>com.tth.pojo.Provinces</class>
+    <class>com.tth.pojo.SaleOrder</class>
+    <class>com.tth.pojo.Admin</class>
+    <class>com.tth.pojo.Tag</class>
+    <class>com.tth.pojo.Customer</class>
+    <class>com.tth.pojo.OrderDetail</class>
+    <class>com.tth.DTO.Forgotpassword</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saleapp?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="Admin@123"/>
+    </properties>
+  </persistence-unit>
+</persistence>
