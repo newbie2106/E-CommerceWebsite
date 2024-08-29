@@ -4,13 +4,16 @@
     Author     : tongh
 --%>
 
+<%@page import="com.tth.pojo.CustomUserDetails"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-        <a class="navbar-brand brand-logo" href="<c:url value="/" />"><img src="assets/images/logo.svg" alt="logo" /></a>
-        <a class="navbar-brand brand-logo-mini" href="<c:url value="/" />"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+        <a class="navbar-brand brand-logo" href="<c:url value="/" />"><img src="assets/images/logo-ngang.png" ></a>
+        <a class="navbar-brand brand-logo-mini" href="<c:url value="/" />"><img src="assets/images/logo-ngang.png" ></a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-stretch">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -33,16 +36,18 @@
 
                         <a class="nav-link dropdown-toggle show" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav-profile-img">
-                                <img src="assets/images/faces/face1.jpg" alt="image">
+                                <img src="<sec:authentication property="principal.avatar"/>" alt="image">
                                 <span class="availability-status online"></span>
                             </div>
                             <div class="nav-profile-text">
-                                <p class="mb-1 text-black">${pageContext.request.userPrincipal.name}</p>
+                                <p class="mb-1 text-black"><sec:authentication property="principal.firstName"/> <sec:authentication property="principal.lastName"/></p>
                             </div>
                         </a>
                         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                             <a class="dropdown-item" href="<c:url value="/update-user/${pageContext.request.userPrincipal.name}" />">
                                 <i class="mdi mdi-cached me-2 text-success"></i> Thay đổi thông tin </a>
+                            <a class="dropdown-item" href="<c:url value="/change-password/${pageContext.request.userPrincipal.name}" />">
+                                <i class="mdi mdi-cached me-2 text-success"></i> Thay đổi mật khẩu </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="<c:url value="/logout"/>">
                                 <i class="mdi mdi-logout me-2 text-primary"></i> Đăng xuất </a>

@@ -4,6 +4,7 @@
  */
 package com.tth.controllers;
 
+import com.tth.DTO.ChangePasswordDTO;
 import com.tth.DTO.UserAdminDTO;
 import com.tth.pojo.Admin;
 import com.tth.pojo.Districts;
@@ -66,7 +67,10 @@ public class UserController {
     private WardService wardService;
 
     @GetMapping("/login")
-    public String login() {
+    public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("errorMessage", "Sai tài khoản hoặc mật khẩu");
+        }
         return "login";
     }
 
@@ -170,12 +174,16 @@ public class UserController {
         return "updateInfoUser";
     }
 
+    @GetMapping("/change-password/{username}")
+    public String createViewChangePassword(Model model, @PathVariable(value = "username") String username) {
+        model.addAttribute("changePassword", new ChangePasswordDTO());
+        return "changePassword";
+    }
+
     @PostMapping("/change-password/{username}")
     public String changePasswordAdmin(
             @PathVariable("username") String username,
-            @RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword,
-            @RequestParam("confirmPassword") String confirmPassword,
+            @ModelAttribute(value = "changePassword") ChangePasswordDTO changePasswordDTO,
             Model model) {
 
         User user = userService.getUserByUsername(username);
@@ -184,21 +192,21 @@ public class UserController {
             return "changePassword";
         }
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
             model.addAttribute("errorMessage", "Mật khẩu cũ không đúng!");
             return "changePassword";
         }
-
-        if (!newPassword.equals(confirmPassword)) {
+// LÀM PASSWWORD KHÓ (CHUA LAM)
+        if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getRePassword())) {
             model.addAttribute("errorMessage", "Mật khẩu mới và xác nhận mật khẩu không khớp!");
             return "changePassword";
         }
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(changePasswordDTO.getNewPassword());
         this.userService.changePassword(user);
 
         model.addAttribute("successMessage", "Đổi mật khẩu thành công!");
-        return "changePassword";
+        return "login";
     }
 
     @RequestMapping("/manage-users")

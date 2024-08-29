@@ -84,12 +84,7 @@ public class ApiForgotPasswordController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                              .body("Lỗi khi gửi email! Vui lòng thử lại sau.");
         }
-//        SimpleMailMessage mes = new SimpleMailMessage();
-//        mes.setFrom(environment.getProperty("spring.mail.username"));
-//        mes.setTo(user.getAdmin().getEmail());
-//        mes.setText("Thông báo từ E-commerce Website "
-//                + "đây là mã OTP của bạn " + otp + " và đừng gửi nó cho ai khác");
-//        mes.setSubject("OTP cho yêu cầu quên mật khẩu của bạn");
+
 
     }
 

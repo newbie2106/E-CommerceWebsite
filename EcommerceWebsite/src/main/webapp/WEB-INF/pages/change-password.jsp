@@ -25,24 +25,37 @@
     </div>
 </c:if>
 
-<form:form method="post" action="${pageContext.request.contextPath}/change-password/${username}">
-    <table>
-        <tr>
-            <td>Mật khẩu cũ:</td>
-            <td><form:password path="oldPassword" /></td>
-        </tr>
-        <tr>
-            <td>Mật khẩu mới:</td>
-            <td><form:password path="newPassword" /></td>
-        </tr>
-        <tr>
-            <td>Xác nhận mật khẩu mới:</td>
-            <td><form:password path="confirmPassword" /></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" value="Đổi Mật Khẩu" />
-            </td>
-        </tr>
-    </table>
+<form:form modelAttribute="changePassword" method="post" action="${pageContext.request.contextPath}/change-password/${username}">
+
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">ĐỔI MẬT KHẨU</h4>
+                </p>
+                <table class="table table-bordered">
+
+                    <tbody>
+                        <tr>
+                            <td>Mật khẩu cũ:</td>
+                            <td><form:password path="oldPassword" /></td>
+                        </tr>
+                        <tr>
+                            <td>Mật khẩu mới:</td>
+                            <td><form:password path="newPassword" /></td>
+                        </tr>
+                        <tr>
+                            <td>Xác nhận mật khẩu mới:</td>
+                            <td><form:password path="rePassword" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="submit" class="btn btn-gradient-success btn-fw">Xác nhận</button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </form:form>
