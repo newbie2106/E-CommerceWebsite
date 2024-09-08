@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -174,39 +175,42 @@ public class UserController {
         return "updateInfoUser";
     }
 
-    @GetMapping("/change-password/{username}")
-    public String createViewChangePassword(Model model, @PathVariable(value = "username") String username) {
+    @GetMapping("/change-password")
+    public String showChangePasswordPage(@ModelAttribute("username") String username,
+            Model model) {
+        model.addAttribute("username", username);
         model.addAttribute("changePassword", new ChangePasswordDTO());
         return "changePassword";
     }
 
-    @PostMapping("/change-password/{username}")
-    public String changePasswordAdmin(
-            @PathVariable("username") String username,
+    @PostMapping("/change-password")
+    public String changePasswordAdminByForgotPassword(
+            @RequestParam("username") String username,
             @ModelAttribute(value = "changePassword") ChangePasswordDTO changePasswordDTO,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
         User user = userService.getUserByUsername(username);
         if (user == null) {
-            model.addAttribute("errorMessage", "Không tìm thấy người dùng!");
-            return "changePassword";
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy người dùng!");
+            return "redirect:/change-password";
         }
 
         if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
-            model.addAttribute("errorMessage", "Mật khẩu cũ không đúng!");
-            return "changePassword";
+            redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu cũ không đúng!");
+            return "redirect:/change-password";
         }
 // LÀM PASSWWORD KHÓ (CHUA LAM)
         if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getRePassword())) {
-            model.addAttribute("errorMessage", "Mật khẩu mới và xác nhận mật khẩu không khớp!");
-            return "changePassword";
+            redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu mới và xác nhận mật khẩu không khớp!");
+            return "redirect:/change-password";
         }
 
         user.setPassword(changePasswordDTO.getNewPassword());
         this.userService.changePassword(user);
 
-        model.addAttribute("successMessage", "Đổi mật khẩu thành công!");
-        return "login";
+        redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu thành công!");
+        return "redirect:/change-password";
+
     }
 
     @RequestMapping("/manage-users")

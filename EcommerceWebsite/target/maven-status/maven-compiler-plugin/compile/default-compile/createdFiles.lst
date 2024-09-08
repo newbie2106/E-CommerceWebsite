@@ -21,6 +21,7 @@ com\tth\validator\UserValidator.class
 com\tth\formatters\WardFormatter.class
 com\tth\services\impl\BrandServiceImpl.class
 com\tth\configs\SpringSecurityConfig.class
+com\tth\services\BranchService.class
 com\tth\services\ForgotPasswordService.class
 com\tth\repositories\ForgotPasswordRepository.class
 com\tth\formatters\CategoryFormatter.class
@@ -41,6 +42,7 @@ com\tth\validator\UserAdminValidator.class
 com\tth\pojo\Branch_.class
 com\tth\pojo\User.class
 com\tth\services\impl\TagServiceImpl.class
+com\tth\controllers\ForgotPasswordController.class
 com\tth\repositories\WardRepository.class
 com\tth\pojo\Role.class
 com\tth\repositories\impl\ProductRepositoryImpl.class
@@ -48,6 +50,7 @@ com\tth\pojo\ForgotPassword.class
 com\tth\formatters\BrandFormatter.class
 com\tth\configs\DispatcherServletInit.class
 com\tth\services\ImageService.class
+com\tth\DTO\ChangePasswordDTO.class
 com\tth\pojo\User_.class
 com\tth\pojo\CustomUserDetails.class
 com\tth\pojo\Districts_.class
@@ -73,6 +76,7 @@ com\tth\repositories\impl\ProvinceRepositoryImpl.class
 com\tth\pojo\Branch.class
 com\tth\controllers\ApiBrandController.class
 com\tth\formatters\RoleFormatter.class
+com\tth\repositories\BranchRepository.class
 com\tth\filters\CustomAccessDeniedHandler.class
 com\tth\pojo\Wards_.class
 com\tth\services\RoleService.class
@@ -90,6 +94,7 @@ com\tth\pojo\Category_.class
 com\tth\repositories\impl\BrandRepositoryImpl.class
 com\tth\services\impl\ForgotPasswordServiceImpl.class
 com\tth\controllers\ApiCategoryController.class
+com\tth\services\impl\BranchServiceImpl.class
 com\tth\services\impl\ProductServiceImpl.class
 com\tth\configs\EmailConfig.class
 com\tth\repositories\impl\DistrictRepositoryImpl.class
@@ -118,6 +123,7 @@ com\tth\DTO\UserAdminDTO.class
 com\tth\pojo\Shipment_.class
 com\tth\components\JwtService.class
 com\tth\pojo\Image.class
+com\tth\repositories\impl\BranchRepositoryImpl.class
 com\tth\controllers\IndexController.class
 com\tth\repositories\BrandRepository.class
 com\tth\pojo\Role_.class

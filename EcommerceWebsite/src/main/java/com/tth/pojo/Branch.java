@@ -36,6 +36,23 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Branch.findByAddress", query = "SELECT b FROM Branch b WHERE b.address = :address")})
 public class Branch implements Serializable {
 
+    /**
+     * @return the adminUser
+     */
+    public Admin getAdminUser() {
+        return adminUser;
+    }
+
+    /**
+     * @param adminUser the adminUser to set
+     */
+    public void setAdminUser(Admin adminUser) {
+        this.adminUser = adminUser;
+    }
+
+    @OneToMany(mappedBy = "branchId")
+    private Set<SaleOrder> saleOrderSet;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +73,9 @@ public class Branch implements Serializable {
     @JoinColumn(name = "ward_id", referencedColumnName = "code")
     @ManyToOne
     private Wards wardId;
+    @JoinColumn(name = "admin_user", referencedColumnName = "username")
+    @ManyToOne
+    private Admin adminUser;
 
     public Branch() {
     }
@@ -137,5 +157,16 @@ public class Branch implements Serializable {
     public String toString() {
         return "com.tth.pojo.Branch[ id=" + id + " ]";
     }
-    
+
+    @XmlTransient
+    public Set<SaleOrder> getSaleOrderSet() {
+        return saleOrderSet;
+    }
+
+    public void setSaleOrderSet(Set<SaleOrder> saleOrderSet) {
+        this.saleOrderSet = saleOrderSet;
+    }
+
+ 
+
 }

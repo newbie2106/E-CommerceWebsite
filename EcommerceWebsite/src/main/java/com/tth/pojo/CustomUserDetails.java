@@ -41,7 +41,6 @@ public class CustomUserDetails implements UserDetails {
         authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleName()));
         return authorities;
     }
-
     @Override
     public String getPassword() {
         return user.getPassword();

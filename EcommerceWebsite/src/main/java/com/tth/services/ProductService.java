@@ -18,7 +18,7 @@ public interface ProductService {
 
     public long countProduct();
 
-    List<Product> getProducts(Map<String, String> params);
+    List<Object[]> getProductsWithInventory(Map<String, String> params, String branchAdmin);
 
     public void addOrUpdate(Product p, List<MultipartFile> image);
 

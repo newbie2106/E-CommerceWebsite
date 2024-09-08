@@ -99,7 +99,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/tagProducts/**").permitAll();
         http.authorizeRequests().antMatchers("/api/verifyOtp/**").permitAll();      
         http.authorizeRequests().antMatchers("/api/verifyAccount/**").permitAll();
-
+        http.authorizeRequests().antMatchers("/api/change-password/**").permitAll();
 
         //http.authorizeRequests().antMatchers("/api/tags/").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/**/comments/").permitAll();

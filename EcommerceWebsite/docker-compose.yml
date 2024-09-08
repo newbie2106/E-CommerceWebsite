@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  tomcat:
+    image: newbie2106/ecommerce-docker-image:1.0.0
+    container_name: ecommerce-docker-container
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./target/ecommerce-docker.war:/usr/local/tomcat/webapps/ROOT.war
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  mysql:
+    image: newbie2106/mysql:8.0.18
+    container_name: ecommerce-mysql-container
+    environment:
+      MYSQL_USER: hiep
+      MYSQL_PASSWORD: Admin@123
+      MYSQL_ROOT_PASSWORD: Admin@123
+      MYSQL_DATABASE: saleapp
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - mysql-config:/etc/mysql/conf.d
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: ecommerce-network
+
+volumes:
+  mysql-data:
+  mysql-config:

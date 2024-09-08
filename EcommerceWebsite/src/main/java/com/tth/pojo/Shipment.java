@@ -55,8 +55,8 @@ public class Shipment implements Serializable {
     private Date expectedDelivery;
     @Size(max = 9)
     @Column(name = "status")
-    private String status;
-    @JoinColumn(name = "carrier_id", referencedColumnName = "id")
+    private String status; 
+   @JoinColumn(name = "carrier_id", referencedColumnName = "id")
     @ManyToOne
     private Carrier carrierId;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "shipmentId")

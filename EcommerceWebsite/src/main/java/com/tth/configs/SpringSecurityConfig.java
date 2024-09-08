@@ -6,6 +6,8 @@ package com.tth.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.tth.filters.CustomAccessDeniedHandler;
+import com.tth.filters.RestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -64,37 +66,37 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             throws Exception {
         http.formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password");
 
-        http.formLogin().defaultSuccessUrl("/")
+        http.formLogin().defaultSuccessUrl("/dashboard")
                 .failureUrl("/login?error=true");
-        http.logout().logoutSuccessUrl("/");
+        http.logout().logoutSuccessUrl("/login");
 
         http.exceptionHandling()
-                .accessDeniedPage("/login?accessDenied");
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .accessDeniedHandler(new CustomAccessDeniedHandler());
         http.authorizeRequests().antMatchers("/manage-products")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/manage-categories")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/manage-brands")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/manage-users")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/stats")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/brands")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/products")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/categories")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/users")
-                .access("hasRole('ROLE_ADMIN')");
-        http.authorizeRequests().antMatchers("/tagProducts")
-                .access("hasRole('ROLE_ADMIN')");
-//        http.authorizeRequests().antMatchers("/").permitAll()
-//                .antMatchers("/**/add")
-//                .access("hasRole('ROLE_ADMIN')");
-//        .antMatchers("/**/pay")
-//                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+                .access("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+                .antMatchers("/products")
+                .access("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+                .antMatchers("/stats")
+                .access("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+                .antMatchers("/manage-categories")
+                .access("hasRole('ROLE_SUPER_ADMIN')")
+                .antMatchers("/manage-brands")
+                .access("hasRole('ROLE_SUPER_ADMIN')")
+                .antMatchers("/manage-users")
+                .access("hasRole('ROLE_SUPER_ADMIN')")
+                .antMatchers("/brands")
+                .access("hasRole('ROLE_SUPER_ADMIN')")
+                .antMatchers("/categories")
+                .access("hasRole('ROLE_SUPER_ADMIN')")
+                .antMatchers("/users")
+                .access("hasRole('ROLE_SUPER_ADMIN')")
+                .antMatchers("/tagProducts")
+                .access("hasRole('ROLE_SUPER_ADMIN')"); //        .antMatchers("/").permitAll()
+                //                .antMatchers("/**/add")
+                //                .access("hasRole('ROLE_ADMIN')");
+                //        .antMatchers("/**/pay")
+                //                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
         http.csrf().disable();
     }
 

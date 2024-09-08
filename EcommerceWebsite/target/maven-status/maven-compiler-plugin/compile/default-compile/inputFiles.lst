@@ -8,6 +8,7 @@ D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\impl\ImageS
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\controllers\ApiTagController.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\impl\ForgotPasswordRepositoryImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\RoleRepository.java
+D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\controllers\ForgotPasswordController.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\UserRepository.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\controllers\BrandController.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\ForgotPasswordService.java
@@ -15,6 +16,7 @@ D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\impl\Distri
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\User.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\impl\ProvinceServiceImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\TagProduct.java
+D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\impl\BranchServiceImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\impl\StatsServiceImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\Branch.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\filters\JwtAuthenticationTokenFilter.java
@@ -22,6 +24,7 @@ D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\AdminServic
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\filters\CustomAccessDeniedHandler.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\WardService.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\Districts.java
+D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\BranchService.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\Customer.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\Product.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\ProductRepository.java
@@ -34,6 +37,7 @@ D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\controllers\StatsCon
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\impl\ProvinceRepositoryImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\controllers\ApiBrandController.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\Inventory.java
+D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\impl\BranchRepositoryImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\impl\StatsRepositoryImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\formatters\RoleFormatter.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\Image.java
@@ -89,6 +93,7 @@ D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\OrderDetail.jav
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\configs\TilesConfig.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\controllers\TagController.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\configs\EmailConfig.java
+D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\BranchRepository.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\impl\AdminRepositoryImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\CategoryService.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\ProductService.java
@@ -106,6 +111,7 @@ D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\AdministrativeU
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\impl\CategoryRepositoryImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\components\JwtService.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\AdministrativeRegions.java
+D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\DTO\ChangePasswordDTO.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\SaleOrder.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\formatters\CategoryFormatter.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\TagRepository.java

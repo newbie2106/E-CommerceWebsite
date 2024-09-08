@@ -38,11 +38,17 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "SaleOrder.findAll", query = "SELECT s FROM SaleOrder s"),
     @NamedQuery(name = "SaleOrder.findById", query = "SELECT s FROM SaleOrder s WHERE s.id = :id"),
-    @NamedQuery(name = "SaleOrder.findByStatus", query = "SELECT s FROM SaleOrder s WHERE s.status = :status"),
     @NamedQuery(name = "SaleOrder.findByCreatedDate", query = "SELECT s FROM SaleOrder s WHERE s.createdDate = :createdDate"),
     @NamedQuery(name = "SaleOrder.findByTotalAmount", query = "SELECT s FROM SaleOrder s WHERE s.totalAmount = :totalAmount"),
     @NamedQuery(name = "SaleOrder.findByPaid", query = "SELECT s FROM SaleOrder s WHERE s.paid = :paid")})
 public class SaleOrder implements Serializable {
+
+    @Column(name = "isPaid")
+    private Boolean isPaid;
+
+    @JoinColumn(name = "branchId", referencedColumnName = "id")
+    @ManyToOne
+    private Branch branchId;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -50,9 +56,6 @@ public class SaleOrder implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 9)
-    @Column(name = "status")
-    private String status;
     @Column(name = "created_date")
     @Temporal(TemporalType.DATE)
     private Date createdDate;
@@ -86,14 +89,6 @@ public class SaleOrder implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Date getCreatedDate() {
@@ -168,6 +163,22 @@ public class SaleOrder implements Serializable {
     @Override
     public String toString() {
         return "com.tth.pojo.SaleOrder[ id=" + id + " ]";
+    }
+
+    public Branch getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(Branch branchId) {
+        this.branchId = branchId;
+    }
+
+    public Boolean getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(Boolean isPaid) {
+        this.isPaid = isPaid;
     }
     
 }

@@ -4,6 +4,7 @@
  */
 package com.tth.controllers;
 
+import com.tth.services.BranchService;
 import com.tth.services.BrandService;
 import com.tth.services.CategoryService;
 import com.tth.services.DistrictService;
@@ -47,17 +48,23 @@ public class IndexController {
     private ProvinceService provinceService;
     @Autowired
     private TagService tagService;
-    
+    @Autowired
+    private BranchService branchService;
     @ModelAttribute
     public void commonAttr(Model model) {
         model.addAttribute("role", this.roleService.getRole());
         model.addAttribute("categories", this.cateService.getCates());
         model.addAttribute("brands", this.brandService.getBrands());
         model.addAttribute("tags", this.tagService.getTags());
-
+        model.addAttribute("branches", this.branchService.getBrands());
     }
 
     @RequestMapping("/")
+    public String login(Model model) {
+        return "redirect:/login";
+    }
+    
+    @RequestMapping("/dashboard")
     public String index(Model model) {
         model.addAttribute("countProduct", this.ProductService.countProduct());
         model.addAttribute("countCate", this.cateService.countCate());

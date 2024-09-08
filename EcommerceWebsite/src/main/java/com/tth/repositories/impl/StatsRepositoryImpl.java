@@ -43,7 +43,7 @@ public class StatsRepositoryImpl implements StatsRepository {
         Root rP = q.from(Product.class);
 
         q.multiselect(b.function(period, Integer.class, rO.get("createdDate")),
-                b.sum(b.prod(rD.get("quantity"), rP.get("price"))));
+                b.sum(rO.get("totalAmount")));
 
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(b.equal(rD.get("saleOrderId"), rO.get("id")));

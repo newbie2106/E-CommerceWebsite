@@ -14,6 +14,8 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,7 +39,7 @@ public class ProductController {
 
     @Autowired
     private Environment env;
-    
+
     @GetMapping("/products")
     public String createView(Model model) {
         model.addAttribute("product", new Product());
@@ -68,9 +70,18 @@ public class ProductController {
     }
 
     @RequestMapping("/manage-products")
-    public String ProductManagement(Model model, @RequestParam Map<String, String> params) {
+    public String ProductManagement(Model model, @RequestParam Map<String, String> params,
+            @RequestParam(value = "username", required = false) String branchAdmin) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName(); // Username của người dùng hiện tại
 
-        model.addAttribute("products", this.prodService.getProducts(params));
+        System.out.println("USERNAME:" + currentUsername);
+        
+        // Nếu không có tham số username được truyền vào, sử dụng username hiện tại
+        if (branchAdmin == null || branchAdmin.isEmpty()) {
+            branchAdmin = currentUsername;
+        }
+        model.addAttribute("productsWithInventory", this.prodService.getProductsWithInventory(params, branchAdmin));
         long pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
         long count = this.prodService.countProduct();
         model.addAttribute("count", Math.ceil(count * 1.0 / pageSize));

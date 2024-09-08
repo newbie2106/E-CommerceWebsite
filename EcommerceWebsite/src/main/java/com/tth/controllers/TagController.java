@@ -84,10 +84,10 @@ public class TagController {
 
 //     --- TAG PRODUCT ---
     @GetMapping("/tagProducts")
-    public String createTagProductView(Model model, Map<String, String> params) {
+    public String createTagProductView(Model model, Map<String, String> params,  @RequestParam("username") String branchAdmin) {
         model.addAttribute("tagProduct", new TagProduct());
 
-        model.addAttribute("products", this.productService.getProducts(params));
+        model.addAttribute("products", this.productService.getProductsWithInventory(params, branchAdmin));
         return "tagProducts";
     }
 
@@ -107,9 +107,9 @@ public class TagController {
 
     @GetMapping("/tagProducts/{tagProductId}")
     public String updateTagProductView(Model model, @PathVariable(value = "tagProductId") int id,
-            Map<String, String> params) {
+            Map<String, String> params, @RequestParam("username") String branchAdmin) {
         model.addAttribute("tagProduct", this.tagService.getTagProductById(id));
-        model.addAttribute("products", this.productService.getProducts(params));
+        model.addAttribute("products", this.productService.getProductsWithInventory(params, branchAdmin));
 
         return "tagProducts";
     }

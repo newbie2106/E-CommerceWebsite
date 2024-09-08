@@ -18,7 +18,7 @@ public interface ProductRepository {
 
     public long countProduct();
 
-    List<Product> getProducts(Map<String, String> params);
+    List<Object[]> getProductsWithInventory(Map<String, String> params, String branchAdmin);
 
     public boolean addOrUpdate(Product p);
 

@@ -83,8 +83,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts(Map<String, String> params) {
-        return this.productRepo.getProducts(params);
+    public List<Object[]> getProductsWithInventory(Map<String, String> params, String branchAdmin) {
+        return this.productRepo.getProductsWithInventory(params, branchAdmin);
     }
 
 }

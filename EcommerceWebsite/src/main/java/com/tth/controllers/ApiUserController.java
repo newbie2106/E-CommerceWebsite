@@ -8,6 +8,7 @@ import com.tth.components.JwtService;
 import com.tth.pojo.User;
 import com.tth.services.UserService;
 import java.security.Principal;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -64,9 +65,11 @@ public class ApiUserController {
     @PostMapping("/change-password/{username}")
     public ResponseEntity<String> changePasswordAdmin(
             @PathVariable("username") String username,
-            @RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword,
-            @RequestParam("confirmPassword") String confirmPassword) {
+            @RequestBody Map<String, String> passwordData) {
+
+        String oldPassword = passwordData.get("oldPassword");
+        String newPassword = passwordData.get("newPassword");
+        String confirmPassword = passwordData.get("confirmPassword");
 
         User user = userService.getUserByUsername(username);
         if (user == null) {

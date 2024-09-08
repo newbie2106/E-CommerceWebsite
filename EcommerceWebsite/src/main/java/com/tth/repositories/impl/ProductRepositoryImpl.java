@@ -4,12 +4,15 @@
  */
 package com.tth.repositories.impl;
 
+import com.tth.pojo.Branch;
 import com.tth.pojo.Cart;
+import com.tth.pojo.Inventory;
 import com.tth.pojo.OrderDetail;
 import com.tth.pojo.Product;
 import com.tth.pojo.SaleOrder;
 import com.tth.repositories.ProductRepository;
 import com.tth.repositories.UserRepository;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +20,10 @@ import java.util.Map;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -27,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -48,42 +54,50 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Autowired
     private Environment env;
 
-    public List<Product> getProducts(Map<String, String> params) {
+    @Override
+    public List<Object[]> getProductsWithInventory(Map<String, String> params, String branchAdmin) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
-        CriteriaQuery<Product> q = b.createQuery(Product.class);
-        Root r = q.from(Product.class);
-        q.select(r);
+        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+
+        Root<Product> rProduct = q.from(Product.class);
+        Root<Inventory> rInventory = q.from(Inventory.class);
+        Join<Inventory, Branch> rBranch = rInventory.join("branchId");
+        q.multiselect(rProduct, rInventory.get("availableQuantity"));
 
         List<Predicate> predicates = new ArrayList<>();
-
+        predicates.add(b.equal(rProduct.get("id"), rInventory.get("productId")));
+        predicates.add(b.equal(rBranch.get("adminUser").get("username"), branchAdmin));
         String kw = params.get("kw");
         if (kw != null && !kw.isEmpty()) {
-            predicates.add(b.like(r.get("name"), String.format("%%%s%%", kw)));
+            predicates.add(b.like(rProduct.get("name"), String.format("%%%s%%", kw)));
         }
 
         String fromPrice = params.get("fromPrice");
         if (fromPrice != null && !fromPrice.isEmpty()) {
-            predicates.add(b.greaterThanOrEqualTo(r.get("price"), Double.parseDouble(fromPrice)));
+            predicates.add(b.greaterThanOrEqualTo(rProduct.get("price"), Double.parseDouble(fromPrice)));
         }
 
         String toPrice = params.get("toPrice");
         if (toPrice != null && !toPrice.isEmpty()) {
-            predicates.add(b.lessThanOrEqualTo(r.get("price"), Double.parseDouble(toPrice)));
+            predicates.add(b.lessThanOrEqualTo(rProduct.get("price"), Double.parseDouble(toPrice)));
         }
 
         String cateId = params.get("cateId");
         if (cateId != null && !cateId.isEmpty()) {
-            predicates.add(b.equal(r.get("categoryId"), Integer.parseInt(cateId)));
+            predicates.add(b.equal(rProduct.get("categoryId"), Integer.parseInt(cateId)));
         }
 
         String brandId = params.get("brandId");
         if (brandId != null && !brandId.isEmpty()) {
-            predicates.add(b.equal(r.get("brandId"), Integer.parseInt(brandId)));
+            predicates.add(b.equal(rProduct.get("brandId"), Integer.parseInt(brandId)));
         }
 
         q.where(predicates.toArray(Predicate[]::new));
-        q.orderBy(b.asc(r.get("id")));
+
+        q.groupBy(rProduct.get("id"), rInventory.get("availableQuantity"));
+
+        q.orderBy(b.asc(rProduct.get("id")));
 
         Query query = s.createQuery(q);
 
@@ -95,11 +109,14 @@ public class ProductRepositoryImpl implements ProductRepository {
             query.setMaxResults(pageSize);
         }
 
-        List<Product> products = query.getResultList();
-        for (Product product : products) {
+        List<Object[]> productsWithInventory = query.getResultList();
+
+        for (Object[] result : productsWithInventory) {
+            Product product = (Product) result[0];
             Hibernate.initialize(product.getImageSet());
         }
-        return products;
+
+        return productsWithInventory;
     }
 
     @Override
@@ -114,7 +131,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public boolean addOrUpdate(Product p) {
         Session s = this.factory.getObject().getCurrentSession();
         p.setCreatedDate(new Date());
-        if (p.getId()!= null && p.getId() > 0) {
+        if (p.getId() != null && p.getId() > 0) {
             s.update(p);
 
         } else {

@@ -67,15 +67,9 @@ public class Product implements Serializable {
     private Date createdDate;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
     private Set<Image> imageSet;
-//    @JoinColumns({
-//        @JoinColumn(name = "brand_id", referencedColumnName = "id"),
-//        @JoinColumn(name = "brand_id", referencedColumnName = "id")})
     @JoinColumn(name = "brand_id", referencedColumnName = "id")
     @ManyToOne
     private Brand brandId;
-//    @JoinColumns({
-//        @JoinColumn(name = "category_id", referencedColumnName = "id"),
-//        @JoinColumn(name = "category_id", referencedColumnName = "id")})
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne
     private Category categoryId;
