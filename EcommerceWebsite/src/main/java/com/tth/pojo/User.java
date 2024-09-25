@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -70,25 +71,38 @@ public class User implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createdDate;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "username")
-    private Set<Wishlist> wishlistSet;
+    @JsonIgnore
+    private Set<Cart> cartSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "username")
     private Set<SaleOrder> saleOrderSet;
-//    @JoinColumns({
-//        @JoinColumn(name = "role_id", referencedColumnName = "id"),
-//        @JoinColumn(name = "role_id", referencedColumnName = "id")})
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne
     private Role roleId;
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "user")
+    @JsonIgnore
     private Customer customer;
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "user")
+    @JsonIgnore
     private Admin admin;
+    @OneToMany(mappedBy = "username", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<RecentlyViewed> recentlyViewedSet;
+
     @Transient
     private MultipartFile file;
     
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<ForgotPassword> forgotPasswordSet;
 
+    public Set<RecentlyViewed> getRecentlyViewedSet() {
+        return recentlyViewedSet;
+    }
+
+    public void setRecentlyViewedSet(Set<RecentlyViewed> recentlyViewedSet) {
+        this.recentlyViewedSet = recentlyViewedSet;
+    }
     /**
      * @return the file
      */
@@ -166,12 +180,20 @@ public class User implements Serializable {
     }
 
     @XmlTransient
-    public Set<Wishlist> getWishlistSet() {
-        return wishlistSet;
+    public Set<Cart> getCartSet() {
+        return cartSet;
     }
 
-    public void setWishlistSet(Set<Wishlist> wishlistSet) {
-        this.wishlistSet = wishlistSet;
+    public void setCartSet(Set<Cart> cartSet) {
+        this.cartSet = cartSet;
+    }
+
+    public Role getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Role roleId) {
+        this.roleId = roleId;
     }
 
     public Admin getAdmin() {

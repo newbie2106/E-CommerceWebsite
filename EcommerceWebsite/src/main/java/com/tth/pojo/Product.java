@@ -4,6 +4,8 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,6 +14,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -66,6 +69,7 @@ public class Product implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createdDate;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
+//    @JsonIgnore
     private Set<Image> imageSet;
     @JoinColumn(name = "brand_id", referencedColumnName = "id")
     @ManyToOne
@@ -73,21 +77,39 @@ public class Product implements Serializable {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne
     private Category categoryId;
-    @OneToMany(mappedBy = "productId")
-    private Set<Wishlist> wishlistSet;
-    @OneToMany(mappedBy = "productId")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
+    @JsonIgnore
+    private Set<Cart> cartSet;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
+    @JsonIgnore
     private Set<Inventory> inventorySet;
-    @OneToMany(mappedBy = "productId")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
+    @JsonIgnore
     private Set<OrderDetail> orderDetailSet;
-    @OneToMany(mappedBy = "productId")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
+    @JsonIgnore
     private Set<TagProduct> tagProductSet;
-
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<RecentlyViewed> recentlyViewedSet;
     @Transient
     private MultipartFile file;
+    
+    
+
+    public Set<RecentlyViewed> getRecentlyViewedSet() {
+        return recentlyViewedSet;
+    }
+
+    public void setRecentlyViewedSet(Set<RecentlyViewed> recentlyViewedSet) {
+        this.recentlyViewedSet = recentlyViewedSet;
+    }
     
     /**
      * @return the file
      */
+    
+
     public MultipartFile getFile() {
         return file;
     }
@@ -98,7 +120,7 @@ public class Product implements Serializable {
     public void setFile(MultipartFile file) {
         this.file = file;
     }
-    
+
     public Product() {
     }
 
@@ -172,12 +194,12 @@ public class Product implements Serializable {
     }
 
     @XmlTransient
-    public Set<Wishlist> getWishlistSet() {
-        return wishlistSet;
+    public Set<Cart> getCartSet() {
+        return cartSet;
     }
 
-    public void setWishlistSet(Set<Wishlist> wishlistSet) {
-        this.wishlistSet = wishlistSet;
+    public void setCartSet(Set<Cart> cartSet) {
+        this.cartSet = cartSet;
     }
 
     @XmlTransient
@@ -231,5 +253,5 @@ public class Product implements Serializable {
     public String toString() {
         return "com.tth.pojo.Product[ id=" + id + " ]";
     }
-    
+
 }

@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -38,6 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Admin implements Serializable {
 
     @OneToMany(mappedBy = "adminUser")
+    @JsonIgnore
     private Set<Branch> branchSet;
 
     /**

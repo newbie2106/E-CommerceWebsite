@@ -4,9 +4,21 @@
  */
 package com.tth.controllers;
 
+import com.tth.DTO.LoginRequest;
+import com.tth.DTO.UserCustomerDTO;
 import com.tth.components.JwtService;
+import com.tth.pojo.Customer;
+import com.tth.pojo.Districts;
+import com.tth.pojo.Provinces;
+import com.tth.pojo.Role;
 import com.tth.pojo.User;
+import com.tth.pojo.Wards;
+import com.tth.services.CustomerService;
+import com.tth.services.DistrictService;
+import com.tth.services.ProvinceService;
+import com.tth.services.RoleService;
 import com.tth.services.UserService;
+import com.tth.services.WardService;
 import java.security.Principal;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +34,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -40,20 +54,68 @@ public class ApiUserController {
     private JwtService jwtService;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private ProvinceService provinceService;
+    @Autowired
+    private DistrictService districtService;
+    @Autowired
+    private WardService wardService;
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
+    private RoleService roleService ;
 
     @PostMapping("/login/")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        if (this.userService.authUser(user.getUsername(), user.getPassword()) == true) {
-            String token = this.jwtService.generateTokenLogin(user.getUsername());
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+
+        if (this.userService.authUser(loginRequest.getUsername(), loginRequest.getPassword()) == true) {
+            String token = this.jwtService.generateTokenLogin(loginRequest.getUsername());
             return new ResponseEntity<>(token, HttpStatus.OK);
         }
-        return new ResponseEntity<>("error" + user.getUsername(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("error" + loginRequest.getUsername(), HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "/current-user/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getCurrentUser(Principal p) {
         User u = this.userService.getUserByUsername(p.getName());
+        System.out.println("NEM1" + p.getName());
         return new ResponseEntity<>(u, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/register/",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity createUserCustomer(@RequestParam Map<String, String> params, @RequestPart MultipartFile avatar) {
+        String username = params.get("username");
+        String password = params.get("password");
+        MultipartFile file = avatar;
+        String firstName = params.get("firstName");
+        String lastName = params.get("lastName");
+        String address = params.get("address");
+        String phone = params.get("phone");
+        String email = params.get("email");
+
+        String provinceCode = params.get("provinceCode");
+        String districtCode = params.get("districtCode");
+        String wardCode = params.get("wardCode");
+        Provinces province = this.provinceService.getProvinceById(provinceCode);
+        Districts district = this.districtService.getDistrictById(districtCode);
+        Wards ward = this.wardService.getWardById(wardCode);
+
+        User u = new User(username, password, firstName, lastName);
+        u.setFile(file);
+        Role role = this.roleService.getRoleById(2);
+        u.setRole(role);
+        Customer customer = new Customer(username, address, email, phone, province, district, ward, u);
+        if (this.userService.addOrUpdateUser(u)) {
+            if (this.customerService.addUserCustomer(customer)) {
+                return new ResponseEntity("Suscess", HttpStatus.CREATED);
+            }
+        }
+
+        return new ResponseEntity("Error", HttpStatus.BAD_REQUEST);
+
     }
 
     @DeleteMapping("/users/{username}/")

@@ -57,14 +57,11 @@ public class ImageRepositoryImpl implements ImageRepository {
         CriteriaQuery<Image> q = b.createQuery(Image.class);
 
         Root r = q.from(Image.class);
-        //Root rP = q.from(Product.class);
-
         q.select(r);
 
         List<Predicate> predicates = new ArrayList<>();
 
         predicates.add(b.equal(r.get("productId"), productId));
-        //predicates.add(b.equal(r.get("productId"), rP.get("id")));
         q.where(predicates.toArray(Predicate[]::new));
 
         Query query = s.createQuery(q);

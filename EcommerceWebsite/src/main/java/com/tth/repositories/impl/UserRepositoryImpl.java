@@ -64,7 +64,11 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Boolean authUser(String username, String password) {
         User u = this.getUserByUsername(username);
-        return this.passEncoder.matches(password, u.getPassword());
+
+        if (this.passEncoder.matches(password, u.getPassword())) {
+            return true;
+        }
+        return false;
 
     }
 
@@ -92,11 +96,11 @@ public class UserRepositoryImpl implements UserRepository {
     public boolean addOrUpdateUser(User user) {
         Session s = this.factory.getObject().getCurrentSession();
         User existedUser = this.getUserByUsername(user.getUsername());
-        System.out.println("HELLO:" + existedUser); 
+        System.out.println("HELLO:" + existedUser);
         try {
-            Role role = this.roleRepo.getRoleById(1);
-            user.setRole(role);
-            if (existedUser== null) {
+//            Role role = this.roleRepo.getRoleById(1);
+//            user.setRole(role);
+            if (existedUser == null) {
                 //User updateUser = getUserByUsername(user.getUsername());
 
                 if (user.getAvatar() == null) {
@@ -118,8 +122,6 @@ public class UserRepositoryImpl implements UserRepository {
             return false;
         }
     }
-    
-    
 
     @Override
     public void deleteUser(String username) {

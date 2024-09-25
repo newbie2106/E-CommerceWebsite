@@ -11,11 +11,14 @@ import java.util.List;
  *
  * @author tongh
  */
-
 public interface BranchRepository {
+
     public Branch getBrandById(int id);
 
+    public Branch getBrandByUserAdmin(String username);
+
     public List<Branch> getBrands();
-    
+
     public String getUsernameByBranchId(int branchId);
+
 }

@@ -4,6 +4,7 @@
  */
 package com.tth.repositories.impl;
 
+import com.tth.DTO.ProductDTO;
 import com.tth.pojo.Branch;
 import com.tth.pojo.Cart;
 import com.tth.pojo.Inventory;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -148,6 +150,33 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public ProductDTO getProductDTOById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Product product = s.get(Product.class, id);  // Lấy Product entity
+
+        if (product == null) {
+            return null;  // Nếu không tìm thấy sản phẩm, trả về null hoặc tùy chỉnh xử lý
+        }
+
+        // Chuyển đổi Product entity sang ProductDTO
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setBrand(product.getBrandId().getName());
+        dto.setCategory(product.getCategoryId().getName());
+
+        // Lấy các URL từ imageSet và thêm vào DTO
+        List<String> imageUrls = product.getImageSet().stream()
+                .map(image -> image.getUrl()) // Giả sử Image có trường 'url'
+                .collect(Collectors.toList());
+        dto.setImageUrls(imageUrls);
+
+        return dto;
+    }
+
+    @Override
     public void deleteProduct(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         Product p = this.getProductById(id);
@@ -177,4 +206,90 @@ public class ProductRepositoryImpl implements ProductRepository {
         }
     }
 
+    public List<ProductDTO> getProducts(Map<String, String> params) {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Product> q = b.createQuery(Product.class);
+        Root r = q.from(Product.class);
+        q.select(r);
+
+        if (params != null) {
+            List<Predicate> predicates = new ArrayList<>();
+
+            String kw = params.get("kw");
+            if (kw != null && !kw.isEmpty()) {
+                predicates.add(b.like(r.get("name"), String.format("%%%s%%", kw)));
+            }
+
+            String fromPrice = params.get("fromPrice");
+            if (fromPrice != null && !fromPrice.isEmpty()) {
+                predicates.add(b.greaterThanOrEqualTo(r.get("price"), Double.parseDouble(fromPrice)));
+            }
+
+            String toPrice = params.get("toPrice");
+            if (toPrice != null && !toPrice.isEmpty()) {
+                predicates.add(b.lessThanOrEqualTo(r.get("price"), Double.parseDouble(toPrice)));
+            }
+            if (fromPrice != null && !fromPrice.isEmpty() && toPrice != null && !toPrice.isEmpty()) {
+                predicates.add(b.between(r.get("price"), Double.parseDouble(fromPrice), Double.parseDouble(toPrice)));
+            }
+
+            String cateId = params.get("cateId");
+
+            if (cateId != null && !cateId.isEmpty()) {
+                predicates.add(b.equal(r.get("categoryId"), Integer.parseInt(cateId)));
+            }
+
+            String brandId = params.get("brandId");
+            if (brandId != null && !brandId.isEmpty()) {
+                predicates.add(b.equal(r.get("brandId"), Integer.parseInt(brandId)));
+            }
+
+            q.where(predicates.toArray(Predicate[]::new));
+        }
+        q.orderBy(b.asc(r.get("id")));
+
+        Query query = s.createQuery(q);
+
+        String p = params.get("page");
+        if (p != null && !p.isEmpty()) {
+            int pageSize = Integer.parseInt(env.getProperty("PAGE_SIZE").toString());
+            int start = (Integer.parseInt(p) - 1) * pageSize;
+            query.setFirstResult(start);
+            query.setMaxResults(pageSize);
+        }
+
+        List<Product> products = query.getResultList();
+        for (Product product : products) {
+            Hibernate.initialize(product.getImageSet());
+        }
+
+        List<ProductDTO> productDTOs = products.stream()
+                .map(this::convertToProductDTO)
+                .collect(Collectors.toList());
+
+        return productDTOs;
+    }
+
+    public ProductDTO convertToProductDTO(Product product) {
+        ProductDTO dto = new ProductDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setBrand(product.getBrandId().getName());
+        dto.setCategory(product.getCategoryId().getName());
+
+        // Lấy các URL từ imageSet và thêm vào DTO
+        List<String> imageUrls = product.getImageSet().stream()
+                .map(image -> image.getUrl()) // Giả sử Image có trường 'url'
+                .collect(Collectors.toList());
+        dto.setImageUrls(imageUrls);
+
+        return dto;
+    }
+//    @Override
+//    public List<ProductDTO> getProducts(Map<String, String> params) {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
 }

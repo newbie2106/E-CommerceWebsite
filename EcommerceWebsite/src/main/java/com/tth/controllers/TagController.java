@@ -14,6 +14,8 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,10 +86,11 @@ public class TagController {
 
 //     --- TAG PRODUCT ---
     @GetMapping("/tagProducts")
-    public String createTagProductView(Model model, Map<String, String> params,  @RequestParam("username") String branchAdmin) {
+    public String createTagProductView(Model model, Map<String, String> params) {
         model.addAttribute("tagProduct", new TagProduct());
-
-        model.addAttribute("products", this.productService.getProductsWithInventory(params, branchAdmin));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        model.addAttribute("products", this.productService.getProductsWithInventory(params, currentUsername));
         return "tagProducts";
     }
 
@@ -107,9 +110,13 @@ public class TagController {
 
     @GetMapping("/tagProducts/{tagProductId}")
     public String updateTagProductView(Model model, @PathVariable(value = "tagProductId") int id,
-            Map<String, String> params, @RequestParam("username") String branchAdmin) {
+            Map<String, String> params) {
         model.addAttribute("tagProduct", this.tagService.getTagProductById(id));
-        model.addAttribute("products", this.productService.getProductsWithInventory(params, branchAdmin));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        model.addAttribute("products", this.productService.getProductsWithInventory(params, currentUsername));
 
         return "tagProducts";
     }

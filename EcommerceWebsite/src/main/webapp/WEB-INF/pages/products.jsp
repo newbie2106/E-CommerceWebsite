@@ -8,6 +8,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+
+<c:url value="/products" var="action" />
+
 <div class="col-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
@@ -76,7 +79,6 @@
 </div>
 
 
-<c:url value="/products" var="action" />
 
 
 

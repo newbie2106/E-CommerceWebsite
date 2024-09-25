@@ -72,6 +72,18 @@ public class Customer implements Serializable {
         this.username = username;
     }
 
+    public Customer(String username, String address, String email, String phone,
+            Provinces province, Districts district, Wards ward, User user) {
+        this.username = username;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.provinceId = province;
+        this.districtId = district;
+        this.wardId = ward;
+        this.user = user;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -160,5 +172,5 @@ public class Customer implements Serializable {
     public String toString() {
         return "com.tth.pojo.Customer[ username=" + username + " ]";
     }
-    
+
 }

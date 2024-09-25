@@ -82,7 +82,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().ignoringAntMatchers("/api/**");
         http.authorizeRequests().antMatchers("/api/login/").permitAll();
         http.authorizeRequests().antMatchers("/api/products/").permitAll();
-        http.authorizeRequests().antMatchers("/api/products/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/product/**").permitAll();
         http.authorizeRequests().antMatchers("/api/categories/").permitAll();
         http.authorizeRequests().antMatchers("/api/categories/**").permitAll();
         http.authorizeRequests().antMatchers("/api/brands/").permitAll();
@@ -97,9 +97,15 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/ward/**").permitAll();
         http.authorizeRequests().antMatchers("/api/tags/**").permitAll();
         http.authorizeRequests().antMatchers("/api/tagProducts/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/verifyOtp/**").permitAll();      
+        http.authorizeRequests().antMatchers("/api/verifyOtp/**").permitAll();
         http.authorizeRequests().antMatchers("/api/verifyAccount/**").permitAll();
         http.authorizeRequests().antMatchers("/api/change-password/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/update-quantity-product/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/register/").permitAll();
+        http.authorizeRequests().antMatchers("/api/current-user/").permitAll();
+        http.authorizeRequests().antMatchers("/api/recently-viewed/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/cart/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/forgot-password/**").permitAll();
 
         //http.authorizeRequests().antMatchers("/api/tags/").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/**/comments/").permitAll();
@@ -109,7 +115,11 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 //                .antMatchers(HttpMethod.DELETE, "/api/categories/**").permitAll()
                 //                .antMatchers(HttpMethod.DELETE, "/api/brands/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET, "/api/current-user/").access("hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+                .antMatchers(HttpMethod.POST, "/api/cart/**").access("hasRole('ROLE_CUSTOMER')")
+                .antMatchers(HttpMethod.POST, "/api/forgot-password/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/api/cart/**").access("hasRole('ROLE_CUSTOMER')")
                 .antMatchers(HttpMethod.DELETE, "/api/**").access("hasRole('ROLE_ADMIN')").and()
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

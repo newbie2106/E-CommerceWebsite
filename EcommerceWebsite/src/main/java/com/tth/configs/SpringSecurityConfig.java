@@ -64,15 +64,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http)
             throws Exception {
-        http.formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password");
+        http.formLogin().loginPage("/login").usernameParameter("username")
+                .passwordParameter("password");
 
         http.formLogin().defaultSuccessUrl("/dashboard")
                 .failureUrl("/login?error=true");
         http.logout().logoutSuccessUrl("/login");
-
-        http.exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                .accessDeniedHandler(new CustomAccessDeniedHandler());
         http.authorizeRequests().antMatchers("/manage-products")
                 .access("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
                 .antMatchers("/products")

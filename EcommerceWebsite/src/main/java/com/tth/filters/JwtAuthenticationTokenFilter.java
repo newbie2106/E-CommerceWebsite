@@ -50,8 +50,6 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
                 boolean accountNonExpired = true;
                 boolean credentialsNonExpired = true;
                 boolean accountNonLocked = true;
-                System.out.println("TRINH TONG HIEP:   " + user.getRole().getRoleName());
-
                 Set<GrantedAuthority> authorities = new HashSet<>();
                 authorities.add(new SimpleGrantedAuthority( user.getRole().getRoleName()));
                 UserDetails userDetail = new org.springframework.security.core.userdetails.User(username, user.getPassword(), enabled, accountNonExpired,

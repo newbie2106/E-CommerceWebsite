@@ -11,6 +11,7 @@ import com.tth.services.ForgotPasswordService;
 import com.tth.services.UserService;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.Random;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -25,6 +26,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author tongh
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/forgot-password")
 @CrossOrigin
 @PropertySource("classpath:configs.properties")
 public class ApiForgotPasswordController {
@@ -57,7 +59,7 @@ public class ApiForgotPasswordController {
         User user = this.userService.getUserByUsername(username);
 
         System.err.println("EMAILFROM: " + environment.getProperty("spring.mail.username"));
-        System.err.println("EMAILTO: " + user.getAdmin().getEmail());
+        System.err.println("EMAILTO: " + user.getCustomer().getEmail());
 
         int otp = otpGenerator();
         try {
@@ -65,7 +67,7 @@ public class ApiForgotPasswordController {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             helper.setFrom(environment.getProperty("spring.mail.username"));
-            helper.setTo(user.getAdmin().getEmail());
+            helper.setTo(user.getCustomer().getEmail());
             String content = "Thông báo từ E-commerce Website "
                     + "đây là mã OTP của bạn " + otp + " và đừng gửi nó cho ai khác";
             helper.setText(content, false);
@@ -82,9 +84,8 @@ public class ApiForgotPasswordController {
         } catch (MessagingException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body("Lỗi khi gửi email! Vui lòng thử lại sau.");
+                    .body("Lỗi khi gửi email! Vui lòng thử lại sau.");
         }
-
 
     }
 
@@ -98,6 +99,28 @@ public class ApiForgotPasswordController {
             return new ResponseEntity<>("OTP has expired!", HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok("OTP đã xác thực!");
+    }
+
+    @PostMapping("/create-new-password/{username}")
+    public ResponseEntity<String> changePasswordAdmin(
+            @PathVariable("username") String username,
+            @RequestBody Map<String, String> passwordData) {
+
+        String newPassword = passwordData.get("newPassword");
+        String confirmPassword = passwordData.get("confirmPassword");
+
+        User user = userService.getUserByUsername(username);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy người dùng!");
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+        }
+        user.setPassword(newPassword);
+        this.userService.changePassword(user);
+
+        return ResponseEntity.ok("Đổi mật khẩu thành công!");
     }
 
 }

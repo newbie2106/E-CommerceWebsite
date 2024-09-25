@@ -36,4 +36,9 @@ public class BranchServiceImpl implements BranchService {
         return this.branchRepo.getUsernameByBranchId(branchId);
     }
 
+    @Override
+    public Branch getBrandByUserAdmin(String username) {
+        return this.branchRepo.getBrandByUserAdmin(username);
+    }
+
 }

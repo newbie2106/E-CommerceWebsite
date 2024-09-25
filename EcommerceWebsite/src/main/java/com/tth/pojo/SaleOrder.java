@@ -69,9 +69,6 @@ public class SaleOrder implements Serializable {
     @JoinColumn(name = "shipment_id", referencedColumnName = "id")
     @ManyToOne
     private Shipment shipmentId;
-//    @JoinColumns({
-////        @JoinColumn(name = "username", referencedColumnName = "username"),
-//        @JoinColumn(name = "username", referencedColumnName = "username")})
     @JoinColumn(name = "username", referencedColumnName = "username")
     @ManyToOne
     private User username;
@@ -180,5 +177,5 @@ public class SaleOrder implements Serializable {
     public void setIsPaid(Boolean isPaid) {
         this.isPaid = isPaid;
     }
-    
+
 }

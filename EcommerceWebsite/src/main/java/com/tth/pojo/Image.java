@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -44,11 +45,9 @@ public class Image implements Serializable {
     @Size(max = 255)
     @Column(name = "url")
     private String url;
-//    @JoinColumns({
-//        @JoinColumn(name = "product_id", referencedColumnName = "id"),
-//        @JoinColumn(name = "product_id", referencedColumnName = "id")})
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     @ManyToOne
+    //@JsonIgnore
     private Product productId;
 
     @Transient

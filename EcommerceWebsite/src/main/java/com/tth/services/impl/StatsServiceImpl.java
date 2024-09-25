@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
  * @author tongh
  */
 @Service
-public class StatsServiceImpl implements StatsService{
+public class StatsServiceImpl implements StatsService {
 
     @Autowired
     private StatsRepository statsRepo;
-    
+
     @Override
     public List<Object[]> StatsRevenueByPeriod(int year, String period) {
         return this.statsRepo.statsRevenueByPeriod(year, period);
@@ -28,6 +28,16 @@ public class StatsServiceImpl implements StatsService{
     @Override
     public List<Object[]> StatsRevenueByProduct() {
         return this.statsRepo.statsRevenueByProduct();
+    }
+
+    @Override
+    public List<Object[]> statsRevenueByProductBranch(String usernameBranch) {
+        return this.statsRepo.statsRevenueByProductBranch(usernameBranch);
+    }
+
+    @Override
+    public List<Object[]> statsRevenueByPeriodBranch(int year, String period, String usernameBranch) {
+        return this.statsRepo.statsRevenueByPeriodBranch(year, period, usernameBranch);
     }
 
 }

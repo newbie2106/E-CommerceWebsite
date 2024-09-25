@@ -16,4 +16,7 @@ public interface StatsRepository {
 
     List<Object[]> statsRevenueByProduct();
 
+    List<Object[]> statsRevenueByProductBranch(String usernameBranch);
+    
+    List<Object[]> statsRevenueByPeriodBranch(int year, String period,String usernameBranch);
 }

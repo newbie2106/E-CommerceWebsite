@@ -71,7 +71,6 @@
                                     <div class="form-group">
                                         <input type="password" name="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Mật khẩu" required="true">
 
-                                        <!-- Hiển thị thông báo lỗi dưới input Mật khẩu -->
 
                                     </div>
                                     <div class="form-group position-relative">

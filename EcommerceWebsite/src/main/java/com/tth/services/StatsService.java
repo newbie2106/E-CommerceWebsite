@@ -15,5 +15,9 @@ public interface StatsService {
     List<Object[]> StatsRevenueByPeriod(int year, String period);
 
     List<Object[]> StatsRevenueByProduct();
+    
+    List<Object[]> statsRevenueByProductBranch(String usernameBranch);
+    
+    List<Object[]> statsRevenueByPeriodBranch(int year, String period,String usernameBranch);
 
 }

@@ -111,7 +111,6 @@ public class UserSeviceImpl implements UserService {
         userAdminDTO.setDistrictCode(u.getAdmin().getDistrictId().getCode());
         userAdminDTO.setWardCode(u.getAdmin().getWardId().getCode());
         userAdminDTO.setAvatar(u.getAvatar());
-        userAdminDTO.setIsActive(true);
 
         return userAdminDTO;
     }

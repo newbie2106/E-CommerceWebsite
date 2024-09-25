@@ -17,4 +17,6 @@ public interface BranchService {
     public List<Branch> getBrands();
     
     public String getUsernameByBranchId(int branchId);
+    
+    Branch getBrandByUserAdmin(String username);
 }

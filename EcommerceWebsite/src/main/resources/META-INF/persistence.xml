@@ -26,6 +26,8 @@
     <class>com.tth.pojo.Customer</class>
     <class>com.tth.pojo.OrderDetail</class>
     <class>com.tth.DTO.Forgotpassword</class>
+    <class>com.tth.pojo.Cart</class>
+    <class>com.tth.pojo.RecentlyViewed</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saleapp?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

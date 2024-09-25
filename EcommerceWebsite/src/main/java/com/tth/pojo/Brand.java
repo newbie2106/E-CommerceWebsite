@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -50,11 +51,12 @@ public class Brand implements Serializable {
     @Column(name = "logo")
     private String logo;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "brandId")
+    @JsonIgnore
     private Set<Product> productSet;
 
     @Transient
     private MultipartFile file;
-    
+
     /**
      * @return the file
      */
@@ -68,7 +70,7 @@ public class Brand implements Serializable {
     public void setFile(MultipartFile file) {
         this.file = file;
     }
-    
+
     public Brand() {
     }
 
@@ -133,5 +135,5 @@ public class Brand implements Serializable {
     public String toString() {
         return "com.tth.pojo.Brand[ id=" + id + " ]";
     }
-    
+
 }

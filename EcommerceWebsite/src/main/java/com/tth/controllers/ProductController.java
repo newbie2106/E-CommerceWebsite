@@ -4,7 +4,10 @@
  */
 package com.tth.controllers;
 
+import com.tth.pojo.Branch;
+import com.tth.pojo.Inventory;
 import com.tth.pojo.Product;
+import com.tth.services.BranchService;
 import com.tth.services.BrandService;
 import com.tth.services.CategoryService;
 import com.tth.services.ProductService;
@@ -36,6 +39,9 @@ public class ProductController {
 
     @Autowired
     private ProductService prodService;
+
+    @Autowired
+    private BranchService branchService;
 
     @Autowired
     private Environment env;
@@ -73,10 +79,8 @@ public class ProductController {
     public String ProductManagement(Model model, @RequestParam Map<String, String> params,
             @RequestParam(value = "username", required = false) String branchAdmin) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName(); // Username của người dùng hiện tại
+        String currentUsername = authentication.getName();
 
-        System.out.println("USERNAME:" + currentUsername);
-        
         // Nếu không có tham số username được truyền vào, sử dụng username hiện tại
         if (branchAdmin == null || branchAdmin.isEmpty()) {
             branchAdmin = currentUsername;
@@ -87,4 +91,15 @@ public class ProductController {
         model.addAttribute("count", Math.ceil(count * 1.0 / pageSize));
         return "manageProducts";
     }
+
+    @RequestMapping("/admin-manage-products")
+    public String ProductAdminManagement(Model model, @RequestParam Map<String, String> params) {
+
+        model.addAttribute("products", this.prodService.getProducts(params));
+        long pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
+        long count = this.prodService.countProduct();
+        model.addAttribute("count", Math.ceil(count * 1.0 / pageSize));
+        return "adminManageProducts";
+    }
+    
 }

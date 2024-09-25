@@ -12,19 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class UserAdminDTO {
 
-    /**
-     * @return the isActive
-     */
-    public boolean isIsActive() {
-        return isActive;
-    }
-
-    /**
-     * @param isActive the isActive to set
-     */
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
 
     /**
      * @return the email
@@ -250,6 +237,4 @@ public class UserAdminDTO {
     private String provinceCode;
     private String districtCode;
     private String wardCode;
-    private boolean isActive = false;
-
 }

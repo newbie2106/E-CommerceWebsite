@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.tth.ENUM.ShipmentStatus;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -55,10 +56,18 @@ public class Shipment implements Serializable {
     private Date expectedDelivery;
     @Size(max = 9)
     @Column(name = "status")
-    private String status; 
+    private ShipmentStatus status; 
    @JoinColumn(name = "carrier_id", referencedColumnName = "id")
     @ManyToOne
     private Carrier carrierId;
+
+    public ShipmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ShipmentStatus status) {
+        this.status = status;
+    }
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "shipmentId")
     private Set<SaleOrder> saleOrderSet;
 
@@ -93,13 +102,6 @@ public class Shipment implements Serializable {
         this.expectedDelivery = expectedDelivery;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public Carrier getCarrierId() {
         return carrierId;

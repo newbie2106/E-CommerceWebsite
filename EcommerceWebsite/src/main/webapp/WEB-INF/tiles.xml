@@ -38,10 +38,20 @@
         <put-attribute name="content"
                        value="/WEB-INF/pages/stats.jsp" />
     </definition>
+    <definition name="statsBranch" extends="baseLayout">
+        <put-attribute name="title" value="Thống kê theo chi nhánh" />
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/stats-branch.jsp" />
+    </definition>
     <definition name="manageProducts" extends="baseLayout">
         <put-attribute name="title" value="Quản lý sản phẩm" />
         <put-attribute name="content"
                        value="/WEB-INF/pages/manage-products.jsp" />
+    </definition>
+     <definition name="adminManageProducts" extends="baseLayout">
+        <put-attribute name="title" value="Quản lý sản phẩm" />
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/admin-manage-products.jsp" />
     </definition>
     <definition name="products" extends="baseLayout">
         <put-attribute name="title" value="Quản lý sản phẩm" />
@@ -103,6 +113,10 @@
         <put-attribute name="content"
                        value="/WEB-INF/pages/tagProducts.jsp" />
     </definition>
-    
+    <definition name="updateProductQuantity" extends="baseLayout">
+        <put-attribute name="title" value="Trang chủ" />
+        <put-attribute name="content"
+                       value="/WEB-INF/pages/update-product-quantity.jsp" />
+    </definition>
 </tiles-definitions>
 

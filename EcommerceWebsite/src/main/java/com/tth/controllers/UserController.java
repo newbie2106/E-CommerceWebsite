@@ -9,6 +9,7 @@ import com.tth.DTO.UserAdminDTO;
 import com.tth.pojo.Admin;
 import com.tth.pojo.Districts;
 import com.tth.pojo.Provinces;
+import com.tth.pojo.Role;
 import com.tth.pojo.User;
 import com.tth.pojo.Wards;
 import com.tth.repositories.UserRepository;
@@ -66,6 +67,8 @@ public class UserController {
     private DistrictService districtService;
     @Autowired
     private WardService wardService;
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -109,7 +112,8 @@ public class UserController {
 
                 User u = new User(username, password, firstName, lastName);
                 u.setFile(file);
-
+                Role role = this.roleService.getRoleById(1);
+                u.setRole(role);
                 Admin admin = new Admin(username, address, email, phone, personalId, province, district, ward, u);
                 if (this.userService.addOrUpdateUser(u)) {
                     if (this.adminService.addOrUpdateUserAdmin(admin)) {

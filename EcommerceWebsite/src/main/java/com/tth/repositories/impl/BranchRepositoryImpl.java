@@ -44,9 +44,9 @@ public class BranchRepositoryImpl implements BranchRepository {
         Root<Branch> r = q.from(Branch.class);
 
         q.select(r);
-        
+
         Query query = s.createQuery(q);
-        
+
         List<Branch> branches = query.getResultList();
         for (Branch branch : branches) {
             Hibernate.initialize(branch.getAdminUser());
@@ -54,13 +54,23 @@ public class BranchRepositoryImpl implements BranchRepository {
 
         return branches;
     }
-    
-     public String getUsernameByBranchId(int branchId) {
+
+    public String getUsernameByBranchId(int branchId) {
         Branch branch = this.getBrandById(branchId);
         if (branch != null && branch.getAdminUser() != null) {
             return branch.getAdminUser().getUsername();
         }
         return null;
     }
+
+    public Branch getBrandByUserAdmin(String username) {
+    Session s = this.factory.getObject().getCurrentSession();
+    
+    Query<Branch> query = s.createQuery("FROM Branch b WHERE b.adminUser.username = :username", Branch.class);
+    query.setParameter("username", username);
+    
+    return query.uniqueResult();
+}
+
 
 }

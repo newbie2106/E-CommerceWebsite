@@ -42,7 +42,7 @@
     <div class="col-md-5 col-12">
         <form>
             <div class="form-floating mb-3 mt-3">
-                <input type="text" value="${param.year}" class="form-control" id="year" placeholder="Năm" name="year">
+                <input type="text" value="${param.year}" class="form-control" id="year" placeholder="Năm" name="year" required="true">
                 <label for="year">Năm</label>
             </div>
             <div class="form-floating mb-3 mt-3">
@@ -94,8 +94,6 @@
 <hr class="hr" />
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="<c:url value="js/script.js" />"></script>
 <script>
     let labels = [];
     let data = [];
