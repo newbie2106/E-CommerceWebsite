@@ -1,7 +1,9 @@
 import axios from "axios";
 import cookie from "react-cookies";
 
-const BASE_URL = "http://localhost:8080/EcommerceWebsite";
+// const BASE_URL = "http://localhost:8080/EcommerceWebsite";
+const BASE_URL = "https://e-commercewebsite-qc69.onrender.com/";
+
 
 export const endpoints = {
   'products': "/api/products/"
