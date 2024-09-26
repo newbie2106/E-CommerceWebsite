@@ -14,6 +14,8 @@ import Cart from "./components/Cart";
 import cookie from "react-cookies";
 import ChangePassword from "./components/ChangePassword";
 import PasswordReset from "./components/PasswordReset";
+import UpdateUserForm from "./components/UpdateUserForm";
+import ProfilePage from "./components/Profile";
 
 
 export const MyUserContext = createContext();
@@ -36,6 +38,8 @@ const App = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/password-reset" element={<PasswordReset />} />
+            <Route path="/edit-profile" element={<UpdateUserForm />} />
+            <Route path="/profile" element={<ProfilePage />} />
 
 
 

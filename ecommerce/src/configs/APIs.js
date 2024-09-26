@@ -12,6 +12,19 @@ export default axios.create({
 });
 
 
+export const updateInfoUser = async (username, userData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/api/users/update/${username}`, userData, {
+      headers: {
+        Authorization: cookie.load("token")
+      }
+    });
+    return response.data; // Trả về dữ liệu phản hồi từ API
+  } catch (error) {
+    // Xử lý lỗi và có thể ném ra để xử lý ở nơi gọi
+    throw new Error(error.response?.data?.message || 'Error updating user');
+  }
+};
 
 
 export const requestOTP = async (username) => {
@@ -156,7 +169,6 @@ export const getCurrentUser = async () => {
     if (res.status === 200) return res;
   } catch (ex) {
     console.error(ex);
-    console.error("ABC");
   }
 };
 export const loadProvinces = async () => {

@@ -26,4 +26,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
+    @Override
+    public Customer getCustomerByUsername(String username) {
+        return this.CustomerRepo.getCustomerByUsername(username);
+    }
+
 }

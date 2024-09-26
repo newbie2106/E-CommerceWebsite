@@ -80,7 +80,6 @@ public class User implements Serializable {
     @ManyToOne
     private Role roleId;
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "user")
-    @JsonIgnore
     private Customer customer;
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "user")
     @JsonIgnore

@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -58,6 +59,7 @@ public class Customer implements Serializable {
     @JoinColumn(name = "province_id", referencedColumnName = "code")
     @ManyToOne
     private Provinces provinceId;
+    @JsonIgnore
     @JoinColumn(name = "username", referencedColumnName = "username", insertable = false, updatable = false)
     @OneToOne(optional = false)
     private User user;

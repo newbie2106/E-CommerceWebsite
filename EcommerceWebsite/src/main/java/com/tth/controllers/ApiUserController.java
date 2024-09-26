@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,7 +64,7 @@ public class ApiUserController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private RoleService roleService ;
+    private RoleService roleService;
 
     @PostMapping("/login/")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
@@ -115,7 +116,65 @@ public class ApiUserController {
         }
 
         return new ResponseEntity("Error", HttpStatus.BAD_REQUEST);
+    }
 
+    @PostMapping("/users/update/${username}")
+    public ResponseEntity updateUserCustomer(@PathVariable String username,@RequestParam Map<String, String> params, @RequestPart(required = false) MultipartFile avatar) {
+        System.out.println("Cập nhật người dùng: " + username);
+        String firstName = params.get("firstName");
+        String lastName = params.get("lastName");
+        String address = params.get("address");
+        String phone = params.get("phone");
+        String email = params.get("email");
+
+        // Fetch existing user and customer info
+        User existingUser = this.userService.getUserByUsername(username);
+        if (existingUser == null) {
+            return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Update user information
+        existingUser.setFirstName(firstName);
+        existingUser.setLastName(lastName);
+        if (avatar != null && !avatar.isEmpty()) {
+            existingUser.setFile(avatar); // Cập nhật avatar nếu có
+        }
+
+        // Fetch existing customer info
+        Customer existingCustomer = this.customerService.getCustomerByUsername(username);
+        if (existingCustomer == null) {
+            return new ResponseEntity("Customer not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Update customer information
+        existingCustomer.setAddress(address);
+        existingCustomer.setEmail(email);
+        existingCustomer.setPhone(phone);
+
+        // Update province, district, and ward if needed
+        String provinceCode = params.get("provinceCode");
+        String districtCode = params.get("districtCode");
+        String wardCode = params.get("wardCode");
+
+        if (provinceCode != null) {
+            Provinces province = this.provinceService.getProvinceById(provinceCode);
+            existingCustomer.setProvinceId(province);
+        }
+        if (districtCode != null) {
+            Districts district = this.districtService.getDistrictById(districtCode);
+            existingCustomer.setDistrictId(district);
+        }
+        if (wardCode != null) {
+            Wards ward = this.wardService.getWardById(wardCode);
+            existingCustomer.setWardId(ward);
+        }
+
+        // Save updated user and customer information
+        if (this.userService.addOrUpdateUser(existingUser) && this.customerService.addUserCustomer(existingCustomer)) {
+            return new ResponseEntity("Success", HttpStatus.OK);
+        }
+
+        return new ResponseEntity("Error", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/users/{username}/")

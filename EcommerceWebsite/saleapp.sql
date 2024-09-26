@@ -195,6 +195,36 @@ INSERT INTO `carrier` VALUES (1,'Hỏa tốc','Giao nhanh trong 1-2 ngày'),(2,'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `cart`
+--
+
+DROP TABLE IF EXISTS `cart`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cart` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `quantity` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_id` (`product_id`),
+  KEY `username` (`username`),
+  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cart`
+--
+
+LOCK TABLES `cart` WRITE;
+/*!40000 ALTER TABLE `cart` DISABLE KEYS */;
+INSERT INTO `cart` VALUES (5,6,2,'tonghiep'),(6,3,3,'tonghiep'),(7,5,1,'tonghiep');
+/*!40000 ALTER TABLE `cart` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `category`
 --
 
@@ -251,6 +281,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES ('tonghiep','0383876058','724/44 LÊ VĂN LƯƠNG','tonghiep22@gmail.com','79','767','27025');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,7 +330,7 @@ CREATE TABLE `forgotpassword` (
   PRIMARY KEY (`id`),
   KEY `fk_user` (`user`),
   CONSTRAINT `fk_user` FOREIGN KEY (`user`) REFERENCES `user` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -308,7 +339,7 @@ CREATE TABLE `forgotpassword` (
 
 LOCK TABLES `forgotpassword` WRITE;
 /*!40000 ALTER TABLE `forgotpassword` DISABLE KEYS */;
-INSERT INTO `forgotpassword` VALUES (2,856787,'2024-08-26 18:13:41','tandat'),(3,505245,'2024-09-03 20:52:04','tandat'),(4,804652,'2024-09-03 20:54:09','tandat'),(5,533224,'2024-09-03 20:54:55','tandat'),(6,391481,'2024-09-03 21:18:30','tandat'),(7,475081,'2024-09-03 21:22:12','tandat'),(8,238978,'2024-09-03 21:22:49','tandat'),(9,814375,'2024-09-03 21:31:52','tandat'),(10,751165,'2024-09-03 21:32:27','tandat'),(11,408411,'2024-09-03 21:32:59','tandat'),(12,422215,'2024-09-03 21:35:00','tandat'),(13,586735,'2024-09-03 21:37:58','tandat'),(14,515370,'2024-09-03 21:43:21','tandat'),(15,263254,'2024-09-03 21:45:37','tandat'),(16,149946,'2024-09-03 21:45:57','tandat'),(17,916946,'2024-09-03 21:46:16','tandat'),(18,398788,'2024-09-03 21:46:16','tandat'),(19,856781,'2024-09-03 21:49:10','tandat'),(20,922761,'2024-09-03 21:51:36','tandat'),(21,625942,'2024-09-03 22:02:58','tandat'),(22,825653,'2024-09-03 22:06:23','dattan'),(23,483263,'2024-09-03 22:22:48','tandat'),(24,664651,'2024-09-03 22:25:41','tandat'),(25,542723,'2024-09-03 22:28:08','dattan'),(26,998040,'2024-09-03 22:29:29','dattan'),(27,462137,'2024-09-03 22:52:30','dattan'),(28,296123,'2024-09-03 22:56:47','dattan'),(29,708259,'2024-09-03 23:04:31','dattan');
+INSERT INTO `forgotpassword` VALUES (2,856787,'2024-08-26 18:13:41','tandat'),(3,505245,'2024-09-03 20:52:04','tandat'),(4,804652,'2024-09-03 20:54:09','tandat'),(5,533224,'2024-09-03 20:54:55','tandat'),(6,391481,'2024-09-03 21:18:30','tandat'),(7,475081,'2024-09-03 21:22:12','tandat'),(8,238978,'2024-09-03 21:22:49','tandat'),(9,814375,'2024-09-03 21:31:52','tandat'),(10,751165,'2024-09-03 21:32:27','tandat'),(11,408411,'2024-09-03 21:32:59','tandat'),(12,422215,'2024-09-03 21:35:00','tandat'),(13,586735,'2024-09-03 21:37:58','tandat'),(14,515370,'2024-09-03 21:43:21','tandat'),(15,263254,'2024-09-03 21:45:37','tandat'),(16,149946,'2024-09-03 21:45:57','tandat'),(17,916946,'2024-09-03 21:46:16','tandat'),(18,398788,'2024-09-03 21:46:16','tandat'),(19,856781,'2024-09-03 21:49:10','tandat'),(20,922761,'2024-09-03 21:51:36','tandat'),(21,625942,'2024-09-03 22:02:58','tandat'),(22,825653,'2024-09-03 22:06:23','dattan'),(23,483263,'2024-09-03 22:22:48','tandat'),(24,664651,'2024-09-03 22:25:41','tandat'),(25,542723,'2024-09-03 22:28:08','dattan'),(26,998040,'2024-09-03 22:29:29','dattan'),(27,462137,'2024-09-03 22:52:30','dattan'),(28,296123,'2024-09-03 22:56:47','dattan'),(29,708259,'2024-09-03 23:04:31','dattan'),(30,917954,'2024-09-24 06:41:40','tonghiep'),(31,921889,'2024-09-24 06:43:45','tonghiep'),(32,288056,'2024-09-24 06:43:53','tonghiep'),(33,560608,'2024-09-24 06:54:41','tonghiep'),(34,898614,'2024-09-24 06:56:31','tonghiep'),(35,946982,'2024-09-24 06:57:37','tonghiep'),(36,602679,'2024-09-24 07:10:31','tonghiep'),(37,413094,'2024-09-24 07:28:29','tonghiep'),(38,619648,'2024-09-25 20:43:01','tonghiep');
 /*!40000 ALTER TABLE `forgotpassword` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,7 +357,7 @@ CREATE TABLE `image` (
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
   CONSTRAINT `image_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -335,7 +366,7 @@ CREATE TABLE `image` (
 
 LOCK TABLES `image` WRITE;
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
-INSERT INTO `image` VALUES (1,'https://res.cloudinary.com/dsbkju7j9/image/upload/v1723890093/mxkmehaxmihmcalna52b.png',1),(2,'https://res.cloudinary.com/dsbkju7j9/image/upload/v1724053716/lnespy9jjetutn8duqtv.png',2),(3,'https://res.cloudinary.com/dsbkju7j9/image/upload/v1724061573/jtnvand062gbifgbszkw.png',3);
+INSERT INTO `image` VALUES (2,'https://res.cloudinary.com/dsbkju7j9/image/upload/v1724053716/lnespy9jjetutn8duqtv.png',2),(3,'https://res.cloudinary.com/dsbkju7j9/image/upload/v1724061573/jtnvand062gbifgbszkw.png',3),(5,'https://res.cloudinary.com/dsbkju7j9/image/upload/v1725840739/dbnit0che01vxcegmmgw.png',1),(6,'https://res.cloudinary.com/dsbkju7j9/image/upload/v1724053716/lnespy9jjetutn8duqtv.png',1);
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -356,7 +387,7 @@ CREATE TABLE `inventory` (
   KEY `product_id` (`product_id`),
   CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`id`),
   CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -365,7 +396,7 @@ CREATE TABLE `inventory` (
 
 LOCK TABLES `inventory` WRITE;
 /*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
-INSERT INTO `inventory` VALUES (7,200,1,1),(8,150,1,2),(9,90,1,3),(10,100,3,1),(11,150,3,2),(12,150,3,3);
+INSERT INTO `inventory` VALUES (7,200,1,1),(8,120,1,2),(9,250,1,3),(10,100,3,1),(11,150,3,2),(12,150,3,3);
 /*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -429,7 +460,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'Iphone 11 64GB (Likenew 99%)','Iphone đã qua sử dụng',5000000.00,'2024-08-17',2,4),(2,'MacBook Air M1','MacBook Air M1 13 inch 8GB/256GB - Chính Hãng VN',18190000.00,'2024-08-19',3,4),(3,'Laptop Gaming Acer Nitro 5','Laptop Gaming Acer Nitro 5 Tiger AN515 58 52SP I5-12500H/8GB/512GB PCIE/VGA 4GB RTX3050/15.6',19990000.00,'2024-08-19',3,7);
+INSERT INTO `product` VALUES (1,'Iphone 11 64GB (Likenew 99%)','Iphone đã qua sử dụng 1 thời gian nhưng còn mới',5000000.00,'2024-09-09',2,4),(2,'MacBook Air M1','MacBook Air M1 13 inch 8GB/256GB - Chính Hãng VN',18190000.00,'2024-08-19',3,4),(3,'Laptop Gaming Acer Nitro 5','Laptop Gaming Acer Nitro 5 Tiger AN515 58 52SP I5-12500H/8GB/512GB PCIE/VGA 4GB RTX3050/15.6',19990000.00,'2024-08-19',3,7);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -461,6 +492,35 @@ LOCK TABLES `provinces` WRITE;
 /*!40000 ALTER TABLE `provinces` DISABLE KEYS */;
 INSERT INTO `provinces` VALUES ('01','Thành phố Hà Nội',1,3),('02','Tỉnh Hà Giang',2,1),('04','Tỉnh Cao Bằng',2,1),('06','Tỉnh Bắc Kạn',2,1),('08','Tỉnh Tuyên Quang',2,1),('10','Tỉnh Lào Cai',2,2),('11','Tỉnh Điện Biên',2,2),('12','Tỉnh Lai Châu',2,2),('14','Tỉnh Sơn La',2,2),('15','Tỉnh Yên Bái',2,2),('17','Tỉnh Hoà Bình',2,2),('19','Tỉnh Thái Nguyên',2,1),('20','Tỉnh Lạng Sơn',2,1),('22','Tỉnh Quảng Ninh',2,1),('24','Tỉnh Bắc Giang',2,1),('25','Tỉnh Phú Thọ',2,1),('26','Tỉnh Vĩnh Phúc',2,3),('27','Tỉnh Bắc Ninh',2,3),('30','Tỉnh Hải Dương',2,3),('31','Thành phố Hải Phòng',1,3),('33','Tỉnh Hưng Yên',2,3),('34','Tỉnh Thái Bình',2,3),('35','Tỉnh Hà Nam',2,3),('36','Tỉnh Nam Định',2,3),('37','Tỉnh Ninh Bình',2,3),('38','Tỉnh Thanh Hóa',2,4),('40','Tỉnh Nghệ An',2,4),('42','Tỉnh Hà Tĩnh',2,4),('44','Tỉnh Quảng Bình',2,4),('45','Tỉnh Quảng Trị',2,4),('46','Tỉnh Thừa Thiên Huế',2,4),('48','Thành phố Đà Nẵng',1,5),('49','Tỉnh Quảng Nam',2,5),('51','Tỉnh Quảng Ngãi',2,5),('52','Tỉnh Bình Định',2,5),('54','Tỉnh Phú Yên',2,5),('56','Tỉnh Khánh Hòa',2,5),('58','Tỉnh Ninh Thuận',2,5),('60','Tỉnh Bình Thuận',2,5),('62','Tỉnh Kon Tum',2,6),('64','Tỉnh Gia Lai',2,6),('66','Tỉnh Đắk Lắk',2,6),('67','Tỉnh Đắk Nông',2,6),('68','Tỉnh Lâm Đồng',2,6),('70','Tỉnh Bình Phước',2,7),('72','Tỉnh Tây Ninh',2,7),('74','Tỉnh Bình Dương',2,7),('75','Tỉnh Đồng Nai',2,7),('77','Tỉnh Bà Rịa - Vũng Tàu',2,7),('79','Thành phố Hồ Chí Minh',1,7),('80','Tỉnh Long An',2,8),('82','Tỉnh Tiền Giang',2,8),('83','Tỉnh Bến Tre',2,8),('84','Tỉnh Trà Vinh',2,8),('86','Tỉnh Vĩnh Long',2,8),('87','Tỉnh Đồng Tháp',2,8),('89','Tỉnh An Giang',2,8),('91','Tỉnh Kiên Giang',2,8),('92','Thành phố Cần Thơ',1,8),('93','Tỉnh Hậu Giang',2,8),('94','Tỉnh Sóc Trăng',2,8),('95','Tỉnh Bạc Liêu',2,8),('96','Tỉnh Cà Mau',2,8);
 /*!40000 ALTER TABLE `provinces` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `recently_viewed`
+--
+
+DROP TABLE IF EXISTS `recently_viewed`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `recently_viewed` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `viewed_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_recently_viewed_product` (`product_id`),
+  KEY `fk_recently_viewed_user` (`username`),
+  CONSTRAINT `fk_recently_viewed_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
+  CONSTRAINT `fk_recently_viewed_user` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recently_viewed`
+--
+
+LOCK TABLES `recently_viewed` WRITE;
+/*!40000 ALTER TABLE `recently_viewed` DISABLE KEYS */;
+/*!40000 ALTER TABLE `recently_viewed` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -632,7 +692,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('dattan','$2a$10$fWbVdfkLL/LjXhtu/5UowuLYIYEBWSMo/Asr5daJTrwaxN85Tx8Ru','TanLee','Dat 1','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724348760/l6oyw5t9itxjuze2ttn1.jpg',1,'2024-08-23'),('hiep','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','hiep','trinh','https://res.cloudinary.com/dsbkju7j9/image/upload/v1715327227/BoardingHouse/Image_avt/fly0xp3n6dpveqxh4wpv.jpg',3,'2022-07-27'),('hieptestzzzz1zz','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Trịnh ','J97','https://res.cloudinary.com/dsbkju7j9/image/upload/v1723889597/nkp97zuqmjgomz3nywax.jpg',1,'2022-08-23'),('tandat','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Lý Tấn','Đạt','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724492306/gpacoyinln4zh9ubpv2h.jpg',1,'2022-07-25');
+INSERT INTO `user` VALUES ('dattan','$2a$10$fWbVdfkLL/LjXhtu/5UowuLYIYEBWSMo/Asr5daJTrwaxN85Tx8Ru','TanLee','Dat 1','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724348760/l6oyw5t9itxjuze2ttn1.jpg',1,'2024-08-23'),('hiep','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','hiep','trinh','https://res.cloudinary.com/dsbkju7j9/image/upload/v1715327227/BoardingHouse/Image_avt/fly0xp3n6dpveqxh4wpv.jpg',3,'2022-07-27'),('hieptestzzzz1zz','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Trịnh ','J97','https://res.cloudinary.com/dsbkju7j9/image/upload/v1723889597/nkp97zuqmjgomz3nywax.jpg',1,'2022-08-23'),('tandat','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Lý Tấn','Đạt','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724492306/gpacoyinln4zh9ubpv2h.jpg',1,'2022-07-25'),('tonghiep','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Trịnh','Hiệp','https://res.cloudinary.com/dsbkju7j9/image/upload/v1726757923/fjttdykymqqrgfin7rfc.png',2,'2022-07-25');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -665,34 +725,6 @@ LOCK TABLES `wards` WRITE;
 INSERT INTO `wards` VALUES ('00001','Phường Phúc Xá','001',8),('26053','Phường Bửu Hòa','731',8),('26056','Phường Long Bình Tân','731',8),('26059','Phường Tân Vạn','731',8),('26062','Phường Tân Hạnh','731',8),('26794','Phường Linh Xuân','769',8),('26797','Phường Bình Chiểu','769',8),('26800','Phường Linh Trung','769',8),('26803','Phường Tam Bình','769',8),('26806','Phường Tam Phú','769',8),('26809','Phường Hiệp Bình Phước','769',8),('26812','Phường Hiệp Bình Chánh','769',8),('26815','Phường Linh Chiểu','769',8),('26818','Phường Linh Tây','769',8),('26821','Phường Linh Đông','769',8),('26824','Phường Bình Thọ','769',8),('26827','Phường Trường Thọ','769',8),('26830','Phường Long Bình','769',8),('26833','Phường Long Thạnh Mỹ','769',8),('26836','Phường Tân Phú','769',8),('26839','Phường Hiệp Phú','769',8),('26842','Phường Tăng Nhơn Phú A','769',8),('26845','Phường Tăng Nhơn Phú B','769',8),('26848','Phường Phước Long B','769',8),('26851','Phường Phước Long A','769',8),('26854','Phường Trường Thạnh','769',8),('26857','Phường Long Phước','769',8),('26860','Phường Long Trường','769',8),('26863','Phường Phước Bình','769',8),('26866','Phường Phú Hữu','769',8),('26998','Phường 08','766',8),('27001','Phường 09','766',8),('27004','Phường 14','766',8),('27007','Phường 15','766',8),('27010','Phường Tân Sơn Nhì','767',8),('27013','Phường Tây Thạnh','767',8),('27016','Phường Sơn Kỳ','767',8),('27019','Phường Tân Quý','767',8),('27022','Phường Tân Thành','767',8),('27025','Phường Phú Thọ Hòa','767',8),('27028','Phường Phú Thạnh','767',8),('27031','Phường Phú Trung','767',8),('27034','Phường Hòa Thạnh','767',8),('27037','Phường Hiệp Tân','767',8),('27040','Phường Tân Thới Hòa','767',8),('27043','Phường 04','768',8),('27046','Phường 05','768',8),('27049','Phường 09','768',8),('27052','Phường 07','768',8),('27055','Phường 03','768',8),('27058','Phường 01','768',8),('27061','Phường 02','768',8),('27064','Phường 08','768',8),('27067','Phường 15','768',8),('27070','Phường 10','768',8),('27073','Phường 11','768',8),('27076','Phường 17','768',8),('27085','Phường 13','768',8),('27088','Phường Thảo Điền','769',8),('27091','Phường An Phú','769',8),('27094','Phường An Khánh','769',8),('27097','Phường Bình Trưng Đông','769',8),('27100','Phường Bình Trưng Tây','769',8),('27109','Phường Cát Lái','769',8),('27112','Phường Thạnh Mỹ Lợi','769',8),('27115','Phường An Lợi Đông','769',8),('27118','Phường Thủ Thiêm','769',8),('27127','Phường 14','770',8),('27130','Phường 12','770',8),('27133','Phường 11','770',8),('27136','Phường 13','770',8),('27139','Phường Võ Thị Sáu','770',8),('27142','Phường 09','770',8),('27145','Phường 10','770',8),('27148','Phường 04','770',8),('27151','Phường 05','770',8),('27154','Phường 03','770',8),('27157','Phường 02','770',8),('27160','Phường 01','770',8),('27163','Phường 15','771',8),('27166','Phường 13','771',8),('27169','Phường 14','771',8),('27172','Phường 12','771',8),('27175','Phường 11','771',8),('27178','Phường 10','771',8),('27181','Phường 09','771',8),('27184','Phường 01','771',8),('27187','Phường 08','771',8),('27190','Phường 02','771',8),('27193','Phường 04','771',8),('27196','Phường 07','771',8),('27199','Phường 05','771',8),('27202','Phường 06','771',8),('27208','Phường 15','772',8),('27211','Phường 05','772',8),('27214','Phường 14','772',8),('27217','Phường 11','772',8),('27220','Phường 03','772',8),('27223','Phường 10','772',8),('27226','Phường 13','772',8),('27229','Phường 08','772',8),('27232','Phường 09','772',8),('27235','Phường 12','772',8),('27238','Phường 07','772',8),('27241','Phường 06','772',8),('29506','Xã Long Hiệp','849',10);
 /*!40000 ALTER TABLE `wards` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wishlist`
---
-
-DROP TABLE IF EXISTS `wishlist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `wishlist` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `product_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`),
-  KEY `product_id` (`product_id`),
-  CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`),
-  CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `wishlist`
---
-
-LOCK TABLES `wishlist` WRITE;
-/*!40000 ALTER TABLE `wishlist` DISABLE KEYS */;
-/*!40000 ALTER TABLE `wishlist` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -703,4 +735,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-09  6:00:01
+-- Dump completed on 2024-09-26 16:14:58

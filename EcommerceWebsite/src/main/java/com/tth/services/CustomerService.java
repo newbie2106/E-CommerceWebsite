@@ -13,5 +13,7 @@ import com.tth.pojo.Customer;
 public interface CustomerService {
 
     boolean addUserCustomer(Customer customer);
+    
+    Customer getCustomerByUsername(String username);
 
 }

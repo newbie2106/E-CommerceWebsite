@@ -9,6 +9,7 @@ import com.tth.pojo.Customer;
 import com.tth.repositories.CustomerRepository;
 import com.tth.repositories.UserRepository;
 import com.tth.services.UserService;
+import javax.persistence.NoResultException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -30,6 +31,18 @@ public class CustomerRepositoryImple implements CustomerRepository {
     @Autowired
     private UserRepository userRepository;
 
+    @Override
+    public Customer getCustomerByUsername(String username) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Query q = s.createQuery("FROM Customer WHERE username = :username");
+        q.setParameter("username", username);
+        try {
+            return (Customer) q.getSingleResult();
+        } catch (NoResultException Ex) {
+            return new Customer();
+        }
+    }
+    
     public boolean usernameCustomerExists(String username) {
         Session s = this.factory.getObject().getCurrentSession();
         Query<Long> q = s.createQuery("SELECT COUNT(*) FROM Customer WHERE username = :username", Long.class);

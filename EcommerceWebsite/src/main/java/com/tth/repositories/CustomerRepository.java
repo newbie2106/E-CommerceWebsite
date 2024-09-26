@@ -5,13 +5,16 @@
 package com.tth.repositories;
 
 import com.tth.pojo.Customer;
-
 /**
  *
  * @author tongh
  */
 public interface CustomerRepository {
+
     boolean addUserCustomer(Customer customer);
-    
+
     boolean usernameCustomerExists(String username);
+
+    Customer getCustomerByUsername(String username);
+
 }
