@@ -1,8 +1,8 @@
 import axios from "axios";
 import cookie from "react-cookies";
 
-// const BASE_URL = "http://localhost:8080/EcommerceWebsite";
-const BASE_URL = "https://ecommerce-xbbg.onrender.com";
+const BASE_URL = "http://localhost:8080/EcommerceWebsite";
+// const BASE_URL = "https://ecommerce-xbbg.onrender.com";
 
 
 export const endpoints = {
@@ -14,14 +14,24 @@ export default axios.create({
 });
 
 
+export const getAllShippingAddresses = async(username) =>{
+  try {
+    const response = await axios.post(`${BASE_URL}/api/addresses/${username}`)
+    return response;
+  } catch (error) {
+    // Xử lý lỗi và có thể ném ra để xử lý ở nơi gọi
+    throw new Error(error.response?.data?.message || 'Error updating user');
+  }
+}
+
 export const updateInfoUser = async (username, userData) => {
   try {
     const response = await axios.post(`${BASE_URL}/api/users/update/${username}`, userData, {
       headers: {
-        Authorization: cookie.load("token")
-      }
+        "Content-Type": `multipart/form-data`
+      },
     });
-    return response.data; // Trả về dữ liệu phản hồi từ API
+    return response;
   } catch (error) {
     // Xử lý lỗi và có thể ném ra để xử lý ở nơi gọi
     throw new Error(error.response?.data?.message || 'Error updating user');
@@ -70,6 +80,26 @@ export const changePassword = async (username, oldPassword, newPassword, confirm
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error.message;
+  }
+};
+
+
+
+export const addRecentlyViewedByUser = async (username, productId) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/api/recently-viewed/add/?username=${username}&productId=${productId}`)
+    return res;
+  } catch (err) {
+    return err;
+  }
+}
+
+export const getRecentlyViewed = async (username) => {
+  try {
+    const res = await axios.get(`${BASE_URL}/api/recently-viewed/user/${username}/`)
+    return res;
+  } catch (err) {
+    return err;
   }
 };
 

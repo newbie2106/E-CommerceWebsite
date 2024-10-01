@@ -144,23 +144,17 @@ const Profile = () => {
                             <FaMapMarkerAlt className="absolute left-3 top-3 text-gray-400" />
                         </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                        {isEditing ? (
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
-                                type="submit"
+                    <div className="mb-6">
+
+                        <div className="relative">
+                            <Link
+                                to="/edit-profile"
+                                className="bg-green-500 hover:bg-gray-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring transition duration-300"
                             >
-                                Lưu Thay Đổi
-                            </button>
-                        ) : (
-                            <button
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110"
-                                type="button"
-                                onClick={() => setIsEditing(!isEditing)} // Thay đổi trạng thái chỉnh sửa
-                            >
-                                Chỉnh Sửa Hồ Sơ
-                            </button>
-                        )}
+                                Chỉnh sửa thông tin
+                            </Link>
+
+                        </div>
                     </div>
                 </form>
             </div>

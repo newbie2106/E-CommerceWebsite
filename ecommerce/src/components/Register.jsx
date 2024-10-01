@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { FaUser, FaLock, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCity, FaFlag } from "react-icons/fa";
 import { loadDistrictsByProvinceCode, loadProvinces, loadWardsByDistrictCode, Register } from "../configs/APIs";
 import { useNavigate } from "react-router-dom";
+import LoadingAnimations from "./LoadingAnimations";
 
 const RegistrationForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -168,14 +169,19 @@ const RegistrationForm = () => {
               className="block w-full pl-3 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="">Select Province</option>
-              {provinces.map(province => (
-                <option key={province.code} value={province.code}>
-                  {province.fullName}
-                </option>
-              ))}
+              {provinces && provinces.length > 0 ? (
+                provinces.map(province => (
+                  <option key={province.code} value={province.code}>
+                    {province.fullName}
+                  </option>
+                ))
+              ) : (
+                <LoadingAnimations />
+              )}
             </select>
             {errors.provinceCode && <p className="text-red-500 text-xs mt-1">{errors.provinceCode.message}</p>}
           </div>
+
 
           {/* District Dropdown */}
           {selectedProvince && (

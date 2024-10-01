@@ -47,7 +47,6 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "User.findByCreatedDate", query = "SELECT u FROM User u WHERE u.createdDate = :createdDate")})
 public class User implements Serializable {
 
-
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -261,6 +260,8 @@ public class User implements Serializable {
     public void setForgotPasswordSet(Set<ForgotPassword> forgotPasswordSet) {
         this.forgotPasswordSet = forgotPasswordSet;
     }
+
+
 
 
 }

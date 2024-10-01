@@ -11,15 +11,18 @@ import com.tth.pojo.Customer;
 import com.tth.pojo.Districts;
 import com.tth.pojo.Provinces;
 import com.tth.pojo.Role;
+import com.tth.pojo.ShippingAddress;
 import com.tth.pojo.User;
 import com.tth.pojo.Wards;
 import com.tth.services.CustomerService;
 import com.tth.services.DistrictService;
 import com.tth.services.ProvinceService;
 import com.tth.services.RoleService;
+import com.tth.services.ShippingAddressService;
 import com.tth.services.UserService;
 import com.tth.services.WardService;
 import java.security.Principal;
+import java.util.Date;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,6 +68,8 @@ public class ApiUserController {
     private CustomerService customerService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ShippingAddressService shippingAddressService;
 
     @PostMapping("/login/")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
@@ -96,6 +101,7 @@ public class ApiUserController {
         String address = params.get("address");
         String phone = params.get("phone");
         String email = params.get("email");
+        String fullName = firstName + " " + lastName;
 
         String provinceCode = params.get("provinceCode");
         String districtCode = params.get("districtCode");
@@ -109,8 +115,10 @@ public class ApiUserController {
         Role role = this.roleService.getRoleById(2);
         u.setRole(role);
         Customer customer = new Customer(username, address, email, phone, province, district, ward, u);
+        ShippingAddress sp = new ShippingAddress(district, province, ward,
+                fullName, phone, address, Boolean.TRUE, new Date(), new Date(), customer);
         if (this.userService.addOrUpdateUser(u)) {
-            if (this.customerService.addUserCustomer(customer)) {
+            if (this.customerService.addUserCustomer(customer) && this.shippingAddressService.addOrUpdateShippingAddress(sp)) {
                 return new ResponseEntity("Suscess", HttpStatus.CREATED);
             }
         }
@@ -118,22 +126,27 @@ public class ApiUserController {
         return new ResponseEntity("Error", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/users/update/${username}")
-    public ResponseEntity updateUserCustomer(@PathVariable String username,@RequestParam Map<String, String> params, @RequestPart(required = false) MultipartFile avatar) {
-        System.out.println("Cập nhật người dùng: " + username);
-        String firstName = params.get("firstName");
-        String lastName = params.get("lastName");
-        String address = params.get("address");
-        String phone = params.get("phone");
-        String email = params.get("email");
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/users/update/{username}")
+    public ResponseEntity updateUserCustomer(@PathVariable String username,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestParam String address,
+            @RequestParam String phone,
+            @RequestParam String email,
+            @RequestParam String provinceCode,
+            @RequestParam String districtCode,
+            @RequestParam String wardCode,
+            @RequestPart(required = false) MultipartFile avatar) {
 
+        MultipartFile file = avatar;
         // Fetch existing user and customer info
         User existingUser = this.userService.getUserByUsername(username);
+
         if (existingUser == null) {
             return new ResponseEntity("User not found", HttpStatus.NOT_FOUND);
         }
 
-        // Update user information
         existingUser.setFirstName(firstName);
         existingUser.setLastName(lastName);
         if (avatar != null && !avatar.isEmpty()) {
@@ -152,11 +165,11 @@ public class ApiUserController {
         existingCustomer.setPhone(phone);
 
         // Update province, district, and ward if needed
-        String provinceCode = params.get("provinceCode");
-        String districtCode = params.get("districtCode");
-        String wardCode = params.get("wardCode");
-
+//        String provinceCode = params.get("provinceCode");
+//        String districtCode = params.get("districtCode");
+//        String wardCode = params.get("wardCode");
         if (provinceCode != null) {
+            System.out.println("provinceCode: " + provinceCode);
             Provinces province = this.provinceService.getProvinceById(provinceCode);
             existingCustomer.setProvinceId(province);
         }

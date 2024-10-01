@@ -1,0 +1,7 @@
+
+#hibernate.dialect=org.hibernate.dialect.MySQLDialect
+#hibernate.showSql=true
+#hibernate.connection.driverClass=com.mysql.cj.jdbc.Driver
+#hibernate.connection.url=jdbcmysqlecommerce-mysql-tonghiep25-b187.g.aivencloud.com27033saleappssl-mode=REQUIRED
+#hibernate.connection.username=avnadmin
+#hibernate.connection.password=AVNS_i-EyqiLYRsjszhNE_fI

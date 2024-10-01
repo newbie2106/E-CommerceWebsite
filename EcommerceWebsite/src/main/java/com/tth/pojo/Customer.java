@@ -6,7 +6,9 @@ package com.tth.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,11 +16,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,6 +38,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Customer.findByAddress", query = "SELECT c FROM Customer c WHERE c.address = :address"),
     @NamedQuery(name = "Customer.findByEmail", query = "SELECT c FROM Customer c WHERE c.email = :email")})
 public class Customer implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "username")
+    @JsonIgnore
+    private Set<ShippingAddress> shippingAddressSet;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -173,6 +181,15 @@ public class Customer implements Serializable {
     @Override
     public String toString() {
         return "com.tth.pojo.Customer[ username=" + username + " ]";
+    }
+
+    @XmlTransient
+    public Set<ShippingAddress> getShippingAddressSet() {
+        return shippingAddressSet;
+    }
+
+    public void setShippingAddressSet(Set<ShippingAddress> shippingAddressSet) {
+        this.shippingAddressSet = shippingAddressSet;
     }
 
 }

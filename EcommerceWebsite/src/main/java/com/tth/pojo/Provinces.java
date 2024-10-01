@@ -37,6 +37,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Provinces.findByAdministrativeUnitId", query = "SELECT p FROM Provinces p WHERE p.administrativeUnitId = :administrativeUnitId")})
 public class Provinces implements Serializable {
 
+    @OneToMany(mappedBy = "provinceCode")
+    @JsonIgnore
+    private Set<ShippingAddress> shippingAddressSet;
+
     @JoinColumn(name = "administrative_unit_id", referencedColumnName = "id")
     @ManyToOne
     @JsonIgnore
@@ -176,6 +180,15 @@ public class Provinces implements Serializable {
 
     public void setDistrictsSet(Set<Districts> districtsSet) {
         this.districtsSet = districtsSet;
+    }
+
+    @XmlTransient
+    public Set<ShippingAddress> getShippingAddressSet() {
+        return shippingAddressSet;
+    }
+
+    public void setShippingAddressSet(Set<ShippingAddress> shippingAddressSet) {
+        this.shippingAddressSet = shippingAddressSet;
     }
     
 }

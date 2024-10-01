@@ -4,7 +4,6 @@ import Home from "./components/Home";
 import Header from "./components/Header";
 import MyUserReducer from "./reducers/MyUserReducer";
 import Login from "./components/Login";
-import Register from "./components/Register";
 import RegistrationForm from "./components/Register";
 import OrderDetailsPage from "./components/Pay";
 import ScrollToTopButton from "./components/ScrollToTopButton";
@@ -16,6 +15,7 @@ import ChangePassword from "./components/ChangePassword";
 import PasswordReset from "./components/PasswordReset";
 import UpdateUserForm from "./components/UpdateUserForm";
 import ProfilePage from "./components/Profile";
+import AddressPage from "./components/AddressPage";
 
 
 export const MyUserContext = createContext();
@@ -40,6 +40,7 @@ const App = () => {
             <Route path="/password-reset" element={<PasswordReset />} />
             <Route path="/edit-profile" element={<UpdateUserForm />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/edit-address" element={<AddressPage />} />
 
 
 

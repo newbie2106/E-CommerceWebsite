@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FiEye, FiFrown, FiShoppingCart } from "react-icons/fi";
-import APIs, { addToCart, endpoints, fetchCartItems, loadBrands, loadCategories } from "../configs/APIs";
+import APIs, { addRecentlyViewedByUser, addToCart, endpoints, fetchCartItems, getRecentlyViewed, loadBrands, loadCategories } from "../configs/APIs";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight, FaTags } from "react-icons/fa";
 import LoadingAnimations from "../components/LoadingAnimations"; // Điều chỉnh đường dẫn nếu cần
@@ -41,7 +41,8 @@ const Home = () => {
   const quantity = 1;
   // TEST THU 
   const loadRecentlyViewed = async () => {
-    const res = await axios.get(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/user/${user.username}/`);
+    //const res = await axios.get(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/user/${user.username}/`);
+    const res = await getRecentlyViewed(user.username);
     setRecentlyViewed(res.data);
     console.log("ABC ", res.data)
   };
@@ -52,8 +53,8 @@ const Home = () => {
 
 
   const addRecentlyViewed = async (productId) => {
-    await axios.post(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/add/?username=${user.username}&productId=${productId}`);
-
+    //await axios.post(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/add/?username=${user.username}&productId=${productId}`);
+    await addRecentlyViewedByUser(user.username, productId);
     loadRecentlyViewed(); // Cập nhật danh sách đã xem
   };
 

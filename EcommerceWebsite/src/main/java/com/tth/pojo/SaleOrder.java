@@ -72,6 +72,25 @@ public class SaleOrder implements Serializable {
     @JoinColumn(name = "username", referencedColumnName = "username")
     @ManyToOne
     private User username;
+    @ManyToOne
+    @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
+    private ShippingAddress shippingAddress;
+
+    public User getUsername() {
+        return username;
+    }
+
+    public void setUsername(User username) {
+        this.username = username;
+    }
+
+    public ShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
 
     public SaleOrder() {
     }

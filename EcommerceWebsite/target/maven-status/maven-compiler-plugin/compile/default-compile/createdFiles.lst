@@ -5,6 +5,7 @@ com\tth\services\impl\RoleServiceImpl.class
 com\tth\repositories\impl\ImageRepositoryImpl.class
 com\tth\repositories\impl\CartRepositoryImpl.class
 com\tth\repositories\impl\TagRepositoryImpl.class
+com\tth\repositories\impl\ShippingAddressRepositoryImpl.class
 com\tth\repositories\CartRepository.class
 com\tth\repositories\RecentlyViewedRepository.class
 com\tth\repositories\impl\SaleOrderRepositoryImpl.class
@@ -50,6 +51,8 @@ com\tth\repositories\impl\InventoryRepositoryImpl.class
 com\tth\services\UserService.class
 com\tth\configs\TilesConfig.class
 com\tth\validator\UserAdminValidator.class
+com\tth\repositories\ShippingAddressRepository.class
+com\tth\pojo\ShippingAddress.class
 com\tth\pojo\Branch_.class
 com\tth\pojo\User.class
 com\tth\services\impl\TagServiceImpl.class
@@ -63,6 +66,7 @@ com\tth\pojo\RecentlyViewed_.class
 com\tth\formatters\BrandFormatter.class
 com\tth\configs\DispatcherServletInit.class
 com\tth\repositories\CustomerRepository.class
+com\tth\controllers\ApiShippingAddressController.class
 com\tth\services\ImageService.class
 com\tth\DTO\ChangePasswordDTO.class
 com\tth\pojo\User_.class
@@ -82,6 +86,7 @@ com\tth\pojo\Customer_.class
 com\tth\pojo\Product_.class
 com\tth\pojo\Carrier.class
 com\tth\controllers\ApiForgotPasswordController.class
+com\tth\pojo\ShippingAddress_.class
 com\tth\repositories\InventoryRepository.class
 com\tth\repositories\UserRepository.class
 com\tth\repositories\CategoryRepository.class
@@ -138,6 +143,7 @@ com\tth\pojo\TagProduct_.class
 com\tth\pojo\Provinces.class
 com\tth\services\ProductService.class
 com\tth\pojo\Districts.class
+com\tth\services\ShippingAddressService.class
 com\tth\repositories\impl\AdminRepositoryImpl.class
 com\tth\configs\JwtSecurityConfig.class
 com\tth\services\RecentlyViewedService.class
@@ -154,6 +160,7 @@ com\tth\repositories\impl\BranchRepositoryImpl.class
 com\tth\controllers\IndexController.class
 com\tth\repositories\BrandRepository.class
 com\tth\pojo\Role_.class
+com\tth\services\impl\ShippingAddressServiceImpl.class
 com\tth\validator\UserCustomerValidator.class
 com\tth\controllers\UserController.class
 com\tth\repositories\impl\CustomerRepositoryImple.class
