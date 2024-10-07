@@ -35,6 +35,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Carrier.findByName", query = "SELECT c FROM Carrier c WHERE c.name = :name")})
 public class Carrier implements Serializable {
 
+    @OneToMany(mappedBy = "carrierId")
+    private Set<SaleOrder> saleOrderSet;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,8 +50,6 @@ public class Carrier implements Serializable {
     @Size(max = 65535)
     @Column(name = "description")
     private String description;
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "carrierId")
-    private Set<Shipment> shipmentSet;
 
     public Carrier() {
     }
@@ -82,14 +82,6 @@ public class Carrier implements Serializable {
         this.description = description;
     }
 
-    @XmlTransient
-    public Set<Shipment> getShipmentSet() {
-        return shipmentSet;
-    }
-
-    public void setShipmentSet(Set<Shipment> shipmentSet) {
-        this.shipmentSet = shipmentSet;
-    }
 
     @Override
     public int hashCode() {
@@ -114,6 +106,15 @@ public class Carrier implements Serializable {
     @Override
     public String toString() {
         return "com.tth.pojo.Carrier[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Set<SaleOrder> getSaleOrderSet() {
+        return saleOrderSet;
+    }
+
+    public void setSaleOrderSet(Set<SaleOrder> saleOrderSet) {
+        this.saleOrderSet = saleOrderSet;
     }
     
 }

@@ -12,6 +12,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,6 +44,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Shipment.findByStatus", query = "SELECT s FROM Shipment s WHERE s.status = :status")})
 public class Shipment implements Serializable {
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ShipmentStatus status;
+    @JoinColumn(name = "sale_order_id", referencedColumnName = "id")
+    @ManyToOne
+    private SaleOrder saleOrderId;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,22 +62,6 @@ public class Shipment implements Serializable {
     @Column(name = "expected_delivery")
     @Temporal(TemporalType.DATE)
     private Date expectedDelivery;
-    @Size(max = 9)
-    @Column(name = "status")
-    private ShipmentStatus status; 
-   @JoinColumn(name = "carrier_id", referencedColumnName = "id")
-    @ManyToOne
-    private Carrier carrierId;
-
-    public ShipmentStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ShipmentStatus status) {
-        this.status = status;
-    }
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "shipmentId")
-    private Set<SaleOrder> saleOrderSet;
 
     public Shipment() {
     }
@@ -101,25 +93,6 @@ public class Shipment implements Serializable {
     public void setExpectedDelivery(Date expectedDelivery) {
         this.expectedDelivery = expectedDelivery;
     }
-
-
-    public Carrier getCarrierId() {
-        return carrierId;
-    }
-
-    public void setCarrierId(Carrier carrierId) {
-        this.carrierId = carrierId;
-    }
-
-    @XmlTransient
-    public Set<SaleOrder> getSaleOrderSet() {
-        return saleOrderSet;
-    }
-
-    public void setSaleOrderSet(Set<SaleOrder> saleOrderSet) {
-        this.saleOrderSet = saleOrderSet;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -129,7 +102,6 @@ public class Shipment implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Shipment)) {
             return false;
         }
@@ -144,5 +116,13 @@ public class Shipment implements Serializable {
     public String toString() {
         return "com.tth.pojo.Shipment[ id=" + id + " ]";
     }
-    
+
+    public SaleOrder getSaleOrderId() {
+        return saleOrderId;
+    }
+
+    public void setSaleOrderId(SaleOrder saleOrderId) {
+        this.saleOrderId = saleOrderId;
+    }
+
 }

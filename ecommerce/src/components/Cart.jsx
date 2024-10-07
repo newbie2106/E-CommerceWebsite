@@ -4,7 +4,6 @@ import { MyDispatchContext, MyUserContext } from '../App';
 import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa';
 import VNDCurrencyFormat from '../configs/Utils';
 
-
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const user = useContext(MyUserContext);
@@ -15,11 +14,12 @@ const Cart = () => {
         const items = await fetchCartItems(user.username);
         setCartItems(items);
     };
+
     useEffect(() => {
         if (user.username) {
             loadCartItems();
         }
-    }, []);
+    }, [user.username]);
 
     const handleAddToCart = async (productId, quantity) => {
         await addToCart(user.username, productId, quantity);
@@ -103,16 +103,21 @@ const Cart = () => {
                 ))}
             </div>
             <div className="mt-8 bg-gray-100 p-4 rounded-lg">
-                <h2 className="text-2xl font-bold">
-                    Total Items: {totalItems}
-                </h2>
-                <h2 className="text-2xl font-bold">
-                    Total Price: {VNDCurrencyFormat.format(totalPrice)}
-                </h2>
+                <h2 className="text-2xl font-bold">Total Items: {totalItems}</h2>
+                <h2 className="text-2xl font-bold">Total Price: {VNDCurrencyFormat.format(totalPrice)}</h2>
+            </div>
+
+            {/* Thêm hai nút "Trở về" và "Thanh toán" */}
+            <div className="flex justify-between mt-6">
+                <button className="bg-white text-red-500 border border-red-500 hover:bg-red-500 hover:text-white transition duration-200 px-4 py-2 rounded">
+                    Trở về
+                </button>
+                <button className="bg-red-500 text-white hover:bg-white hover:text-red-500 transition hover:border hover:border-red-500 duration-200 px-4 py-2 rounded">
+                    Thanh toán
+                </button>
             </div>
         </div>
     );
-
 };
 
 export default Cart;

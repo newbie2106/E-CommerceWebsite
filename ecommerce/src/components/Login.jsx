@@ -5,6 +5,7 @@ import { getCurrentUser, loginAccount } from "../configs/APIs";
 import cookie from "react-cookies";
 import { Link, useNavigate } from "react-router-dom";
 import { MyDispatchContext, MyUserContext } from "../App";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
     const user = useContext(MyUserContext);
@@ -16,6 +17,7 @@ const Login = () => {
     const [language, setLanguage] = useState("vi");
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const [showGoogleLogin, setShowGoogleLogin] = useState(false);
     const handleSubmit = (evt) => {
         evt.preventDefault();
         setIsLoading(true);
@@ -47,7 +49,6 @@ const Login = () => {
     };
 
     const handleGoogleLogin = () => {
-        // Thêm logic đăng nhập với Google
         console.log("Đăng nhập với Google");
     };
 
@@ -76,12 +77,21 @@ const Login = () => {
                     <div>
                         <button
                             type="button"
-                            onClick={handleGoogleLogin}
+                            onClick={() => setShowGoogleLogin(true)}
                             className="flex justify-center w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
                         >
                             <FaGoogle className="mr-2 h-5 w-5" />
                             {language === "en" ? "Sign in with Google" : "Đăng nhập với Google"}
                         </button>
+                        <GoogleLogin
+                            onSuccess={credentialResponse => {
+                                console.log(credentialResponse);
+                            }}
+                            onError={() => {
+                                console.log('Login Failed');
+                            }}
+                            useOneTap
+                        />;
                     </div>
 
                     {/* Nút đăng nhập với Facebook */}
@@ -102,7 +112,7 @@ const Login = () => {
                             <label htmlFor="username" className="sr-only">{t.username}</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <FaUser className="h-5 w-5 text-gray-400" />
+                                    <FaUser className="h-5 w-5 text-gray-400" />
 
                                 </div>
                                 <input
@@ -139,7 +149,7 @@ const Login = () => {
                         </div>
                         {message && (
                             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3" role="alert">
-                                
+
                                 <span className="block sm:inline"> {message}</span>
                             </div>
                         )}
@@ -180,6 +190,16 @@ const Login = () => {
                         </p>
                     </div>
                 </form>
+                {/* {showGoogleLogin && (
+                    <GoogleLogin
+                        onSuccess={handleGoogleLogin}
+                        onFailure={(error) => {
+                            console.error("G", error)
+                            console.error("Google login failed:", error);
+                            setShowGoogleLogin(false);
+                        }}
+                    />
+                )} */}
             </div>
         </div>
 

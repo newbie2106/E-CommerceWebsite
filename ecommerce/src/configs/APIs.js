@@ -14,9 +14,28 @@ export default axios.create({
 });
 
 
-export const getAllShippingAddresses = async(username) =>{
+export const updateDefaultAddress = async (shippingAddressId, username) => {
   try {
-    const response = await axios.post(`${BASE_URL}/api/addresses/${username}`)
+    const response = await axios.put(`${BASE_URL}/api/addresses/default/${shippingAddressId}?username=${username}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error update default address:", error);
+    throw error;
+  }
+};
+export const createShippingAddress = async (shippingAddress) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/api/addresses/`, shippingAddress);
+    return response.data;
+  } catch (error) {
+    console.error("Error create shipping address:", error);
+    throw error;
+  }
+};
+
+export const getAllShippingAddresses = async (username) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/addresses/${username}`)
     return response;
   } catch (error) {
     // Xử lý lỗi và có thể ném ra để xử lý ở nơi gọi

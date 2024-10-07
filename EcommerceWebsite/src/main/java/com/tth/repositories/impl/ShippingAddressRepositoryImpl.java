@@ -33,10 +33,14 @@ public class ShippingAddressRepositoryImpl implements ShippingAddressRepository 
     public boolean addOrUpdateShippingAddress(ShippingAddress shippingAddress) {
         Session s = this.factory.getObject().getCurrentSession();
         try {
+            Date now = new Date();
             if (shippingAddress.getId() != null && shippingAddress.getId() > 0) {
+                shippingAddress.setUpdatedAt(now);
                 s.update(shippingAddress);
 
             } else {
+                shippingAddress.setUpdatedAt(now);
+                shippingAddress.setCreatedAt(now);
                 s.save(shippingAddress);
 
             }

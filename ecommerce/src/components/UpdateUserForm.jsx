@@ -265,7 +265,7 @@ const UpdateUserForm = () => {
                         disabled={isSubmitting}
                         className={`w-full py-2 rounded-lg text-white ${isSubmitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"} transition`}
                     >
-                        {isSubmitting ? "Updating..." : "Update"}
+                        {isSubmitting ? "Đăng cập nhật..." : "Cập nhật"}
                     </button>
                 </form>
             </div>

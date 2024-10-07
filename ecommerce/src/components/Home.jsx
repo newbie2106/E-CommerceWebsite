@@ -41,21 +41,29 @@ const Home = () => {
   const quantity = 1;
   // TEST THU 
   const loadRecentlyViewed = async () => {
-    //const res = await axios.get(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/user/${user.username}/`);
-    const res = await getRecentlyViewed(user.username);
-    setRecentlyViewed(res.data);
-    console.log("ABC ", res.data)
+    if(user && user.username){
+      
+      //const res = await axios.get(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/user/${user.username}/`);
+      const res = await getRecentlyViewed(user.username);
+      setRecentlyViewed(res.data);
+    }
   };
 
   useEffect(() => {
-    loadRecentlyViewed();
+    if(user && user.username){
+      
+      loadRecentlyViewed();
+    }
   }, [user]);
 
 
   const addRecentlyViewed = async (productId) => {
     //await axios.post(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/add/?username=${user.username}&productId=${productId}`);
-    await addRecentlyViewedByUser(user.username, productId);
-    loadRecentlyViewed(); // Cập nhật danh sách đã xem
+    if(user && user.username){
+      
+      await addRecentlyViewedByUser(user.username, productId);
+      loadRecentlyViewed(); // Cập nhật danh sách đã xem
+    }
   };
 
   const loadViewProducts = async () => {
@@ -111,7 +119,9 @@ const Home = () => {
 
   // ===== HANDLE 
   const handleProductClick = async (productId) => {
-    await addRecentlyViewed(productId);
+    if(user && user.username){
+      await addRecentlyViewed(productId);
+    }
     navigate(`/product/${productId}`); // Điều hướng đến trang chi tiết sản phẩm
   };
   useEffect(() => {

@@ -10,6 +10,7 @@ import com.tth.filters.RestAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -108,6 +109,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/recently-viewed/**").permitAll();
         http.authorizeRequests().antMatchers("/api/cart/**").permitAll();
         http.authorizeRequests().antMatchers("/api/forgot-password/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/addresses/**").permitAll();
 
         //http.authorizeRequests().antMatchers("/api/tags/").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/**/comments/").permitAll();
@@ -116,18 +118,16 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 //                .antMatchers(HttpMethod.DELETE, "/api/products/**").permitAll()
                 //                .antMatchers(HttpMethod.DELETE, "/api/categories/**").permitAll()
                 //                .antMatchers(HttpMethod.DELETE, "/api/brands/**").permitAll()
-
-                .antMatchers(HttpMethod.POST, "/api/addresses/").hasAnyRole("CUSTOMER", "ADMIN", "SUPER_ADMIN") // Thêm địa chỉ
-                .antMatchers(HttpMethod.GET, "/api/addresses/**").hasAnyRole("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN") // Lấy địa chỉ của người dùng
-                .antMatchers(HttpMethod.PUT, "/api/addresses/{id}/").hasAnyRole("CUSTOMER", "ADMIN", "SUPER_ADMIN") // Cập nhật địa chỉ
-                .antMatchers(HttpMethod.DELETE, "/api/addresses/delete/{id}/").hasAnyRole("ADMIN", "SUPER_ADMIN") // Xóa địa chỉ
+                //
+                //                .antMatchers(HttpMethod.POST, "/api/addresses/").hasAnyRole("CUSTOMER", "ADMIN", "SUPER_ADMIN") // Thêm địa chỉ
+                //                .antMatchers(HttpMethod.GET, "/api/addresses/**").hasAnyRole("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN") // Lấy địa chỉ của người dùng
+                //                .antMatchers(HttpMethod.PUT, "/api/addresses/{id}/").hasAnyRole("CUSTOMER", "ADMIN", "SUPER_ADMIN") // Cập nhật địa chỉ
+                //                .antMatchers(HttpMethod.DELETE, "/api/addresses/delete/{id}/").hasAnyRole("ADMIN", "SUPER_ADMIN") // Xóa địa chỉ
 
                 .antMatchers(HttpMethod.POST, "/api/users/update/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/current-user/").access("hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
                 .antMatchers(HttpMethod.POST, "/api/forgot-password/**").permitAll()
-                
                 .antMatchers(HttpMethod.POST, "/api/cart/**").access("hasRole('ROLE_CUSTOMER')")
-                
                 .antMatchers(HttpMethod.GET, "/api/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.POST, "/api/**").access("hasRole('ROLE_ADMIN')").antMatchers(HttpMethod.POST, "/api/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.DELETE, "/api/**").access("hasRole('ROLE_ADMIN')").and()

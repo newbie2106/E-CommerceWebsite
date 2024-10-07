@@ -43,13 +43,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "SaleOrder.findByPaid", query = "SELECT s FROM SaleOrder s WHERE s.paid = :paid")})
 public class SaleOrder implements Serializable {
 
+    @OneToMany(mappedBy = "saleOrderId")
+    private Set<Shipment> shipmentSet;
+    @JoinColumn(name = "carrier_id", referencedColumnName = "id")
+    @ManyToOne
+    private Carrier carrierId;
     @Column(name = "isPaid")
     private Boolean isPaid;
-
     @JoinColumn(name = "branchId", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,15 +69,15 @@ public class SaleOrder implements Serializable {
     private Boolean paid;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "saleOrderId")
     private Set<OrderDetail> orderDetailSet;
-    @JoinColumn(name = "shipment_id", referencedColumnName = "id")
-    @ManyToOne
-    private Shipment shipmentId;
     @JoinColumn(name = "username", referencedColumnName = "username")
     @ManyToOne
     private User username;
     @ManyToOne
     @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
     private ShippingAddress shippingAddress;
+    @Size(max = 255)
+    @Column(name = "note")
+    private String note;
 
     public User getUsername() {
         return username;
@@ -140,13 +143,6 @@ public class SaleOrder implements Serializable {
         this.orderDetailSet = orderDetailSet;
     }
 
-    public Shipment getShipmentId() {
-        return shipmentId;
-    }
-
-    public void setShipmentId(Shipment shipmentId) {
-        this.shipmentId = shipmentId;
-    }
 
     public User getUser() {
         return username;
@@ -195,6 +191,23 @@ public class SaleOrder implements Serializable {
 
     public void setIsPaid(Boolean isPaid) {
         this.isPaid = isPaid;
+    }
+
+    @XmlTransient
+    public Set<Shipment> getShipmentSet() {
+        return shipmentSet;
+    }
+
+    public void setShipmentSet(Set<Shipment> shipmentSet) {
+        this.shipmentSet = shipmentSet;
+    }
+
+    public Carrier getCarrierId() {
+        return carrierId;
+    }
+
+    public void setCarrierId(Carrier carrierId) {
+        this.carrierId = carrierId;
     }
 
 }

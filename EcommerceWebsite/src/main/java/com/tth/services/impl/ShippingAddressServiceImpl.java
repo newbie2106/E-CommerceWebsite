@@ -50,4 +50,16 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
         return null; // Trả về null nếu không tìm thấy địa chỉ
     }
 
+    @Override
+    public void updateDefaultAddress(Long id, String username) {
+        List<ShippingAddress> currentDefaultAddress = this.ShippingAddressRepo.getAllAddressesByUserName(username);
+        for (ShippingAddress s : currentDefaultAddress) {
+            s.setIsDefault(false);
+            this.ShippingAddressRepo.addOrUpdateShippingAddress(s);
+        }
+        ShippingAddress newDefaultAddress = this.ShippingAddressRepo.getShippingAddressByUsernameAndId(username, id);
+        newDefaultAddress.setIsDefault(Boolean.TRUE);
+        this.ShippingAddressRepo.addOrUpdateShippingAddress(newDefaultAddress);
+    }
+
 }

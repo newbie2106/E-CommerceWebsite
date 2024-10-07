@@ -18,4 +18,5 @@ public interface ShippingAddressRepository {
     List<ShippingAddress> getAllAddressesByUserName(String username);
 
     ShippingAddress getShippingAddressByUsernameAndId(String username, Long id);
+
 }

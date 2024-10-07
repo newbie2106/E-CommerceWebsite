@@ -44,7 +44,7 @@ public class Cart implements Serializable {
     private Product productId;
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "username")
-    private User username;
+    private User username;  
 
     public Product getProductId() {
         return productId;

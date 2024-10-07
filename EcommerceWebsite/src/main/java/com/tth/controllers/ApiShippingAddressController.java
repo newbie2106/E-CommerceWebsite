@@ -1,4 +1,3 @@
-
 package com.tth.controllers;
 
 import com.tth.pojo.ShippingAddress;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,6 +29,18 @@ public class ApiShippingAddressController {
     public ResponseEntity<List<ShippingAddress>> getAllAddresses(@PathVariable String username) {
         List<ShippingAddress> addresses = this.shippingAddressService.getAllAddresses(username);
         return ResponseEntity.ok(addresses);
+    }
+
+    @PutMapping("/default/{id}")
+    public ResponseEntity<?> updateDefaultAddress(@PathVariable Long id, @RequestParam String username) {
+        try {
+            // Gọi service để cập nhật địa chỉ mặc định
+            this.shippingAddressService.updateDefaultAddress(id, username);
+            System.out.println("da vao day()");
+            return ResponseEntity.ok("Địa chỉ đã được đặt làm mặc định thành công");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Đã có lỗi xảy ra: " + e.getMessage());
+        }
     }
 
     // Thêm địa chỉ mới

@@ -153,7 +153,7 @@ const Header = () => {
                               Thay đổi mật khẩu
                             </Link>
                             <Link
-                              to="/edit-address"
+                              to="/address"
                               className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
                             >
                               <FaMapMarkerAlt className="mr-2" />

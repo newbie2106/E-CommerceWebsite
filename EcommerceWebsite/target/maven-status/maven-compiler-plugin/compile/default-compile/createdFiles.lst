@@ -144,6 +144,7 @@ com\tth\pojo\Provinces.class
 com\tth\services\ProductService.class
 com\tth\pojo\Districts.class
 com\tth\services\ShippingAddressService.class
+com\tth\DTO\PaymentDTO.class
 com\tth\repositories\impl\AdminRepositoryImpl.class
 com\tth\configs\JwtSecurityConfig.class
 com\tth\services\RecentlyViewedService.class

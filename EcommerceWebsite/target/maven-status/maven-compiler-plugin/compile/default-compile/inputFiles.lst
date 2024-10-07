@@ -111,6 +111,7 @@ D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\CartRep
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\impl\ShippingAddressServiceImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\BrandRepository.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\pojo\Wards.java
+D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\DTO\PaymentDTO.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\repositories\CustomerRepository.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\services\impl\UserSeviceImpl.java
 D:\E-CommerceWebsite\EcommerceWebsite\src\main\java\com\tth\validator\UserAdminValidator.java

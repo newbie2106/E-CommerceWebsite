@@ -18,4 +18,7 @@ public interface ShippingAddressService {
     List<ShippingAddress> getAllAddresses(String username);
 
     ShippingAddress updateAddress(Long id, ShippingAddress updatedAddress);
+
+    void updateDefaultAddress(Long id, String username);
+
 }
