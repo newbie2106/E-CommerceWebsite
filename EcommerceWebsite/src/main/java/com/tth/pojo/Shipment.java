@@ -63,6 +63,14 @@ public class Shipment implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date expectedDelivery;
 
+    public ShipmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ShipmentStatus status) {
+        this.status = status;
+    }
+
     public Shipment() {
     }
 

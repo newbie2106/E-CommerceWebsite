@@ -30,6 +30,7 @@ const Header = () => {
     navigate(`/?cateId=${cateId}`);  // Điều hướng với cateId
   };
   const handleLogout = () => {
+    localStorage.removeItem('user');
     dispatch({ type: "logout" });
   };
 

@@ -7,6 +7,7 @@ package com.tth.repositories;
 import com.tth.pojo.Branch;
 import com.tth.pojo.Inventory;
 import com.tth.pojo.Product;
+import java.util.List;
 
 /**
  *
@@ -17,4 +18,6 @@ public interface InventoryRepository {
     boolean updateProductQuantity(Inventory i);
 
     Inventory getInventoryByProductAndBranch(Product product, Branch branch);
+
+    List<Inventory> getInventoryByBranch(String branch);
 }

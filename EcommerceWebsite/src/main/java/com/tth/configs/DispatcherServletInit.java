@@ -19,7 +19,8 @@ public class DispatcherServletInit extends AbstractAnnotationConfigDispatcherSer
             TilesConfig.class,
             JwtSecurityConfig.class,
             EmailConfig.class,
-            SchedulerConfig.class
+            SchedulerConfig.class,
+            Config.class
         };
     }
 

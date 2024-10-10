@@ -11,6 +11,7 @@ import com.tth.repositories.InventoryRepository;
 import com.tth.services.BranchService;
 import com.tth.services.InventoryService;
 import com.tth.services.ProductService;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class InventoryServiceImpl implements InventoryService {
         Product product = productService.getProductById(Integer.parseInt(productId));
 
         System.out.println("BRANJ" + branch);
-        
+
         // Kiểm tra sản phẩm trong Inventory
         Inventory inventory = inventoryRepo.getInventoryByProductAndBranch(product, branch);
 
@@ -61,5 +62,10 @@ public class InventoryServiceImpl implements InventoryService {
             newInventory.setAvailableQuantity(availableQuantity);
             return inventoryRepo.updateProductQuantity(newInventory);
         }
+    }
+
+    @Override
+    public List<Inventory> getInventoryByBranch(String branch) {
+        return this.inventoryRepo.getInventoryByBranch(branch);
     }
 }

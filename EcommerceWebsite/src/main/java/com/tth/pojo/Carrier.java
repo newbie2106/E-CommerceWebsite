@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -36,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Carrier implements Serializable {
 
     @OneToMany(mappedBy = "carrierId")
+    @JsonIgnore
     private Set<SaleOrder> saleOrderSet;
     private static final long serialVersionUID = 1L;
     @Id

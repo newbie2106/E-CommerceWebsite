@@ -29,6 +29,8 @@
     <class>com.tth.pojo.Cart</class>
     <class>com.tth.pojo.RecentlyViewed</class>
     <class>com.tth.pojo.ShippingAddress</class>
+    <class>com.tth.controllers.GoogleAccount</class>
+    <class>com.tth.pojo.GoogleAccount</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saleapp?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

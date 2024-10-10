@@ -211,7 +211,7 @@ CREATE TABLE `cart` (
   KEY `username` (`username`),
   CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
   CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,7 +220,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
-INSERT INTO `cart` VALUES (5,6,2,'tonghiep'),(6,3,3,'tonghiep'),(7,5,1,'tonghiep');
+INSERT INTO `cart` VALUES (5,6,2,'tonghiep'),(6,3,3,'tonghiep'),(7,5,1,'tonghiep'),(9,1,2,'tonghiep12'),(10,2,1,'tonghiep12');
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,7 +281,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES ('tonghiep','0383876058','724/44 LÊ VĂN LƯƠNG','tonghiep22@gmail.com','79','767','27025');
+INSERT INTO `customer` VALUES ('hiepabc','0383876012','724/44 LÊ VĂN LƯƠNG','tonghiep28@gmail.com','79','767','27010'),('tonghiep','0383876058','724/44 LÊ VĂN LƯƠNG','tonghiep22@gmail.com','01','001','00001'),('tonghiep12','0383876000','724 Cộng Hòa','tonghiep22@gmail.com','01','001','00001');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -341,6 +341,33 @@ LOCK TABLES `forgotpassword` WRITE;
 /*!40000 ALTER TABLE `forgotpassword` DISABLE KEYS */;
 INSERT INTO `forgotpassword` VALUES (2,856787,'2024-08-26 18:13:41','tandat'),(3,505245,'2024-09-03 20:52:04','tandat'),(4,804652,'2024-09-03 20:54:09','tandat'),(5,533224,'2024-09-03 20:54:55','tandat'),(6,391481,'2024-09-03 21:18:30','tandat'),(7,475081,'2024-09-03 21:22:12','tandat'),(8,238978,'2024-09-03 21:22:49','tandat'),(9,814375,'2024-09-03 21:31:52','tandat'),(10,751165,'2024-09-03 21:32:27','tandat'),(11,408411,'2024-09-03 21:32:59','tandat'),(12,422215,'2024-09-03 21:35:00','tandat'),(13,586735,'2024-09-03 21:37:58','tandat'),(14,515370,'2024-09-03 21:43:21','tandat'),(15,263254,'2024-09-03 21:45:37','tandat'),(16,149946,'2024-09-03 21:45:57','tandat'),(17,916946,'2024-09-03 21:46:16','tandat'),(18,398788,'2024-09-03 21:46:16','tandat'),(19,856781,'2024-09-03 21:49:10','tandat'),(20,922761,'2024-09-03 21:51:36','tandat'),(21,625942,'2024-09-03 22:02:58','tandat'),(22,825653,'2024-09-03 22:06:23','dattan'),(23,483263,'2024-09-03 22:22:48','tandat'),(24,664651,'2024-09-03 22:25:41','tandat'),(25,542723,'2024-09-03 22:28:08','dattan'),(26,998040,'2024-09-03 22:29:29','dattan'),(27,462137,'2024-09-03 22:52:30','dattan'),(28,296123,'2024-09-03 22:56:47','dattan'),(29,708259,'2024-09-03 23:04:31','dattan'),(30,917954,'2024-09-24 06:41:40','tonghiep'),(31,921889,'2024-09-24 06:43:45','tonghiep'),(32,288056,'2024-09-24 06:43:53','tonghiep'),(33,560608,'2024-09-24 06:54:41','tonghiep'),(34,898614,'2024-09-24 06:56:31','tonghiep'),(35,946982,'2024-09-24 06:57:37','tonghiep'),(36,602679,'2024-09-24 07:10:31','tonghiep'),(37,413094,'2024-09-24 07:28:29','tonghiep'),(38,619648,'2024-09-25 20:43:01','tonghiep');
 /*!40000 ALTER TABLE `forgotpassword` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `google_account`
+--
+
+DROP TABLE IF EXISTS `google_account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `google_account` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `google_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pictureUrl` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `google_account`
+--
+
+LOCK TABLES `google_account` WRITE;
+/*!40000 ALTER TABLE `google_account` DISABLE KEYS */;
+INSERT INTO `google_account` VALUES (16,'117900273800637003247','Hiệp Trịnh','tonghiep25@gmail.com','https://lh3.googleusercontent.com/a/ACg8ocL986ATAoPVzGEqSpCk_kk0d1ZmTvn0ViVaLqa1jGeKh6hqS_kK=s96-c'),(17,'106567848555335050572','Trịnh Hiệp','hiepdata30tb@gmail.com','https://lh3.googleusercontent.com/a/ACg8ocIvnd7P1kM02q77GxbilIDzY80k7-iXvEpgemgAAX7Enctn7A=s96-c');
+/*!40000 ALTER TABLE `google_account` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -418,7 +445,7 @@ CREATE TABLE `order_detail` (
   KEY `product_id` (`product_id`),
   CONSTRAINT `order_detail_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `sale_order` (`id`),
   CONSTRAINT `order_detail_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -427,7 +454,7 @@ CREATE TABLE `order_detail` (
 
 LOCK TABLES `order_detail` WRITE;
 /*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
-INSERT INTO `order_detail` VALUES (1,5000000.00,2,1,1),(2,18190000.00,1,2,2),(3,19990000.00,1,2,3),(4,5000000.00,1,3,1),(5,18190000.00,1,3,2),(6,19990000.00,1,3,3);
+INSERT INTO `order_detail` VALUES (1,5000000.00,2,1,1),(2,18190000.00,1,2,2),(3,19990000.00,1,2,3),(4,5000000.00,1,3,1),(5,18190000.00,1,3,2),(6,19990000.00,1,3,3),(7,18190000.00,1,4,2),(8,5000000.00,2,4,1),(9,18190000.00,1,5,2),(10,5000000.00,2,5,1);
 /*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -511,7 +538,7 @@ CREATE TABLE `recently_viewed` (
   KEY `fk_recently_viewed_user` (`username`),
   CONSTRAINT `fk_recently_viewed_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
   CONSTRAINT `fk_recently_viewed_user` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -559,18 +586,21 @@ CREATE TABLE `sale_order` (
   `created_date` date DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
   `paid` tinyint(1) DEFAULT NULL,
-  `shipment_id` int DEFAULT NULL,
   `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `branchId` int DEFAULT NULL,
-  `isPaid` tinyint(1) DEFAULT '0',
+  `shipping_address_id` bigint DEFAULT NULL,
+  `note` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `carrier_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`),
-  KEY `shipment_id` (`shipment_id`),
   KEY `fk_branch` (`branchId`),
+  KEY `fk_shipping_address` (`shipping_address_id`),
+  KEY `fk_carrier_id` (`carrier_id`),
   CONSTRAINT `fk_branch` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`),
-  CONSTRAINT `sale_order_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`),
-  CONSTRAINT `sale_order_ibfk_2` FOREIGN KEY (`shipment_id`) REFERENCES `shipment` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `fk_carrier_id` FOREIGN KEY (`carrier_id`) REFERENCES `carrier` (`id`),
+  CONSTRAINT `fk_shipping_address` FOREIGN KEY (`shipping_address_id`) REFERENCES `shipping_address` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `sale_order_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -579,7 +609,7 @@ CREATE TABLE `sale_order` (
 
 LOCK TABLES `sale_order` WRITE;
 /*!40000 ALTER TABLE `sale_order` DISABLE KEYS */;
-INSERT INTO `sale_order` VALUES (1,'2024-09-07',10000000.00,1,1,'tandat',1,1),(2,'2024-08-07',38180000.00,1,2,'hieptestzzzz1zz',3,1),(3,'2024-01-07',43180000.00,1,3,'tandat',1,1);
+INSERT INTO `sale_order` VALUES (1,'2024-09-07',10000000.00,1,'tandat',1,NULL,NULL,NULL),(2,'2024-08-07',38180000.00,1,'hieptestzzzz1zz',3,NULL,NULL,NULL),(3,'2024-01-07',43180000.00,1,'tandat',1,NULL,NULL,NULL),(4,'2024-10-08',28190000.00,1,'tonghiep12',1,6,'adsd',2),(5,'2024-10-08',28190000.00,1,'tonghiep12',1,6,'adsdadsada',3);
 /*!40000 ALTER TABLE `sale_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -595,11 +625,11 @@ CREATE TABLE `shipment` (
   `shipment_date` date DEFAULT NULL,
   `expected_delivery` date DEFAULT NULL,
   `status` enum('Pending','confirmed','Shipped','Delivered','Cancelled') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `carrier_id` int DEFAULT NULL,
+  `sale_order_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `carrier_id` (`carrier_id`),
-  CONSTRAINT `shipment_ibfk_1` FOREIGN KEY (`carrier_id`) REFERENCES `carrier` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `fk_sale_order_id` (`sale_order_id`),
+  CONSTRAINT `fk_sale_order_id` FOREIGN KEY (`sale_order_id`) REFERENCES `sale_order` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -608,8 +638,49 @@ CREATE TABLE `shipment` (
 
 LOCK TABLES `shipment` WRITE;
 /*!40000 ALTER TABLE `shipment` DISABLE KEYS */;
-INSERT INTO `shipment` VALUES (1,'2024-09-08','2024-09-11','Delivered',2),(2,'2024-08-08','2024-08-09','Delivered',1),(3,'2024-01-07','2024-01-13','Delivered',3);
+INSERT INTO `shipment` VALUES (1,'2024-09-08','2024-09-11','Delivered',NULL),(2,'2024-08-08','2024-08-09','Delivered',NULL),(3,'2024-01-07','2024-01-13','Delivered',NULL),(4,'2024-10-08','2024-10-08','Pending',5);
 /*!40000 ALTER TABLE `shipment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `shipping_address`
+--
+
+DROP TABLE IF EXISTS `shipping_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `shipping_address` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `full_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone_number` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `province_code` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `district_code` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ward_code` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_default` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`),
+  KEY `province_code` (`province_code`),
+  KEY `district_code` (`district_code`),
+  KEY `ward_code` (`ward_code`),
+  CONSTRAINT `shipping_address_ibfk_1` FOREIGN KEY (`username`) REFERENCES `customer` (`username`),
+  CONSTRAINT `shipping_address_ibfk_2` FOREIGN KEY (`province_code`) REFERENCES `provinces` (`code`),
+  CONSTRAINT `shipping_address_ibfk_3` FOREIGN KEY (`district_code`) REFERENCES `districts` (`code`),
+  CONSTRAINT `shipping_address_ibfk_4` FOREIGN KEY (`ward_code`) REFERENCES `wards` (`code`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `shipping_address`
+--
+
+LOCK TABLES `shipping_address` WRITE;
+/*!40000 ALTER TABLE `shipping_address` DISABLE KEYS */;
+INSERT INTO `shipping_address` VALUES (1,'tonghiep12','trinh tong hiep','0383876000','724 Cộng Hòa','01','001','00001',0,'2024-09-28 11:11:40','2024-10-03 13:12:48'),(6,'tonghiep12','Hiep Trinh','0383876000','Tan phu','01','001','00001',1,'2024-10-03 12:45:37','2024-10-03 13:12:49'),(7,'hiepabc','tonghiep trinh','0383876012','724/44 LÊ VĂN LƯƠNG','79','767','27010',1,'2024-10-07 13:42:09','2024-10-07 13:42:09');
+/*!40000 ALTER TABLE `shipping_address` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -692,7 +763,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('dattan','$2a$10$fWbVdfkLL/LjXhtu/5UowuLYIYEBWSMo/Asr5daJTrwaxN85Tx8Ru','TanLee','Dat 1','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724348760/l6oyw5t9itxjuze2ttn1.jpg',1,'2024-08-23'),('hiep','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','hiep','trinh','https://res.cloudinary.com/dsbkju7j9/image/upload/v1715327227/BoardingHouse/Image_avt/fly0xp3n6dpveqxh4wpv.jpg',3,'2022-07-27'),('hieptestzzzz1zz','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Trịnh ','J97','https://res.cloudinary.com/dsbkju7j9/image/upload/v1723889597/nkp97zuqmjgomz3nywax.jpg',1,'2022-08-23'),('tandat','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Lý Tấn','Đạt','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724492306/gpacoyinln4zh9ubpv2h.jpg',1,'2022-07-25'),('tonghiep','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Trịnh','Hiệp','https://res.cloudinary.com/dsbkju7j9/image/upload/v1726757923/fjttdykymqqrgfin7rfc.png',2,'2022-07-25');
+INSERT INTO `user` VALUES ('dattan','$2a$10$fWbVdfkLL/LjXhtu/5UowuLYIYEBWSMo/Asr5daJTrwaxN85Tx8Ru','TanLee','Dat 1','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724348760/l6oyw5t9itxjuze2ttn1.jpg',1,'2024-08-23'),('hiep','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','hiep','trinh','https://res.cloudinary.com/dsbkju7j9/image/upload/v1715327227/BoardingHouse/Image_avt/fly0xp3n6dpveqxh4wpv.jpg',3,'2022-07-27'),('hiepabc','$2a$10$RDoUWrdGt84StOlokmSSk.T4jEn.R6zJOzFsiVcjifH1nx4mnC/yS','tonghiep','trinh','https://res.cloudinary.com/dsbkju7j9/image/upload/v1728308526/smmelbguxubn5skujau2.jpg',2,NULL),('hieptestzzzz1zz','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Trịnh ','J97','https://res.cloudinary.com/dsbkju7j9/image/upload/v1723889597/nkp97zuqmjgomz3nywax.jpg',1,'2022-08-23'),('tandat','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','Lý Tấn','Đạt','https://res.cloudinary.com/dsbkju7j9/image/upload/v1724492306/gpacoyinln4zh9ubpv2h.jpg',1,'2022-07-25'),('tonghiep','$2a$10$o0MiGbJE2EMAKblMKLb1LuLJALmQzqLxPa5xXj0hJdzuIT1TRj/ci','Trịnh','Hiệp','https://res.cloudinary.com/dsbkju7j9/image/upload/v1727513656/wpucabsr177siog0gjoz.jpg',2,'2022-07-25'),('tonghiep12','$2a$12$pkkKm.s43cksNzsKLOQm/OsgGnjbai9sR/0Mtt62iN/0Bix/Vz2iO','trinh','tong hiep','https://res.cloudinary.com/dsbkju7j9/image/upload/v1727521903/n0lnkm48nas2mmddfv22.jpg',2,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -735,4 +806,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-26 16:14:58
+-- Dump completed on 2024-10-09 15:10:29

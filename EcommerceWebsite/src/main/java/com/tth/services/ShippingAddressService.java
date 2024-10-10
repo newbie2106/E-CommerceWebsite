@@ -21,4 +21,6 @@ public interface ShippingAddressService {
 
     void updateDefaultAddress(Long id, String username);
 
+    ShippingAddress getShippingAddressByUsernameAndId(String username, Long id);
+
 }

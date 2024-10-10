@@ -7,6 +7,7 @@ package com.tth.services;
 import com.tth.pojo.Branch;
 import com.tth.pojo.Inventory;
 import com.tth.pojo.Product;
+import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,5 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface InventoryService {
 
     public boolean updateProductQuantity(@RequestParam Map<String, String> params);
-    
+
+    List<Inventory> getInventoryByBranch(String branch);
+
 }

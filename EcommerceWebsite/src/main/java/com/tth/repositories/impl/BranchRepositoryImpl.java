@@ -64,13 +64,12 @@ public class BranchRepositoryImpl implements BranchRepository {
     }
 
     public Branch getBrandByUserAdmin(String username) {
-    Session s = this.factory.getObject().getCurrentSession();
-    
-    Query<Branch> query = s.createQuery("FROM Branch b WHERE b.adminUser.username = :username", Branch.class);
-    query.setParameter("username", username);
-    
-    return query.uniqueResult();
-}
+        Session s = this.factory.getObject().getCurrentSession();
 
+        Query<Branch> query = s.createQuery("FROM Branch b WHERE b.adminUser.username = :username", Branch.class);
+        query.setParameter("username", username);
+
+        return query.uniqueResult();
+    }
 
 }

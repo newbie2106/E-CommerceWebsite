@@ -1,31 +1,66 @@
-import React, { useState } from "react";
-import { FaChevronDown, FaChevronUp, FaTimes, FaCreditCard, FaPaypal, FaApplePay } from "react-icons/fa";
+import React, { useContext, useEffect, useState } from "react";
+import { FaChevronDown, FaChevronUp, FaTimes, FaCreditCard, FaPaypal, FaApplePay, FaMapMarkerAlt } from "react-icons/fa";
+import { createSaleOrder, fetchCartItems, getAllShippingAddresses, loadCarrier, loadDistrictsByProvinceCode, loadProvinces, loadWardsByDistrictCode, paymentVNPay } from "../configs/APIs";
+import { MyUserContext } from "../App";
+import VNDCurrencyFormat from "../configs/Utils";
+import { Link, useNavigate } from "react-router-dom";
+import { BsCashCoin } from "react-icons/bs";
 
 const OrderDetailsPage = () => {
-  const [items, setItems] = useState([
-    { id: 1, name: "Product 1", quantity: 2, price: 19.99, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" },
-    { id: 2, name: "Product 2", quantity: 1, price: 29.99, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" },
-  ]);
+  const [items, setItems] = useState([]);
+  const user = useContext(MyUserContext);
+  const [carrier, setCarrier] = useState([]);
+  const [note, setNote] = useState("");
+  const [addresses, setAddresses] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [isPaid, setIsPaid] = useState(false);
+  const nav = useNavigate();
 
-  const [expandedItems, setExpandedItems] = useState([]);
-  const [shippingInfo, setShippingInfo] = useState({
-    name: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    country: "",
-    state: "",
-    postalCode: "",
-    phone: "",
-  });
-  const [shippingMethod, setShippingMethod] = useState("standard");
+  useEffect(() => {
+    const fetchAddresses = async () => {
+
+      try {
+        const res = await getAllShippingAddresses(user.username);
+        const newAddresses = res.data;
+        setAddresses(newAddresses);
+
+        const defaultAddress = newAddresses.find((address) => address.isDefault);
+        setSelectedAddressId(defaultAddress?.id || null);
+      } catch (err) {
+        console.error('Error fetching addresses:', err);
+      }
+    };
+
+    fetchAddresses();
+  }, [user.username]);
+  const loadChooseCarrier = async () => {
+    const carrier = await loadCarrier();
+    setCarrier(carrier);
+  };
+
+  useEffect(() => {
+    loadChooseCarrier();
+  }, []);
+
+  const loadCartItems = async () => {
+    const items = await fetchCartItems(user.username);
+    setItems(items);
+  };
+
+  useEffect(() => {
+    if (user.username) {
+      loadCartItems();
+    }
+  }, [user.username]);
+  const [shippingMethod, setShippingMethod] = useState("");
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
     expirationDate: "",
     cvv: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState("creditCard");
-  const [errors, setErrors] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [expandedItems, setExpandedItems] = useState([]);
 
   const toggleItemExpansion = (id) => {
     setExpandedItems((prev) =>
@@ -37,52 +72,83 @@ const OrderDetailsPage = () => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const handleShippingInfoChange = (e) => {
-    const { name, value } = e.target;
-    setShippingInfo((prev) => ({ ...prev, [name]: value }));
-  };
+  // const handleShippingInfoChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setShippingInfo((prev) => ({ ...prev, [name]: value }));
+  // };
 
-  const handlePaymentInfoChange = (e) => {
-    const { name, value } = e.target;
-    setPaymentInfo((prev) => ({ ...prev, [name]: value }));
-  };
+  // const handlePaymentInfoChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setPaymentInfo((prev) => ({ ...prev, [name]: value }));
+  // };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!shippingInfo.name) newErrors.name = "Name is required";
-    if (!shippingInfo.addressLine1) newErrors.addressLine1 = "Address is required";
-    if (!shippingInfo.city) newErrors.city = "City is required";
-    if (!shippingInfo.country) newErrors.country = "Country is required";
-    if (!shippingInfo.state) newErrors.state = "State is required";
-    if (!shippingInfo.postalCode) newErrors.postalCode = "Postal code is required";
-    if (!shippingInfo.phone) newErrors.phone = "Phone number is required";
+  const carrierId = parseInt(shippingMethod, 10) || null;
 
-    if (paymentMethod === "creditCard") {
-      if (!paymentInfo.cardNumber) newErrors.cardNumber = "Card number is required";
-      if (!paymentInfo.expirationDate) newErrors.expirationDate = "Expiration date is required";
-      if (!paymentInfo.cvv) newErrors.cvv = "CVV is required";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      // Process the order
-      console.log("Order submitted");
+    // Xử lý thanh toán, gửi dữ liệu đến API
+    const saleOrderRequest = {
+      username: user.username,
+      totalAmount: totalCost,
+      isPaid: isPaid,
+      note,
+      branchId: 1,
+      shippingAdressId: selectedAddressId,
+      carrierId: carrierId,
+      orderDetails: items
+    };
+    if (isPaid) {
+      localStorage.setItem("username", user.username);
+      localStorage.setItem("selectedAddressId", selectedAddressId);
+      localStorage.setItem("carrierId", carrierId);
+      localStorage.setItem("items", JSON.stringify(items));
+      localStorage.setItem("note", note);
+      const response = await paymentVNPay(totalCost);
+      window.location.href = response.data.paymentUrl
+    } else {
+      try {
+        const response = await createSaleOrder(saleOrderRequest);
+        alert("Đơn hàng đã được tạo thành công: " + response);
+        nav("/");
+      } catch (error) {
+        alert("Đã có lỗi xảy ra khi tạo đơn hàng: " + error.message);
+      }
     }
+    console.log('Đơn hàng:', saleOrderRequest);
+  };
+
+  // Cập nhật địa chỉ mặc định
+  const handleAddressChange = (addressId) => {
+    setSelectedAddressId(addressId);
+  };
+
+  const handleCancelChange = (e) => {
+    e.preventDefault();
+    setShowModal(false);
+  };
+
+  // Xác nhận thay đổi địa chỉ mặc định
+  const handleConfirmChange = (e) => {
+    e.preventDefault();
+    // Cập nhật địa chỉ default với địa chỉ đã chọn
+    setAddresses((prevAddresses) =>
+      prevAddresses.map((address) =>
+        address.id === selectedAddressId
+          ? { ...address, isDefault: true }
+          : { ...address, isDefault: false }
+      )
+    );
+    setShowModal(false);
   };
 
   const totalCost = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Order Details</h1>
+      <h1 className="text-3xl font-bold mb-8">Chi tiết đơn hàng</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
+          <h2 className="text-2xl font-semibold mb-4">Tóm tắt đơn hàng</h2>
           {items.map((item) => (
             <div key={item.id} className="mb-4 border-b pb-4">
               <div className="flex items-center justify-between">
@@ -91,7 +157,7 @@ const OrderDetailsPage = () => {
                   <div>
                     <h3 className="font-semibold">{item.name}</h3>
                     <p className="text-gray-600">
-                      {item.quantity} x ${item.price.toFixed(2)}
+                      {item.quantity} x {VNDCurrencyFormat.format(item.price)}
                     </p>
                   </div>
                 </div>
@@ -111,6 +177,7 @@ const OrderDetailsPage = () => {
                     <FaTimes />
                   </button>
                 </div>
+
               </div>
               {expandedItems.includes(item.id) && (
                 <div className="mt-4 text-gray-600">
@@ -119,166 +186,132 @@ const OrderDetailsPage = () => {
               )}
             </div>
           ))}
+          <div>
+            <label className="block mb-1">Ghi Chú:</label>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+          </div>
           <div className="mt-6 text-xl font-semibold">
-            Total: ${totalCost.toFixed(2)}
+            Total: {VNDCurrencyFormat.format(totalCost)}
           </div>
         </div>
         <div>
           <form onSubmit={handleSubmit}>
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-              <h2 className="text-2xl font-semibold mb-4">Shipping Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={shippingInfo.name}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    required
-                  />
-                  {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-                </div>
-                <div>
-                  <label htmlFor="addressLine1" className="block text-sm font-medium text-gray-700">
-                    Address Line 1
-                  </label>
-                  <input
-                    type="text"
-                    id="addressLine1"
-                    name="addressLine1"
-                    value={shippingInfo.addressLine1}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    required
-                  />
-                  {errors.addressLine1 && <p className="text-red-500 text-sm mt-1">{errors.addressLine1}</p>}
-                </div>
-                <div>
-                  <label htmlFor="addressLine2" className="block text-sm font-medium text-gray-700">
-                    Address Line 2 (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="addressLine2"
-                    name="addressLine2"
-                    value={shippingInfo.addressLine2}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={shippingInfo.city}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    required
-                  />
-                  {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
-                </div>
-                <div>
-                  <label htmlFor="country" className="block text-sm font-medium text-gray-700">
-                    Country
-                  </label>
-                  <input
-                    type="text"
-                    id="country"
-                    name="country"
-                    value={shippingInfo.country}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    required
-                  />
-                  {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
-                </div>
-                <div>
-                  <label htmlFor="state" className="block text-sm font-medium text-gray-700">
-                    State/Province
-                  </label>
-                  <input
-                    type="text"
-                    id="state"
-                    name="state"
-                    value={shippingInfo.state}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    required
-                  />
-                  {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
-                </div>
-                <div>
-                  <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">
-                    Postal Code
-                  </label>
-                  <input
-                    type="text"
-                    id="postalCode"
-                    name="postalCode"
-                    value={shippingInfo.postalCode}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    required
-                  />
-                  {errors.postalCode && <p className="text-red-500 text-sm mt-1">{errors.postalCode}</p>}
-                </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={shippingInfo.phone}
-                    onChange={handleShippingInfoChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    required
-                  />
-                  {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-                </div>
+              <h2 className="text-2xl font-semibold mb-4">Thông tin đặt hàng</h2>
+              <div className="w-full">
+                {/* Hiển thị địa chỉ mặc định */}
+                {addresses
+                  .filter((address) => address.id === selectedAddressId)
+                  .map((address) => (
+                    <div
+                      key={address.id}
+                      className="p-4 bg-gray-100 rounded-lg shadow-md w-full flex justify-between items-start"
+                    >
+                      <div>
+                        <h2 className="text-lg font-bold text-gray-800">
+                          <FaMapMarkerAlt className="inline-block text-blue-500 mr-2" />
+                          {address.fullName}
+                        </h2>
+                        <p className="text-gray-600">
+                          <span className="font-bold">Địa chỉ: </span>
+                          {address.address}, {address.wardCode.fullName},{" "}
+                          {address.districtCode.fullName}, {address.provinceCode.fullName}
+                        </p>
+                        <p className="text-gray-600">
+                          <span className="font-bold">Số điện thoại: </span> {address.phone}
+                        </p>
+                      </div>
+
+                      {/* Nút thay đổi */}
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="text-blue-500 font-semibold hover:underline"
+                      >
+                        Thay đổi
+                      </button>
+                    </div>
+                  ))}
+
+                {/* Modal thay đổi địa chỉ */}
+                {showModal && (
+                  <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-2xl max-w-xl w-full relative">
+                      <h2 className="text-2xl font-semibold mb-6 text-gray-800 text-center">Chọn địa chỉ mới</h2>
+
+                      <div className="space-y-6 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                        {addresses.map((address) => (
+                          <div
+                            key={address.id}
+                            className={`p-4 rounded-lg shadow-md flex items-start border ${selectedAddressId === address.id ? 'border-blue-500' : 'border-gray-300'}`}
+                          >
+                            <input
+                              type="radio"
+                              id={`address-${address.id}`}
+                              name="address"
+                              value={address.id}
+                              checked={selectedAddressId === address.id}
+                              onChange={() => handleAddressChange(address.id)}
+                              className="mr-4 mt-1 accent-blue-500"
+                            />
+                            <label htmlFor={`address-${address.id}`} className="text-gray-700 w-full">
+                              <p className="font-bold text-lg">{address.fullName}</p>
+                              <p className="text-sm text-gray-600">{address.address}, {address.wardCode.fullName}, {address.districtCode.fullName}, {address.provinceCode.fullName}</p>
+                              <p className="text-sm text-gray-600"><strong>Số điện thoại:</strong> {address.phone}</p>
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-6 flex justify-between">
+                        <button
+                          type="button"
+                          onClick={handleCancelChange}
+                          className="bg-gray-300 text-gray-700 hover:bg-gray-400 px-4 py-2 rounded-md transition duration-200"
+                        >
+                          Hủy bỏ
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleConfirmChange}
+                          className="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-md transition duration-200"
+                        >
+                          Xác nhận
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
               </div>
+
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Shipping Method
+                  Phương thức vận chuyển
                 </label>
-                <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="shippingMethod"
-                      value="standard"
-                      checked={shippingMethod === "standard"}
-                      onChange={(e) => setShippingMethod(e.target.value)}
-                      className="form-radio h-4 w-4 text-indigo-600"
-                    />
-                    <span className="ml-2">Standard Shipping (5-7 business days)</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="shippingMethod"
-                      value="express"
-                      checked={shippingMethod === "express"}
-                      onChange={(e) => setShippingMethod(e.target.value)}
-                      className="form-radio h-4 w-4 text-indigo-600"
-                    />
-                    <span className="ml-2">Express Shipping (2-3 business days)</span>
-                  </label>
-                </div>
+                {carrier.map((c) => (
+                  <div value={c.id} className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="shippingMethod"
+                        value={c.id}
+                        checked={shippingMethod === `${c.id}`}
+                        onChange={(e) => setShippingMethod(e.target.value)}
+                        className="form-radio h-4 w-4 text-indigo-600" required
+                      />
+                      <span className="ml-2 font-bold">{c.name} <span className="text-gray-600 text-sm">{c.description}</span></span>
+                    </label>
+                  </div>
+                ))}
+
               </div>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-semibold mb-4">Payment Details</h2>
+              <h2 className="text-2xl font-semibold mb-4">Phương thức thanh toán</h2>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Payment Method
@@ -286,85 +319,28 @@ const OrderDetailsPage = () => {
                 <div className="flex space-x-4">
                   <button
                     type="button"
-                    onClick={() => setPaymentMethod("creditCard")}
+                    onClick={() => {
+                      setPaymentMethod("cash")
+                      setIsPaid(false);
+                    }}
+                    className={`flex items-center justify-center px-4 py-2 border rounded-md ${paymentMethod === "cash" ? "border-indigo-500 text-indigo-500" : "border-gray-300 text-gray-700"}`}
+                  >
+                    <BsCashCoin className="mr-2" /> Tiền mặt
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentMethod("creditCard")
+                      setIsPaid(true)
+                    }}
                     className={`flex items-center justify-center px-4 py-2 border rounded-md ${paymentMethod === "creditCard" ? "border-indigo-500 text-indigo-500" : "border-gray-300 text-gray-700"}`}
                   >
                     <FaCreditCard className="mr-2" /> Credit Card
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("paypal")}
-                    className={`flex items-center justify-center px-4 py-2 border rounded-md ${paymentMethod === "paypal" ? "border-indigo-500 text-indigo-500" : "border-gray-300 text-gray-700"}`}
-                  >
-                    <FaPaypal className="mr-2" /> PayPal
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("applePay")}
-                    className={`flex items-center justify-center px-4 py-2 border rounded-md ${paymentMethod === "applePay" ? "border-indigo-500 text-indigo-500" : "border-gray-300 text-gray-700"}`}
-                  >
-                    <FaApplePay className="mr-2" /> Apple Pay
-                  </button>
                 </div>
               </div>
-              {paymentMethod === "creditCard" && (
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700">
-                      Card Number
-                    </label>
-                    <input
-                      type="text"
-                      id="cardNumber"
-                      name="cardNumber"
-                      value={paymentInfo.cardNumber}
-                      onChange={handlePaymentInfoChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      required
-                    />
-                    {errors.cardNumber && <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>}
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="expirationDate" className="block text-sm font-medium text-gray-700">
-                        Expiration Date
-                      </label>
-                      <input
-                        type="text"
-                        id="expirationDate"
-                        name="expirationDate"
-                        value={paymentInfo.expirationDate}
-                        onChange={handlePaymentInfoChange}
-                        placeholder="MM/YY"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        required
-                      />
-                      {errors.expirationDate && <p className="text-red-500 text-sm mt-1">{errors.expirationDate}</p>}
-                    </div>
-                    <div>
-                      <label htmlFor="cvv" className="block text-sm font-medium text-gray-700">
-                        CVV
-                      </label>
-                      <input
-                        type="password"
-                        id="cvv"
-                        name="cvv"
-                        value={paymentInfo.cvv}
-                        onChange={handlePaymentInfoChange}
-                        maxLength="4"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        required
-                      />
-                      {errors.cvv && <p className="text-red-500 text-sm mt-1">{errors.cvv}</p>}
-                    </div>
-                  </div>
-                </div>
-              )}
-              {paymentMethod === "paypal" && (
-                <p className="text-gray-600">You will be redirected to PayPal to complete your payment.</p>
-              )}
-              {paymentMethod === "applePay" && (
-                <p className="text-gray-600">You will be prompted to use Apple Pay to complete your payment.</p>
+              {paymentMethod === "cash" && (
+                <p className="text-gray-600">Thanh toán sau khi nhận hàng</p>
               )}
             </div>
             <div className="mt-8">
@@ -372,7 +348,7 @@ const OrderDetailsPage = () => {
                 type="submit"
                 className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
               >
-                Place Order
+                Thanh toán
               </button>
             </div>
           </form>

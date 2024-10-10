@@ -18,6 +18,7 @@ import ProfilePage from "./components/Profile";
 import AddressPage from "./components/AddressPage";
 import AddShippingAddress from "./components/AddShippingAddress";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import PaymentReturn from "./components/PaymentReturn";
 
 
 export const MyUserContext = createContext();
@@ -46,6 +47,7 @@ const App = () => {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/address" element={<AddressPage />} />
               <Route path="/add-address" element={<AddShippingAddress />} />
+              <Route path="/payment-return" element={<PaymentReturn />} />
 
 
 

@@ -12,19 +12,19 @@ const AddressPage = () => {
 
     useEffect(() => {
         const fetchAddresses = async () => {
-            setLoading(true); // Bắt đầu loading
+            setLoading(true); 
             try {
                 const res = await getAllShippingAddresses(user.username);
                 setAddresses(res.data);
             } catch (err) {
                 console.error('Error fetching addresses:', err);
             } finally {
-                setLoading(false); // Kết thúc loading
+                setLoading(false); 
             }
         };
 
         fetchAddresses();
-    }, [user.username]); // Thêm user.username vào dependency để lấy lại địa chỉ khi user thay đổi
+    }, [user.username]); 
 
     const handleSetDefault = async (id) => {
         setLoading(true); // Bắt đầu loading

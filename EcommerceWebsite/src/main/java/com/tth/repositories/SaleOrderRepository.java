@@ -5,6 +5,7 @@
 package com.tth.repositories;
 
 import com.tth.ENUM.ShipmentStatus;
+import com.tth.pojo.SaleOrder;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,6 @@ import java.util.Map;
  */
 public interface SaleOrderRepository {
 
-    List<Object[]> getSaleOrder(Map<String, String> params, String branch, ShipmentStatus status);
+    boolean AddSaleOrder(SaleOrder saleOrder);
 
 }

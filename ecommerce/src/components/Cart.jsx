@@ -3,13 +3,14 @@ import { addToCart, clearCart, fetchCartItems, removeFromCart, updateCartQuantit
 import { MyDispatchContext, MyUserContext } from '../App';
 import { FaMinus, FaPlus, FaTrash } from 'react-icons/fa';
 import VNDCurrencyFormat from '../configs/Utils';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const user = useContext(MyUserContext);
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
+    const nav = useNavigate();
     const loadCartItems = async () => {
         const items = await fetchCartItems(user.username);
         setCartItems(items);
@@ -21,11 +22,18 @@ const Cart = () => {
         }
     }, [user.username]);
 
-    const handleAddToCart = async (productId, quantity) => {
-        await addToCart(user.username, productId, quantity);
-        const items = await fetchCartItems(user.username); // Cập nhật giỏ hàng sau khi thêm
-        setCartItems(items);
-    };
+    // const handleAddToCart = async (productId, quantity) => {
+    //     await addToCart(user.username, productId, quantity);
+    //     const items = await fetchCartItems(user.username); // Cập nhật giỏ hàng sau khi thêm
+    //     setCartItems(items);
+    // };
+
+    const handleBack = () => {
+        nav("/");
+    }
+    const handlePayment = () => {
+        nav("/pay");
+    }
 
     const handleUpdateCartQuantity = async (productId, quantity) => {
         await updateCartQuantity(user.username, productId, quantity);
@@ -109,10 +117,10 @@ const Cart = () => {
 
             {/* Thêm hai nút "Trở về" và "Thanh toán" */}
             <div className="flex justify-between mt-6">
-                <button className="bg-white text-red-500 border border-red-500 hover:bg-red-500 hover:text-white transition duration-200 px-4 py-2 rounded">
+                <button onClick={handleBack} className="bg-white text-red-500 border border-red-500 hover:bg-red-500 hover:text-white transition duration-200 px-4 py-2 rounded">
                     Trở về
                 </button>
-                <button className="bg-red-500 text-white hover:bg-white hover:text-red-500 transition hover:border hover:border-red-500 duration-200 px-4 py-2 rounded">
+                <button onClick={handlePayment} className="bg-red-500 text-white hover:bg-white hover:text-red-500 transition hover:border hover:border-red-500 duration-200 px-4 py-2 rounded">
                     Thanh toán
                 </button>
             </div>

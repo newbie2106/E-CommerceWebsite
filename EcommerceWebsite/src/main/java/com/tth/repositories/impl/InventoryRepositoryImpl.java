@@ -8,6 +8,7 @@ import com.tth.pojo.Branch;
 import com.tth.pojo.Inventory;
 import com.tth.pojo.Product;
 import com.tth.repositories.InventoryRepository;
+import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -46,5 +47,15 @@ public class InventoryRepositoryImpl implements InventoryRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Inventory> getInventoryByBranch(String branch) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        Query<Inventory> query = s.createQuery("FROM Inventory i WHERE i.branchId.id = :id", Inventory.class);
+        query.setParameter("id", branch);
+
+        return query.getResultList();
     }
 }

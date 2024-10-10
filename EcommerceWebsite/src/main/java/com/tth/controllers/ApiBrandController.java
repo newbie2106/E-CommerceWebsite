@@ -38,7 +38,7 @@ public class ApiBrandController {
     }
     
     @GetMapping("/brands/")
-    public ResponseEntity<List<Brand>> getProvinces() {
+    public ResponseEntity<List<Brand>> getBrands() {
         List<Brand> brand = this.brandService.getBrands();
         return new ResponseEntity<>(brand, HttpStatus.OK);
     }

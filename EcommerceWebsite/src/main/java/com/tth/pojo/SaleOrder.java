@@ -48,8 +48,6 @@ public class SaleOrder implements Serializable {
     @JoinColumn(name = "carrier_id", referencedColumnName = "id")
     @ManyToOne
     private Carrier carrierId;
-    @Column(name = "isPaid")
-    private Boolean isPaid;
     @JoinColumn(name = "branchId", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -78,6 +76,14 @@ public class SaleOrder implements Serializable {
     @Size(max = 255)
     @Column(name = "note")
     private String note;
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 
     public User getUsername() {
         return username;
@@ -183,14 +189,6 @@ public class SaleOrder implements Serializable {
 
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
-    }
-
-    public Boolean getIsPaid() {
-        return isPaid;
-    }
-
-    public void setIsPaid(Boolean isPaid) {
-        this.isPaid = isPaid;
     }
 
     @XmlTransient

@@ -14,6 +14,28 @@ export default axios.create({
 });
 
 
+export const paymentVNPay = async (amount) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/create-payment/?amount=${amount}`);
+    return response;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+};
+
+
+export const createSaleOrder = async (saleOrderRequest) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/api/orders/`, saleOrderRequest);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating sale order:", error);
+    throw error;
+  }
+};
+
+
 export const updateDefaultAddress = async (shippingAddressId, username) => {
   try {
     const response = await axios.put(`${BASE_URL}/api/addresses/default/${shippingAddressId}?username=${username}`);
@@ -222,6 +244,17 @@ export const getCurrentUser = async () => {
     console.error(ex);
   }
 };
+
+export const loadCarrier = async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/api/carrier/`);
+    return res.data;
+  } catch (err) {
+    console.error("Failed to load provinces:", err);
+    return err;
+  }
+};
+
 export const loadProvinces = async () => {
   try {
     const res = await axios.get(`${BASE_URL}/api/provinces/`);

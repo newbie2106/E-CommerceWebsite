@@ -22,6 +22,11 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
     private ShippingAddressRepository ShippingAddressRepo;
 
     @Override
+    public ShippingAddress getShippingAddressByUsernameAndId(String username, Long id) {
+        return this.ShippingAddressRepo.getShippingAddressByUsernameAndId(username, id);
+    }
+
+    @Override
     public boolean addOrUpdateShippingAddress(ShippingAddress shippingAddress) {
         return this.ShippingAddressRepo.addOrUpdateShippingAddress(shippingAddress);
     }

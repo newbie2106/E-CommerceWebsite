@@ -6,6 +6,7 @@ import cookie from "react-cookies";
 import { Link, useNavigate } from "react-router-dom";
 import { MyDispatchContext, MyUserContext } from "../App";
 import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 const Login = () => {
     const user = useContext(MyUserContext);
@@ -48,8 +49,27 @@ const Login = () => {
             });
     };
 
-    const handleGoogleLogin = () => {
-        console.log("Đăng nhập với Google");
+    const handleGoogleLoginSuccess = (credentialResponse) => {
+        const credential = credentialResponse.credential;
+
+        // Gửi token đến server để xác thực
+        axios.post('http://localhost:8080/EcommerceWebsite/api/auth/google-login', {
+            token: credential,
+        })
+            .then(response => {
+                console.log('Login successful:', response.data);
+                localStorage.setItem('jwtToken', response.data.token);
+                // Lưu thông tin người dùng và điều hướng
+                dispatch({
+                    type: "login",
+                    payload: response.data.user,
+                });
+                nav("/");
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                setMessage("Đăng nhập thất bại. Vui lòng thử lại.");
+            });
     };
 
     const handleFacebookLogin = () => {
@@ -75,22 +95,11 @@ const Login = () => {
 
                     {/* Nút đăng nhập với Google */}
                     <div>
-                        <button
-                            type="button"
-                            onClick={() => setShowGoogleLogin(true)}
-                            className="flex justify-center w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
-                        >
-                            <FaGoogle className="mr-2 h-5 w-5" />
-                            {language === "en" ? "Sign in with Google" : "Đăng nhập với Google"}
-                        </button>
                         <GoogleLogin
-                            onSuccess={credentialResponse => {
-                                console.log(credentialResponse);
-                            }}
+                            onSuccess={handleGoogleLoginSuccess}
                             onError={() => {
                                 console.log('Login Failed');
                             }}
-                            useOneTap
                         />;
                     </div>
 
