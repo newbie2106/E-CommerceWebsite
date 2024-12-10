@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaStar, FaShoppingCart, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { addToCart, fetchCartItems, productDetail } from "../configs/APIs";
+import { addComment, addToCart, fetchCartItems, getCommentByProductId, productDetail } from "../configs/APIs";
 import { useNavigate, useParams } from "react-router-dom";
 import { MyDispatchContext, MyUserContext } from "../App";
-import LoadingAnimations from './LoadingAnimations'; // Đảm bảo import LoadingAnimations
+import LoadingAnimations from './LoadingAnimations';
 import AddToCartNotification from "./AddToCartNotification";
 
 const ViewProduct = () => {
@@ -19,8 +19,8 @@ const ViewProduct = () => {
     const [comment, setComment] = useState("");
     const [listComment, setListComment] = useState([]);
     const [showNotification, setShowNotification] = useState(false);
+    const [commentSuccess, setCommentSuccess] = useState(false);
 
-    // Modal state
     const [showModal, setShowModal] = useState(false);
     const [countdown, setCountdown] = useState(10);
 
@@ -30,13 +30,41 @@ const ViewProduct = () => {
             .then((res) => {
                 if (res.status === 200) {
                     setProduct(res.data);
-                    console.log(res.data);
                 } else {
                     console.log("ERROR");
                 }
             })
             .finally(() => setLoading(false)); // Tắt loading khi đã nhận được dữ liệu
     }, [productId]);
+
+    useEffect(() => {
+        setLoading(true);
+        getCommentByProductId(productId)
+            .then((res) => {
+                setListComment(res);
+            }).finally(() => setLoading(false));
+
+    }, [productId]);
+
+    useEffect(() => {
+        const loadImages = async () => {
+            if (product && product.imageUrls) {
+                const imagePromises = product.imageUrls.map((url) => {
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        img.src = url;
+                        img.onload = resolve;
+                        img.onerror = () => resolve(); // Resolve ngay cả khi có lỗi
+                    });
+                });
+                await Promise.all(imagePromises);
+            }
+        };
+
+        loadImages().then(() => {
+            setLoading(false); // Chỉ tắt loading khi tất cả hình ảnh đã được tải
+        });
+    }, [product]); // Theo dõi sự thay đổi của product
 
     const handleAddToCart = async (productId, quantity) => {
         if (user) {
@@ -85,9 +113,54 @@ const ViewProduct = () => {
         nav("/cart"); // Chuyển hướng đến giỏ hàng
     };
 
-    if (loading) {
+    if (loading || !product) {
         return <LoadingAnimations />; // Hiển thị loading trong khi tải sản phẩm
     }
+
+    const calculateTimeDifference = (timestamp) => {
+        const now = new Date();
+        const createdAt = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        const diffInMs = now - createdAt;
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+        const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+        if (diffInDays > 0) {
+            return `${diffInDays} ngày trước`;
+        } else if (diffInHours > 0) {
+            return `${diffInHours} giờ trước`;
+        } else if (diffInMinutes > 0) {
+            return `${diffInMinutes} phút trước`;
+        } else {
+            return 'Vừa xong';
+        }
+    };
+
+    const handleCommentSubmit = async () => {
+        if (!user) {
+            alert("Vui lòng đăng nhập để bình luận");
+            return;
+        }
+
+        const newComment = {
+            content: comment,
+            productId: productId,
+            username: user.username
+        };
+
+        try {
+            const res = await addComment(newComment);
+            if (res.status === 201) {
+                setComment(""); // Xóa nội dung sau khi bình luận
+                setCommentSuccess(true); // Hiển thị thông báo thành công
+                setTimeout(() => setCommentSuccess(false), 3000); // Tự động ẩn thông báo sau 3 giây
+                const updatedComments = await getCommentByProductId(productId);
+                setListComment(updatedComments); // Cập nhật danh sách bình luận
+            }
+        } catch (error) {
+            console.error("Error adding comment:", error);
+        }
+    };
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -135,63 +208,79 @@ const ViewProduct = () => {
                         <h2 className="text-lg font-semibold mb-2">Quantity:</h2>
                         <div className="flex items-center space-x-2">
                             <button
-                                className="px-3 py-1 border rounded-md"
-                                onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                                onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : prev))}
+                                className="border border-gray-300 rounded-md p-2"
                             >
                                 -
                             </button>
-                            <span className="text-xl font-semibold">{quantity}</span>
+                            <span className="text-lg">{quantity}</span>
                             <button
-                                className="px-3 py-1 border rounded-md"
                                 onClick={() => setQuantity((prev) => prev + 1)}
+                                className="border border-gray-300 rounded-md p-2"
                             >
                                 +
                             </button>
                         </div>
                     </div>
-                    <button
-                        className="w-full bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
-                        onClick={() => handleAddToCart(product.id, quantity)}
-                    >
-                        <FaShoppingCart />
-                        <span>Add to Cart</span>
-                    </button>
-                </div>
-                {showNotification && (
-                    <AddToCartNotification
-                        onGoBack={handleGoBack}
-                        onViewCart={handleViewCart}
-                    />
-                )}
-            </div>
 
-            {/* Modal thông báo */}
-            {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg text-center relative">
-                        <button
-                            className="absolute top-0 right-0 m-0 p-1 hover:bg-red-500 rounded-bl"
-                            onClick={() => {
-                                setShowModal(false);
-                                setCountdown(10); // Reset lại countdown
-                            }}
-                            aria-label="Close"
-                        >
-                            X
-                        </button>
-                        <p className="mb-4">Bạn chưa đăng nhập! Vui lòng đăng nhập để thêm sản phẩm vào giỏ.</p>
-                        <button className="bg-blue-500 text-white py-2 px-4 rounded" onClick={handleLoginClick}>
-                            Đăng nhập
-                        </button>
-                        <div className="mt-4">
-                            <p className="mb-2">Đóng lại sau: {countdown} giây</p>
+                    <button
+                        onClick={() => handleAddToCart(product.id, quantity)}
+                        className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all"
+                    >
+                        <FaShoppingCart className="mr-2" /> Add to Cart
+                    </button>
+
+                    {showNotification && (
+                        <AddToCartNotification onClose={() => setShowNotification(false)} />
+                    )}
+                    {showModal && (
+                        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                            <div className="bg-white rounded-lg p-8 text-center">
+                                <h2 className="text-lg font-semibold mb-4">Please log in to add items to the cart</h2>
+                                <button
+                                    onClick={handleLoginClick}
+                                    className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all"
+                                >
+                                    Log in
+                                </button>
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="mt-4 bg-gray-300 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-400 transition-all"
+                                >
+                                    Close
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
-            )}
+            </div>
+            <div className="mt-8">
+                <h2 className="text-2xl font-semibold mb-4">Comments</h2>
+                {listComment.map((item, index) => (
+                    <div key={index} className="border-b border-gray-300 mb-4 pb-4">
+                        <p className="font-semibold">{item.username} <span className="text-gray-500 text-sm">{calculateTimeDifference(item.createdAt)}</span></p>
+                        <p>{item.content}</p>
+                    </div>
+                ))}
+                <div className="mt-4">
+                    <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        rows="4"
+                        placeholder="Add a comment..."
+                    ></textarea>
+                    <button
+                        onClick={handleCommentSubmit}
+                        className="mt-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all"
+                    >
+                        Submit
+                    </button>
+                    {commentSuccess && <p className="text-green-500 mt-2">Comment added successfully!</p>}
+                </div>
+            </div>
         </div>
     );
 };
 
 export default ViewProduct;
-

@@ -9,6 +9,10 @@ import com.tth.pojo.Inventory;
 import com.tth.pojo.Product;
 import com.tth.repositories.InventoryRepository;
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -37,6 +41,40 @@ public class InventoryRepositoryImpl implements InventoryRepository {
         return query.uniqueResult();
     }
 
+    @Override
+    public boolean updateInventoryQuantity(int productId, int branchId, int quantityPurchased) {
+        Session session = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+
+        // Tạo truy vấn lấy Inventory của sản phẩm và chi nhánh cụ thể
+        CriteriaQuery<Inventory> query = builder.createQuery(Inventory.class);
+        Root<Inventory> root = query.from(Inventory.class);
+
+        Predicate productPredicate = builder.equal(root.get("productId").get("id"), productId);
+        Predicate branchPredicate = builder.equal(root.get("branchId").get("id"), branchId);
+        query.where(builder.and(productPredicate, branchPredicate));
+
+        Query<Inventory> q = session.createQuery(query);
+        Inventory inventory = q.uniqueResult();
+
+        if (inventory != null) {
+            // Kiểm tra nếu số lượng tồn kho đủ để trừ đi
+            int newQuantity = inventory.getAvailableQuantity() - quantityPurchased;
+            if (newQuantity >= 0) {
+                // Cập nhật số lượng tồn kho mới
+                inventory.setAvailableQuantity(newQuantity);
+                session.update(inventory);
+                return true;
+            } else {
+                // Số lượng trong kho không đủ
+                return false;
+            }
+        } else {
+            // Không tìm thấy Inventory
+            return false;
+        }
+    }
+
     public boolean updateProductQuantity(Inventory inventory) {
         Session session = this.factory.getObject().getCurrentSession();
 
@@ -58,4 +96,5 @@ public class InventoryRepositoryImpl implements InventoryRepository {
 
         return query.getResultList();
     }
+
 }

@@ -4,12 +4,15 @@
  */
 package com.tth.controllers;
 
+import com.tth.DTO.SaleOrderDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.tth.configs.Config;
+import com.tth.services.PaymentService;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -21,8 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -34,13 +40,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @CrossOrigin
 public class ApiPaymentController {
 
-//    @GetMapping("/create-payment/")
-//    public ResponseEntity<?> createPayment(
-//            @RequestParam("amount") long amount, // nhận giá trị tiền từ param
-//            @RequestParam(value = "bankCode", required = false) String bankCode // nhận bankCode nếu có
-//    ) throws UnsupportedEncodingException {
+    private static final int MOMO_SUCCESS_CODE = 0;
+
+    @Autowired
+    private PaymentService paymentService;
+
     @GetMapping("/create-payment/")
-    public ResponseEntity<?> createPayment(HttpServletRequest request,@RequestParam long amount) throws UnsupportedEncodingException {
+    public ResponseEntity<?> createPayment(HttpServletRequest request, @RequestParam long amount) throws UnsupportedEncodingException {
         // Tạo mã giao dịch ngẫu nhiên
         String vnp_TxnRef = Config.getRandomNumber(8);
         String vnp_TmnCode = Config.vnp_TmnCode;
@@ -62,14 +68,6 @@ public class ApiPaymentController {
         vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
         vnp_Params.put("vnp_OrderType", orderType);
 
-        // Nếu có bankCode, thêm vào, ngược lại dùng mặc định
-//        if (bankCode != null && !bankCode.isEmpty()) {
-//            vnp_Params.put("vnp_BankCode", bankCode);
-//        } else {
-//            vnp_Params.put("vnp_BankCode", "NCB"); // Bank mặc định
-//        }
-        // Các tham số còn lại
-        // Lấy ngày tạo và ngày hết hạn giao dịch
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
@@ -118,5 +116,42 @@ public class ApiPaymentController {
         // Trả về trạng thái thành công với URL thanh toán
         return ResponseEntity.ok(response);
     }
-    
+
+    @GetMapping("/vnpay-return/")
+    public ResponseEntity<?> handleVNPayReturn(HttpServletRequest request) {
+        String redirectUrl = "http://localhost:5173/payment-return";
+
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
+    }
+
+    @PostMapping("/payment-momo/")
+    public ResponseEntity<Map<String, String>> pay(@RequestBody SaleOrderDTO saleOrderDTO, HttpServletRequest request) {
+        try {
+            // Gọi dịch vụ thanh toán và trả về phản hồi
+            return paymentService.payWithMoMo(request, saleOrderDTO);
+        } catch (Exception e) {
+            // Xử lý lỗi và trả về thông báo lỗi
+            Map<String, String> errorResponse = Map.of("error", "Error processing payment: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+//    @PostMapping("/ipn-momo")
+//    public ResponseEntity<String> ipnMomo(@RequestBody Map<String, String> requestData) {
+//        try {
+//            if (!requestData.containsKey("resultCode") || !Integer.toString(MOMO_SUCCESS_CODE).equals(requestData.get("resultCode"))) {
+//                return new ResponseEntity<>("Transaction is not success", HttpStatus.BAD_REQUEST);
+//            }
+//
+//            Invoice invoice = this.invoiceService.checkrequestId(requestData.get("requestId"));
+//            System.out.println("CHeck invoice: " + invoice);
+//            if (invoice != null) {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            } else {
+//                return new ResponseEntity<>("Redirected data is invalid", HttpStatus.BAD_REQUEST);
+//            }
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }

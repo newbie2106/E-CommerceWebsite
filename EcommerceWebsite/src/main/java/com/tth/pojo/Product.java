@@ -69,7 +69,7 @@ public class Product implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createdDate;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
-//    @JsonIgnore
+    @JsonIgnore
     private Set<Image> imageSet;
     @JoinColumn(name = "brand_id", referencedColumnName = "id")
     @ManyToOne
@@ -95,7 +95,9 @@ public class Product implements Serializable {
     @Transient
     private MultipartFile file;
     
-    
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "productId")
+    private Set<Comment> commentSet;
 
     public Set<RecentlyViewed> getRecentlyViewedSet() {
         return recentlyViewedSet;

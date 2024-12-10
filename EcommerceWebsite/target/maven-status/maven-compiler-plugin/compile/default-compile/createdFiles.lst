@@ -17,6 +17,7 @@ com\tth\validator\UserValidator.class
 com\tth\formatters\WardFormatter.class
 com\tth\configs\SpringSecurityConfig.class
 com\tth\services\BranchService.class
+com\tth\services\impl\PaymentServiceImpl$1.class
 com\tth\DTO\LoginRequest.class
 com\tth\repositories\ForgotPasswordRepository.class
 com\tth\DTO\RecentlyViewedDTO.class
@@ -57,6 +58,7 @@ com\tth\services\EmailService.class
 com\tth\controllers\ApiTagController.class
 com\tth\pojo\Tag.class
 com\tth\services\impl\InventoryServiceImpl.class
+com\tth\controllers\ApiCommentController.class
 com\tth\controllers\ApiBrandController.class
 com\tth\formatters\RoleFormatter.class
 com\tth\repositories\SaleOrderRepository.class
@@ -69,6 +71,8 @@ com\tth\pojo\AdministrativeRegions_.class
 com\tth\pojo\Category_.class
 com\tth\repositories\impl\BrandRepositoryImpl.class
 com\tth\services\impl\ForgotPasswordServiceImpl.class
+com\tth\DTO\CommentDTO.class
+com\tth\controllers\SaleOrderController.class
 com\tth\services\impl\ProductServiceImpl.class
 com\tth\configs\EmailConfig.class
 com\tth\repositories\impl\DistrictRepositoryImpl.class
@@ -135,9 +139,11 @@ com\tth\pojo\Admin.class
 com\tth\configs\WebAppContextConfig.class
 com\tth\controllers\ApiPaymentController.class
 com\tth\repositories\impl\OrderDetailsRepositoryImpl.class
+com\tth\pojo\Comment_.class
 com\tth\services\impl\WardServiceImpl.class
 com\tth\pojo\ForgotPassword_.class
 com\tth\services\UserService.class
+com\tth\services\impl\CommentServiceImpl.class
 com\tth\configs\TilesConfig.class
 com\tth\controllers\ApiSaleOrderController.class
 com\tth\DTO\SaleOrderDTO.class
@@ -153,6 +159,7 @@ com\tth\services\ImageService.class
 com\tth\pojo\CustomUserDetails.class
 com\tth\pojo\Districts_.class
 com\tth\repositories\CarrierRepository.class
+com\tth\services\CommentService.class
 com\tth\formatters\ProvinceFormatter.class
 com\tth\pojo\Cart.class
 com\tth\services\InventoryService.class
@@ -169,6 +176,7 @@ com\tth\repositories\impl\ProvinceRepositoryImpl.class
 com\tth\pojo\Branch.class
 com\tth\repositories\BranchRepository.class
 com\tth\pojo\Cart_.class
+com\tth\DTO\purchaseOrderDTO.class
 com\tth\filters\CustomAccessDeniedHandler.class
 com\tth\pojo\Wards_.class
 com\tth\controllers\CategoryController.class
@@ -178,6 +186,7 @@ com\tth\pojo\Image_.class
 com\tth\controllers\ApiLocationController.class
 com\tth\pojo\Category.class
 com\tth\services\impl\ShipmentServiceImpl.class
+com\tth\pojo\Comment.class
 com\tth\formatters\ProductFormatter.class
 com\tth\controllers\ApiCategoryController.class
 com\tth\repositories\impl\CarrierRepositoryImpl.class
@@ -185,9 +194,12 @@ com\tth\services\impl\BranchServiceImpl.class
 com\tth\configs\SchedulerConfig.class
 com\tth\pojo\Customer.class
 com\tth\repositories\impl\CategoryRepositoryImpl.class
+com\tth\repositories\CommentRepository.class
 com\tth\controllers\ApiUserController.class
 com\tth\services\impl\CustomerServiceImpl.class
+com\tth\controllers\ApiBranchController.class
 com\tth\services\DistrictService.class
+com\tth\repositories\impl\CommentRepositoryImpl.class
 com\tth\pojo\Provinces.class
 com\tth\pojo\Districts.class
 com\tth\DTO\PaymentDTO.class
@@ -196,6 +208,7 @@ com\tth\configs\JwtSecurityConfig.class
 com\tth\services\CarrierService.class
 com\tth\formatters\BranchFormatter.class
 com\tth\pojo\Inventory_.class
+com\tth\services\impl\PaymentServiceImpl.class
 com\tth\services\impl\StatsServiceImpl.class
 com\tth\DTO\UserAdminDTO.class
 com\tth\services\GoogleAccountService.class
@@ -203,6 +216,7 @@ com\tth\pojo\Image.class
 com\tth\repositories\impl\BranchRepositoryImpl.class
 com\tth\validator\UserCustomerValidator.class
 com\tth\repositories\impl\CustomerRepositoryImple.class
+com\tth\services\PaymentService.class
 com\tth\repositories\RoleRepository.class
 com\tth\repositories\impl\RecentlyViewedRepositoryImpl.class
 com\tth\configs\SecurityWebApplicationInitializer.class

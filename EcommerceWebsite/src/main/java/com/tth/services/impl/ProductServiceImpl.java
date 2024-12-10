@@ -15,6 +15,7 @@ import com.tth.pojo.Product;
 import com.tth.repositories.ProductRepository;
 import com.tth.services.BranchService;
 import com.tth.services.ImageService;
+import com.tth.services.InventoryService;
 import com.tth.services.ProductService;
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +42,8 @@ public class ProductServiceImpl implements ProductService {
     private ImageService imgService;
     @Autowired
     private BranchService branchService;
+    @Autowired
+    private InventoryService inventoryService;
 
     @Override
     public long countProduct() {
@@ -50,7 +53,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void addOrUpdate(Product p, List<MultipartFile> image) {
         this.productRepo.addOrUpdate(p);
+        List<Branch> branches = this.branchService.getBrands();
+        for (Branch branch : branches) {
+            Inventory inventory = new Inventory();
+            inventory.setAvailableQuantity(0); // Khởi tạo số lượng tồn kho
+            inventory.setProductId(p); // Gán sản phẩm
+            inventory.setBranchId(branch); // Gán chi nhánh
 
+            boolean isSuccess = this.inventoryService.updateProductQuantity(inventory);
+            // Lưu inventory vào cơ sở dữ liệu
+            if (!isSuccess) {
+                System.err.println("Không thể lưu inventory cho chi nhánh " + branch.getAddress());
+                // Xử lý thêm nếu cần
+            }
+        }
         boolean hasValidImage = image != null && image.stream().anyMatch(img -> img != null && !img.isEmpty());
         if (hasValidImage) {
 
@@ -70,6 +86,7 @@ public class ProductServiceImpl implements ProductService {
         } else {
             System.out.println("TỆP RỖNG RỒI");
         }
+
     }
 
     @Override

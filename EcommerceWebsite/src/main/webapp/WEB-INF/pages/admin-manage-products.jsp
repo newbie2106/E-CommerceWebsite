@@ -20,7 +20,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Id</th>
+<!--                                <th>Id</th>-->
                                 <th>Ảnh</th>
                                 <th>Tên sản phẩm</th>
                                 <th>Giá</th>
@@ -31,16 +31,13 @@
                         <tbody>
                             <c:forEach items="${products}" var="p">
                                 <tr>
-                                    <td>${p.id}</td>
+<!--                                    <td>${p.id}</td>-->
                                     <td class="d-flex justify-content-center align-items-center gap-3">
-                                        <c:if test="${not empty p.imageSet}">
-                                            <c:forEach items="${p.imageSet}" var="i" varStatus="status">
-                                                <c:if test="${status.index == 0}">
-                                                    <a href="${i.url}" data-toggle="lightbox" data-gallery="example-gallery">
-                                                        <img src="${i.url}" width="150" height="100"/>
-                                                    </a>
-                                                </c:if>
-                                            </c:forEach>
+                                        <c:if test="${not empty p.imageUrls}">
+                                            <!-- Lấy hình ảnh đầu tiên từ mảng imageUrls -->
+                                            <a href="${p.imageUrls[0]}" data-toggle="lightbox" data-gallery="example-gallery">
+                                                <img src="${p.imageUrls[0]}" width="150" height="100"/>
+                                            </a>
                                         </c:if>
                                     </td>
                                     <td>${p.name}</td>

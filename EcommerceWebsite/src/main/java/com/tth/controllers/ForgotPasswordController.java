@@ -9,11 +9,13 @@ import com.tth.pojo.ForgotPassword;
 import com.tth.pojo.User;
 import com.tth.services.ForgotPasswordService;
 import com.tth.services.UserService;
+
 import java.time.Instant;
 import java.util.Date;
 import java.util.Random;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -31,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- *
  * @author tongh
  */
 @Controller
@@ -50,7 +51,8 @@ public class ForgotPasswordController {
 
     private Integer otpGenerator() {
         Random random = new Random();
-        return random.nextInt(100_000, 999_999);
+//        return random.nextInt(100_000, 999_999);
+        return 0;
     }
 
     @GetMapping("/verify-account")
@@ -60,7 +62,7 @@ public class ForgotPasswordController {
 
     @PostMapping(value = "/verify-account")
     public String verifyAccount(@RequestParam("username") String username, Model model,
-            RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes) {
         User user = this.userService.getUserByUsername(username);
         System.out.println("userNgoai" + user);
 
@@ -110,7 +112,7 @@ public class ForgotPasswordController {
 
     @PostMapping("/verify-otp")
     public String verifyOtp(@RequestParam("otp") Integer otp, @RequestParam("username") String username,
-            RedirectAttributes redirectAttributes) {
+                            RedirectAttributes redirectAttributes) {
         User user = this.userService.getUserByUsername(username);
         ForgotPassword fp = this.forgotPasswordService.findByOtpAndUSer(otp, user);
 
@@ -138,7 +140,7 @@ public class ForgotPasswordController {
             RedirectAttributes redirectAttributes) {
 
         User user = userService.getUserByUsername(username);
-    
+
 // LÀM PASSWWORD KHÓ (CHUA LAM)
         if (!newPassword.equals(rePassword)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu mới và xác nhận mật khẩu không khớp!");

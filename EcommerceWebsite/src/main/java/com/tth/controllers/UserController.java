@@ -21,6 +21,7 @@ import com.tth.services.UserService;
 import com.tth.services.WardService;
 import com.tth.validator.UpdateUserAdminValidator;
 import com.tth.validator.UserAdminValidator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -103,6 +104,8 @@ public class UserController {
                 String email = userAdminDTO.getEmail();
                 String personalId = userAdminDTO.getPersonalId();
 
+                String hashedPassword = this.passwordEncoder.encode(password);
+
                 String provinceCode = userAdminDTO.getProvinceCode();
                 String districtCode = userAdminDTO.getDistrictCode();
                 String wardCode = userAdminDTO.getWardCode();
@@ -110,10 +113,11 @@ public class UserController {
                 Districts district = this.districtService.getDistrictById(districtCode);
                 Wards ward = this.wardService.getWardById(wardCode);
 
-                User u = new User(username, password, firstName, lastName);
+                User u = new User(username, hashedPassword, firstName, lastName);
                 u.setFile(file);
                 Role role = this.roleService.getRoleById(1);
                 u.setRole(role);
+                u.setCreatedDate(new Date());
                 Admin admin = new Admin(username, address, email, phone, personalId, province, district, ward, u);
                 if (this.userService.addOrUpdateUser(u)) {
                     if (this.adminService.addOrUpdateUserAdmin(admin)) {
@@ -154,6 +158,10 @@ public class UserController {
                 String email = userAdminDTO.getEmail();
                 String personalId = userAdminDTO.getPersonalId();
 
+                int roleId = userAdminDTO.getRole();
+                System.out.println("R0le" + roleId);
+                Role r = this.roleService.getRoleById(roleId);
+
                 String provinceCode = userAdminDTO.getProvinceCode();
                 String districtCode = userAdminDTO.getDistrictCode();
                 String wardCode = userAdminDTO.getWardCode();
@@ -163,11 +171,11 @@ public class UserController {
 
                 User u = new User(username, password, firstName, lastName);
                 u.setFile(file);
-
+                u.setRole(r);
                 Admin admin = new Admin(username, address, email, phone, personalId, province, district, ward, u);
                 if (this.userService.addOrUpdateUser(u)) {
                     if (this.adminService.addOrUpdateUserAdmin(admin)) {
-                        return "redirect:/manage-users";
+                        return "redirect:/dashboard";
                     }
                 }
             } catch (Exception ex) {
@@ -203,7 +211,14 @@ public class UserController {
             redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu cũ không đúng!");
             return "redirect:/change-password";
         }
-// LÀM PASSWWORD KHÓ (CHUA LAM)
+
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+
+        if (!changePasswordDTO.getNewPassword().matches(passwordPattern)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu phải có ít nhất 8 ký tự, chứa chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            return "redirect:/change-password";
+        }
+
         if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getRePassword())) {
             redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu mới và xác nhận mật khẩu không khớp!");
             return "redirect:/change-password";

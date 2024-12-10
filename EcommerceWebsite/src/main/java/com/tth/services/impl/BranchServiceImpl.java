@@ -27,7 +27,7 @@ public class BranchServiceImpl implements BranchService {
 
     @Autowired
     private InventoryService inventoryService;
-    
+
     @Override
     public Branch getBrandById(int id) {
         return this.branchRepo.getBrandById(id);
@@ -79,4 +79,8 @@ public class BranchServiceImpl implements BranchService {
 //                return new BranchDTO();
 //                }).collect(Collectors.toList());
 //    }
+    @Override
+    public List<BranchDTO> getBranchDTO() {
+        return this.branchRepo.getBranchDTO();
+    }
 }

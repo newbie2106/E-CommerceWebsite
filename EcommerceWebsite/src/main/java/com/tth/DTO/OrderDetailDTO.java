@@ -15,6 +15,24 @@ public class OrderDetailDTO {
     private BigDecimal unitPrice;
     private Integer productId;
     private Integer quantity;
+    private String productImage;
+    private String productName;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
 
     public OrderDetailDTO() {
     }

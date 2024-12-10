@@ -19,6 +19,9 @@ import AddressPage from "./components/AddressPage";
 import AddShippingAddress from "./components/AddShippingAddress";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import PaymentReturn from "./components/PaymentReturn";
+import Chat from "./components/Chat";
+import OrderList from "./components/Order";
+import Map from "./components/Map";
 
 
 export const MyUserContext = createContext();
@@ -26,7 +29,7 @@ export const MyDispatchContext = createContext();
 
 const App = () => {
   const [user, dispatch] = useReducer(MyUserReducer, cookie.load("user") || null);
-  
+
   return (
     <BrowserRouter>
       <MyUserContext.Provider value={user}>
@@ -48,6 +51,9 @@ const App = () => {
               <Route path="/address" element={<AddressPage />} />
               <Route path="/add-address" element={<AddShippingAddress />} />
               <Route path="/payment-return" element={<PaymentReturn />} />
+              <Route path="/forumtech" element={<Chat/>}/>
+              <Route path="/purchase" element={<OrderList/>}/>
+              <Route path="/location" element={<Map/>}/>
 
 
 

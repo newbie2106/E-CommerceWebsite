@@ -4,9 +4,12 @@
  */
 package com.tth.repositories.impl;
 
+import com.tth.ENUM.ShipmentStatus;
+import com.tth.pojo.Branch;
 import com.tth.pojo.OrderDetail;
 import com.tth.pojo.SaleOrder;
 import com.tth.pojo.Product;
+import com.tth.pojo.Shipment;
 import com.tth.pojo.User;
 import com.tth.repositories.StatsRepository;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ public class StatsRepositoryImpl implements StatsRepository {
         Root rD = q.from(OrderDetail.class);
         Root rO = q.from(SaleOrder.class);
         Root rP = q.from(Product.class);
+        Root rS = q.from(Shipment.class);
 
         q.multiselect(b.function(period, Integer.class, rO.get("createdDate")),
                 b.sum(rO.get("totalAmount")));
@@ -51,6 +55,8 @@ public class StatsRepositoryImpl implements StatsRepository {
         predicates.add(b.equal(rD.get("saleOrderId"), rO.get("id")));
         predicates.add(b.equal(rD.get("productId"), rP.get("id")));
         predicates.add(b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), year));
+        predicates.add(b.equal(rS.get("status"), ShipmentStatus.Delivered));
+        predicates.add(b.equal(rS.get("saleOrder"), rO.get("id")));
 
         q.where(predicates.toArray(Predicate[]::new));
         q.groupBy(b.function(period, Integer.class, rO.get("createdDate")));
@@ -68,12 +74,16 @@ public class StatsRepositoryImpl implements StatsRepository {
 
         Root rP = q.from(Product.class);
         Root rD = q.from(OrderDetail.class);
+        Root rS = q.from(Shipment.class);
+        Root rO = q.from(SaleOrder.class);
 
-        q.multiselect(rP.get("id"), rP.get("name"), b.sum(b.prod(rD.get("quantity"), rP.get("price"))));
+        q.multiselect(rP.get("id"), rP.get("name"), b.sum(b.prod(rD.get("quantity"), rD.get("unitPrice"))));
 
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(b.equal(rD.get("productId"), rP.get("id")));
-
+        predicates.add(b.equal(rS.get("status"), ShipmentStatus.Delivered));
+        predicates.add(b.equal(rS.get("saleOrder"), rO.get("id")));
+        predicates.add(b.equal(rO.get("id"), rD.get("saleOrderId")));
         q.where(predicates.toArray(Predicate[]::new));
 
         q.groupBy(rP.get("id"));
@@ -86,25 +96,30 @@ public class StatsRepositoryImpl implements StatsRepository {
     @Override
     public List<Object[]> statsRevenueByProductBranch(String usernameBranch) {
         Session s = this.factory.getObject().getCurrentSession();
-        CriteriaBuilder cb = s.getCriteriaBuilder();
-        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
 
-        Root<OrderDetail> rD = cq.from(OrderDetail.class);
-        Join<OrderDetail, SaleOrder> joinOrder = rD.join("saleOrderId");
-        Join<OrderDetail, Product> joinProduct = rD.join("productId");
-
-        // Select product ID, product name, and sum of revenue
-        cq.multiselect(
-                joinProduct.get("id"),
-                joinProduct.get("name"),
-                cb.sum(cb.prod(rD.get("quantity"), rD.get("unitPrice")))
+        Root rP = q.from(Product.class);
+        Root rD = q.from(OrderDetail.class);
+        Root rS = q.from(Shipment.class);
+        Root rO = q.from(SaleOrder.class);
+        Root rB = q.from(Branch.class);
+        q.multiselect(
+                rP.get("id"), rP.get("name"),
+                b.sum(b.prod(rD.get("quantity"), rD.get("unitPrice")))
         );
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rS.get("status"), ShipmentStatus.Delivered));
+        predicates.add(b.equal(rB.get("adminUser").get("username"), usernameBranch));
+        //predicates.add(b.equal(rS.get("saleOrder"), rD.get("id")));     
+        predicates.add(b.equal(rO.get("id"), rD.get("saleOrderId")));
+        predicates.add(b.equal(rP.get("id"), rD.get("productId")));
 
-        cq.where(cb.equal(joinOrder.get("username").get("username"), usernameBranch));
+        q.where(predicates.toArray(Predicate[]::new));
 
-        cq.groupBy(joinProduct.get("id"));
+        q.groupBy(rP.get("id"));
 
-        Query<Object[]> query = s.createQuery(cq);
+        Query<Object[]> query = s.createQuery(q);
 
         return query.getResultList();
     }
@@ -112,27 +127,29 @@ public class StatsRepositoryImpl implements StatsRepository {
     @Override
     public List<Object[]> statsRevenueByPeriodBranch(int year, String period, String usernameBranch) {
         Session s = this.factory.getObject().getCurrentSession();
-        CriteriaBuilder cb = s.getCriteriaBuilder();
-        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
 
-        Root<SaleOrder> rO = cq.from(SaleOrder.class);
+        Root<SaleOrder> rO = q.from(SaleOrder.class);
+        Root rS = q.from(Shipment.class);
+        Root rB = q.from(Branch.class);
 
-        // Select period and sum of total amount
-        cq.multiselect(
-                cb.function(period, Integer.class, rO.get("createdDate")),
-                cb.sum(rO.get("totalAmount"))
+        q.multiselect(
+                b.function(period, Integer.class, rO.get("createdDate")),
+                b.sum(rO.get("totalAmount"))
         );
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(cb.function("YEAR", Integer.class, rO.get("createdDate")), year));
-        predicates.add(cb.equal(rO.get("username").get("username"), usernameBranch));
+        predicates.add(b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), year));
+        predicates.add(b.equal(rB.get("adminUser").get("username"), usernameBranch));
+        predicates.add(b.equal(rS.get("status"), ShipmentStatus.Delivered));
+        predicates.add(b.equal(rS.get("saleOrder"), rO.get("id")));
 
-        cq.where(predicates.toArray(new Predicate[0]));
+        q.where(predicates.toArray(Predicate[]::new));
 
-        // Group by period
-        cq.groupBy(cb.function(period, Integer.class, rO.get("createdDate")));
+        q.groupBy(b.function(period, Integer.class, rO.get("createdDate")));
 
-        Query<Object[]> query = s.createQuery(cq);
+        Query<Object[]> query = s.createQuery(q);
 
         return query.getResultList();
     }

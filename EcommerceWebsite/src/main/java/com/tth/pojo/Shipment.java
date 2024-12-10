@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -47,9 +48,9 @@ public class Shipment implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private ShipmentStatus status;
-    @JoinColumn(name = "sale_order_id", referencedColumnName = "id")
-    @ManyToOne
-    private SaleOrder saleOrderId;
+//    @JoinColumn(name = "sale_order_id", referencedColumnName = "id")
+//    @ManyToOne
+//    private SaleOrder saleOrderId;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +64,19 @@ public class Shipment implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date expectedDelivery;
 
+    @OneToOne
+    @JoinColumn(name = "sale_order_id") // Tạo khóa ngoại trong bảng Shipment
+    private SaleOrder saleOrder;
+
+    public SaleOrder getSaleOrder() {
+        return saleOrder;
+    }
+
+    public void setSaleOrder(SaleOrder saleOrder) {
+        this.saleOrder = saleOrder;
+    }
+    
+    
     public ShipmentStatus getStatus() {
         return status;
     }
@@ -125,12 +139,12 @@ public class Shipment implements Serializable {
         return "com.tth.pojo.Shipment[ id=" + id + " ]";
     }
 
-    public SaleOrder getSaleOrderId() {
-        return saleOrderId;
-    }
-
-    public void setSaleOrderId(SaleOrder saleOrderId) {
-        this.saleOrderId = saleOrderId;
-    }
+//    public SaleOrder getSaleOrderId() {
+//        return saleOrderId;
+//    }
+//
+//    public void setSaleOrderId(SaleOrder saleOrderId) {
+//        this.saleOrderId = saleOrderId;
+//    }
 
 }

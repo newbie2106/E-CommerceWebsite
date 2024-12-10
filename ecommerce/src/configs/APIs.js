@@ -14,6 +14,71 @@ export default axios.create({
 });
 
 
+
+export const markOrderAsCancel = async (orderId) => {
+  try {
+    const res = await axios.put(`${BASE_URL}/api/orders/${orderId}/cancel`);
+    return res.data; 
+  } catch (ex) {
+    console.error("Error marking order as cancel:", ex);
+    throw ex; 
+  }
+};
+
+export const markOrderAsDelivered = async (orderId) => {
+  try {
+    const res = await axios.put(`${BASE_URL}/api/orders/${orderId}/delivered`);
+    return res.data; 
+  } catch (ex) {
+    console.error("Error marking order as delivered:", ex);
+    throw ex; 
+  }
+};
+
+export const getCommentByProductId = async (productId) => {
+  try {
+    const res = await axios.get(`${BASE_URL}/api/comment/${productId}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const addComment = async (data) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/api/comment/`, data, {
+      headers: {
+        Authorization: cookie.load("token")
+      }
+    })
+    return res
+  }
+  catch (err) {
+    return err
+  }
+}
+
+
+export const fetchOrderItems = async (username) => {
+  try {
+    const res = await axios.get(`${BASE_URL}/api/orders/${username}`);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const paymentMomo = async (saleOrderRequest) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/api/payment-momo/`, saleOrderRequest);
+    return response;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+};
+
+
 export const paymentVNPay = async (amount) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/create-payment/?amount=${amount}`);
@@ -244,6 +309,18 @@ export const getCurrentUser = async () => {
     console.error(ex);
   }
 };
+
+
+export const getBranch = async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}/api/branch/`);
+    return res.data;
+  } catch (err) {
+    console.error("Failed to load branch:", err);
+    return err;
+  }
+};
+
 
 export const loadCarrier = async () => {
   try {

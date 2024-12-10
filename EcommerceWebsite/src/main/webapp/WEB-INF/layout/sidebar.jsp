@@ -37,12 +37,18 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<c:url value='/manage-tagProducts' />">Quản lý nhãn sản phẩm</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<c:url value='/stats' />">Thống kê</a>
+                    </li>
                 </sec:authorize>
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value='/manage-products' />">Quản lý sản phẩm chi nhánh</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value='/stats' />">Thống kê</a>
+                    <a class="nav-link" href="<c:url value='/saleOrder' />">Quản lý đơn hàng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<c:url value='/stats-branch' />">Thống kê theo chi nhánh</a>
                 </li>
             </ul>
         </nav>

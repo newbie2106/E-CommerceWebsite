@@ -7,6 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { MyDispatchContext, MyUserContext } from "../App";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { auth, fbProvider } from "../configs/firebase";
+import { signInWithPopup } from 'firebase/auth';
+
 
 const Login = () => {
     const user = useContext(MyUserContext);
@@ -72,10 +75,37 @@ const Login = () => {
             });
     };
 
-    const handleFacebookLogin = () => {
-        // Thêm logic đăng nhập với Facebook
-        console.log("Đăng nhập với Facebook");
-    };
+
+    const FacebookLogin = async () => {
+        try {
+            const result = await signInWithPopup(auth, fbProvider);
+            console.log(result.user);
+
+            // Xử lý kết quả thành công
+            const user = result.user;
+            console.log("User info: ", user);
+
+            // Xử lý kết quả thành công - ví dụ: dispatch dữ liệu đến Redux
+            dispatch({
+                type: "login",
+                payload: {
+                    uid: user.uid,
+                    name: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    accessToken: result._tokenResponse.oauthAccessToken,
+                },
+            });
+            nav("/");
+        } catch (error) {
+            // Xử lý lỗi
+            console.error('Error logging in with Facebook', error);
+        }
+    }
+
+    // auth.onAuthStateChanged((user) => {
+    //     console.log({ user });
+    // });
 
     const toggleLanguage = () => {
         setLanguage((prevLang) => (prevLang === "en" ? "vi" : "en"));
@@ -100,14 +130,14 @@ const Login = () => {
                             onError={() => {
                                 console.log('Login Failed');
                             }}
-                        />;
+                        />
                     </div>
 
                     {/* Nút đăng nhập với Facebook */}
                     <div>
                         <button
                             type="button"
-                            onClick={handleFacebookLogin}
+                            onClick={FacebookLogin}
                             className="flex justify-center w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
                         >
                             <FaFacebook className="mr-2 h-5 w-5" />

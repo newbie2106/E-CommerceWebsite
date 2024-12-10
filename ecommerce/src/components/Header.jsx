@@ -4,7 +4,8 @@ import {
   FaChevronDown, FaPhoneAlt, FaSignOutAlt, FaEdit,
   FaKey, FaArrowLeft,
   FaChevronLeft,
-  FaChevronRight
+  FaChevronRight,
+  FaRegStickyNote
 } from "react-icons/fa"; // Thêm các biểu tượng mới
 import { Link, useNavigate } from "react-router-dom";
 import { MyDispatchContext, MyUserContext } from "../App";
@@ -27,11 +28,12 @@ const Header = () => {
   };
   const searchCategory = (e, cateId) => {
     e.preventDefault();
-    navigate(`/?cateId=${cateId}`);  // Điều hướng với cateId
+    nav(`/?cateId=${cateId}`);  // Điều hướng với cateId
   };
   const handleLogout = () => {
     localStorage.removeItem('user');
     dispatch({ type: "logout" });
+    nav("/");
   };
 
   const submit = (e) => {
@@ -61,6 +63,9 @@ const Header = () => {
                 <Link to="/call" className="hover:text-gray-300 transition duration-300">
                   Gọi mua hàng 1800.0138
                 </Link>
+                <Link to="/forumtech" className="m-3 text-white bg-blue-500 hover:bg-blue-400 text-lg font-semibold border border-blue-600 rounded-md px-4 py-2 transition duration-300">
+                  Diễn đàn công nghệ
+                </Link>
               </div>
             </div>
 
@@ -75,11 +80,17 @@ const Header = () => {
                     placeholder="Bạn tìm gì..."
                     className="w-full bg-white border border-gray-300 rounded-full py-2 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-300"
                   />
+                  <Link
+                    to="/map"
+                    className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  >
+                    <FaSearch />
+                  </Link>
                   <button
                     type="submit"
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-700"
                   >
-                    <FaSearch />
+
                   </button>
                 </div>
               </form>
@@ -121,7 +132,13 @@ const Header = () => {
                               </div>
                               <FaChevronRight className="text-black" /> {/* Màu xám cho icon */}
                             </button>
-
+                            <Link
+                              to="/purchase"
+                              className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
+                            >
+                              <FaRegStickyNote className="mr-2" />
+                              Đơn hàng
+                            </Link>
                             <button
                               onClick={handleLogout}
                               className="flex items-center w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"

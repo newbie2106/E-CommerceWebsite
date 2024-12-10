@@ -73,14 +73,7 @@
 
 
                                     </div>
-                                    <div class="form-group position-relative">
-                                        <select name="role" class="form-control fw-bold text-primary text-center">
-                                            <option value="ROLE_ADMIN">Đăng nhập với Admin</option>
-                                            <option value="ROLE_SUPER_ADMIN">Đăng nhập với Super Admin</option>
-                                        </select>
-                                        <i class="fa-solid fa-caret-down position-absolute" 
-                                           style="top: 50%; right: 15px; transform: translateY(-50%); pointer-events: none;"></i>
-                                    </div>
+                                   
                                     <c:if test="${param.error != null}">
                                         <span class="text-danger">Sai tài khoản hoặc mật khẩu</span>
                                     </c:if>

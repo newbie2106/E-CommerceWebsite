@@ -5,7 +5,9 @@
 package com.tth.services;
 
 import com.tth.DTO.SaleOrderDTO;
+import com.tth.pojo.Branch;
 import com.tth.pojo.SaleOrder;
+import java.util.List;
 
 /**
  *
@@ -14,5 +16,17 @@ import com.tth.pojo.SaleOrder;
 public interface SaleOrderService {
 
     boolean AddSaleOrder(SaleOrderDTO saleOrder);
+
+    List<SaleOrderDTO> getSaleOrderByBranchAdmin(String branchAdmin);
+
+    SaleOrderDTO convertToSaleOrderDTO(SaleOrder saleOrder);
+
+    List<SaleOrderDTO> getSaleOrderByUsername(String username);
+
+    void UpdateStatusSaleOrder(SaleOrder saleOrder);
+    
+    SaleOrder getSaleOrderById(int id);
+    
+    boolean cancelSaleOrder(int orderId);
 
 }

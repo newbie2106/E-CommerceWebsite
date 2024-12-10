@@ -4,9 +4,11 @@
  */
 package com.tth.DTO;
 
+import com.tth.ENUM.ShipmentStatus;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -14,6 +16,7 @@ import java.util.List;
  */
 public class SaleOrderDTO {
 
+    private int id;
     private String username;
     private Date createdDate;
     private BigDecimal totalAmount;
@@ -22,9 +25,45 @@ public class SaleOrderDTO {
     private Integer branchId;
     private Integer shippingAdressId;
     private Integer carrierId;
+    private List<OrderDetailDTO> orderDetails;
+    private ShipmentStatus currentStatus; 
+    private ShipmentStatus selectedStatus;
+
+    public String getProductIdByOrderDetail() {
+        return orderDetails.stream()
+                .map(c -> String.valueOf(c.getProductId()))
+                .collect(Collectors.joining(","));
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
 
     public SaleOrderDTO() {
     }
+
+    public ShipmentStatus getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(ShipmentStatus currentStatus) {
+        this.currentStatus = currentStatus;
+    }
+
+    public ShipmentStatus getSelectedStatus() {
+        return selectedStatus;
+    }
+
+    public void setSelectedStatus(ShipmentStatus selectedStatus) {
+        this.selectedStatus = selectedStatus;
+    }
+    
+    
 
     public SaleOrderDTO(String username, Date createdDate, BigDecimal totalAmount, boolean isPaid, String note, Integer branchId, Integer shippingAdressId, Integer carrierId, List<OrderDetailDTO> orderDetails) {
         this.username = username;
@@ -93,8 +132,6 @@ public class SaleOrderDTO {
     public void setCarrierId(Integer carrierId) {
         this.carrierId = carrierId;
     }
-
-    private List<OrderDetailDTO> orderDetails;
 
     public String getNote() {
         return note;

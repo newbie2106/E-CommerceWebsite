@@ -25,7 +25,7 @@ public interface ProductRepository {
     public boolean addOrUpdate(Product p);
 
     Product getProductById(int id);
-    
+
     ProductDTO getProductDTOById(int id);
 
     void deleteProduct(int id);
@@ -36,5 +36,7 @@ public interface ProductRepository {
     ProductDTO convertToProductDTO(Product product);
 
     boolean addReceipt(Map<String, Cart> cart);
+
+    String getProductInfoForPayment(String productId);
 
 }

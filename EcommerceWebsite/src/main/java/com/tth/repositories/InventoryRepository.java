@@ -17,6 +17,8 @@ public interface InventoryRepository {
 
     boolean updateProductQuantity(Inventory i);
 
+    boolean updateInventoryQuantity(int productId, int branchId, int quantityPurchased);
+
     Inventory getInventoryByProductAndBranch(Product product, Branch branch);
 
     List<Inventory> getInventoryByBranch(String branch);

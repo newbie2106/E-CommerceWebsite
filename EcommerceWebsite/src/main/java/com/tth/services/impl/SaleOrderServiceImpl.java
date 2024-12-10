@@ -19,12 +19,14 @@ import com.tth.repositories.OrderDetailsRepository;
 import com.tth.repositories.SaleOrderRepository;
 import com.tth.services.BranchService;
 import com.tth.services.CarrierService;
+import com.tth.services.InventoryService;
 import com.tth.services.ProductService;
 import com.tth.services.SaleOrderService;
 import com.tth.services.ShipmentService;
 import com.tth.services.ShippingAddressService;
 import com.tth.services.UserService;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +54,9 @@ public class SaleOrderServiceImpl implements SaleOrderService {
     @Autowired
     private ShipmentService shipmentService;
 
+    @Autowired
+    private InventoryService inventoryService;
+
     @Override
     public boolean AddSaleOrder(SaleOrderDTO saleOrder) {
         User u = this.userService.getUserByUsername(saleOrder.getUsername());
@@ -76,7 +81,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
                 shipment.setShipmentDate(new Date());
                 shipment.setExpectedDelivery(new Date());
                 shipment.setStatus(ShipmentStatus.Pending);
-                shipment.setSaleOrderId(newSaleOrder);
+                shipment.setSaleOrder(newSaleOrder);
                 this.shipmentService.addShipment(shipment);
             }
 
@@ -88,6 +93,16 @@ public class SaleOrderServiceImpl implements SaleOrderService {
                 orderDetail.setQuantity(detailDTO.getQuantity());
                 orderDetail.setSaleOrder(newSaleOrder);
                 this.orderDetailRepo.addOrderDetail(orderDetail);
+
+                boolean isUpdated = this.inventoryService.updateInventoryQuantity(
+                        detailDTO.getProductId(),
+                        saleOrder.getBranchId(),
+                        detailDTO.getQuantity()
+                );
+
+                if (!isUpdated) {
+                    throw new Exception("Sản phẩm không đủ số lượng trong kho" + detailDTO.getProductId());
+                }
             }
 
             return true;
@@ -95,6 +110,54 @@ public class SaleOrderServiceImpl implements SaleOrderService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public boolean cancelSaleOrder(int orderId) {
+        SaleOrder saleOrder = this.saleOrderRepository.getSaleOrderById(orderId);
+        if (saleOrder != null) {
+            // Hoàn lại số lượng sản phẩm vào kho          
+            Branch branch = this.branchService.getBrandById(saleOrder.getBranchId().getId());
+
+            for (OrderDetail detail : saleOrder.getOrderDetailSet()) {
+                Product p = this.prodService.getProductById(detail.getProduct().getId());
+                int quantityPurchased = -detail.getQuantity();
+
+                boolean isUpdated = this.inventoryService.updateInventoryQuantity(p.getId(), branch.getId(), quantityPurchased);
+                if (!isUpdated) {
+                    return false; // Không thể cập nhật kho cho sản phẩm này
+                }
+            }
+
+            saleOrder.getShipment().setStatus(ShipmentStatus.Cancelled);
+            this.saleOrderRepository.UpdateStatusSaleOrder(saleOrder);
+        }
+        return false; // Không tìm thấy đơn hàng
+    }
+
+    @Override
+    public List<SaleOrderDTO> getSaleOrderByBranchAdmin(String branchAdmin) {
+        return this.saleOrderRepository.getSaleOrderByBranchAdmin(branchAdmin);
+    }
+
+    @Override
+    public SaleOrderDTO convertToSaleOrderDTO(SaleOrder saleOrder) {
+        return this.saleOrderRepository.convertToSaleOrderDTO(saleOrder);
+    }
+
+    @Override
+    public List<SaleOrderDTO> getSaleOrderByUsername(String username) {
+        return this.saleOrderRepository.getSaleOrderByUsername(username);
+    }
+
+    @Override
+    public void UpdateStatusSaleOrder(SaleOrder saleOrder) {
+        this.saleOrderRepository.UpdateStatusSaleOrder(saleOrder);
+    }
+
+    @Override
+    public SaleOrder getSaleOrderById(int id) {
+        return this.saleOrderRepository.getSaleOrderById(id);
     }
 
 }

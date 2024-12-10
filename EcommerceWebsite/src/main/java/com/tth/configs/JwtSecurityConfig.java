@@ -84,6 +84,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
         http.authorizeRequests().antMatchers("/api/login/").permitAll();
         http.authorizeRequests().antMatchers("/api/products/").permitAll();
+        http.authorizeRequests().antMatchers("/api/products/**").permitAll();
         http.authorizeRequests().antMatchers("/api/product/**").permitAll();
         http.authorizeRequests().antMatchers("/api/categories/").permitAll();
         http.authorizeRequests().antMatchers("/api/categories/**").permitAll();
@@ -115,6 +116,11 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/carrier/**").permitAll();
         http.authorizeRequests().antMatchers("/api/create-payment").permitAll();
         http.authorizeRequests().antMatchers("/api/create-payment/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/vnpay-return/").permitAll();
+        http.authorizeRequests().antMatchers("/api/vnpay-return/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/payment-momo/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/comment/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/branch/").permitAll();
 
         //http.authorizeRequests().antMatchers("/api/tags/").permitAll();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/**/comments/").permitAll();
@@ -133,9 +139,9 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/current-user/").access("hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
                 .antMatchers(HttpMethod.POST, "/api/forgot-password/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/cart/**").access("hasRole('ROLE_CUSTOMER')")
-                .antMatchers(HttpMethod.GET, "/api/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.POST, "/api/**").access("hasRole('ROLE_ADMIN')").antMatchers(HttpMethod.POST, "/api/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.DELETE, "/api/**").access("hasRole('ROLE_ADMIN')").and()
+                .antMatchers(HttpMethod.GET, "/api/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+                .antMatchers(HttpMethod.POST, "/api/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/api/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')").and()
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
     }

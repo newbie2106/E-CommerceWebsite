@@ -79,6 +79,13 @@ const Footer = () => {
                     </p>
                 </div>
             </div>
+            <df-messenger
+                intent="WELCOME"
+                chat-title="EcommerceChat"
+                agent-id="eaafebb3-ac91-46cd-8b8c-a0922d1e9b28"
+                language-code="en"
+            >
+            </df-messenger>
         </footer>
     );
 };

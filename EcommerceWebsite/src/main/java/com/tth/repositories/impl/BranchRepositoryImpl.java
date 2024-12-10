@@ -4,9 +4,11 @@
  */
 package com.tth.repositories.impl;
 
+import com.tth.DTO.BranchDTO;
 import com.tth.pojo.Branch;
 import com.tth.repositories.BranchRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -70,6 +72,39 @@ public class BranchRepositoryImpl implements BranchRepository {
         query.setParameter("username", username);
 
         return query.uniqueResult();
+    }
+
+    @Override
+    public List<BranchDTO> getBranchDTO() {
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Branch> q = b.createQuery(Branch.class);
+        Root r = q.from(Branch.class);
+        q.select(r);
+
+        Query query = s.createQuery(q);
+
+        List<Branch> saleOrderList = query.getResultList();
+
+        List<BranchDTO> saleOrderDTO = saleOrderList.stream()
+                .map(this::convertToBranchDTO)
+                .collect(Collectors.toList());
+
+        return saleOrderDTO;
+    }
+
+    @Override
+    public BranchDTO convertToBranchDTO(Branch branch) {
+        BranchDTO dto = new BranchDTO();
+
+        dto.setBranch(branch.getId());
+        dto.setAddress(branch.getAddress());
+        dto.setWards(branch.getWardId().getFullName());
+        dto.setDistrict(branch.getDistrictId().getFullName());
+        dto.setProvince(branch.getProvinceId().getFullName());
+
+        return dto;
+
     }
 
 }

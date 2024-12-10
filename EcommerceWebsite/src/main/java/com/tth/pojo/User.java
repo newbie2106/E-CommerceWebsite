@@ -89,10 +89,13 @@ public class User implements Serializable {
 
     @Transient
     private MultipartFile file;
-    
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private Set<ForgotPassword> forgotPasswordSet;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "username")
+    @JsonIgnore
+    private Set<Comment> commentSet;
 
     public Set<RecentlyViewed> getRecentlyViewedSet() {
         return recentlyViewedSet;
@@ -101,6 +104,7 @@ public class User implements Serializable {
     public void setRecentlyViewedSet(Set<RecentlyViewed> recentlyViewedSet) {
         this.recentlyViewedSet = recentlyViewedSet;
     }
+
     /**
      * @return the file
      */
@@ -118,13 +122,13 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String username, String password,String firstName,String lastName) {
+    public User(String username, String password, String firstName, String lastName) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
     }
-    
+
     public User(String username) {
         this.username = username;
     }
@@ -260,8 +264,5 @@ public class User implements Serializable {
     public void setForgotPasswordSet(Set<ForgotPassword> forgotPasswordSet) {
         this.forgotPasswordSet = forgotPasswordSet;
     }
-
-
-
 
 }

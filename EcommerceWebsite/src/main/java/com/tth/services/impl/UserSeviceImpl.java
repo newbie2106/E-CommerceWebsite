@@ -85,7 +85,7 @@ public class UserSeviceImpl implements UserService {
                 Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        u.setPassword(this.passwordEncoder.encode(u.getPassword()));
+//        u.setPassword(this.passwordEncoder.encode(u.getPassword()));
         return this.userRepo.addOrUpdateUser(u);
     }
 

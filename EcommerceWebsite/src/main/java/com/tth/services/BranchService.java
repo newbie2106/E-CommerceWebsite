@@ -4,6 +4,7 @@
  */
 package com.tth.services;
 
+import com.tth.DTO.BranchDTO;
 import com.tth.pojo.Branch;
 import java.util.List;
 
@@ -12,11 +13,14 @@ import java.util.List;
  * @author tongh
  */
 public interface BranchService {
+
     public Branch getBrandById(int id);
 
     public List<Branch> getBrands();
-    
+
     public String getUsernameByBranchId(int branchId);
-    
+
+    List<BranchDTO> getBranchDTO();
+
     Branch getBrandByUserAdmin(String username);
 }

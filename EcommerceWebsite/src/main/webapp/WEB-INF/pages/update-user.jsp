@@ -64,9 +64,12 @@
         </form:select>
     </div>
     <div class="form-floating">
-        <form:input type="text" class="form-control" path="role" id="role" name="role" value="ROLE_ADMIN" disabled="true"/>
-        <label for="name" class="form-label">Vai trò</label>
+        <input type="text" class="form-control" value="ROLE_ADMIN" readonly="true"/>
+        <label for="roleDisplay" class="form-label">Vai trò</label>
+
+        <form:hidden path="role" value="1" />
     </div>
+
     <div class="form-floating mb-3 mt-3">
         <div class="mt-1">
             <label for="file">Ảnh đại diện</label>
@@ -79,7 +82,7 @@
     <form:hidden path="username" />
     <form:hidden path="password" />
     <form:hidden path="rePassword" />
-    
+
     <div class="form-floating">
         <button class="btn btn-info mt-1" type="submit">
             <c:choose>

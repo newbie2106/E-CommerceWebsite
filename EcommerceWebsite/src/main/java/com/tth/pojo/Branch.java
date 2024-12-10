@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -51,6 +52,7 @@ public class Branch implements Serializable {
     }
 
     @OneToMany(mappedBy = "branchId")
+    @JsonIgnore
     private Set<SaleOrder> saleOrderSet;
 
     private static final long serialVersionUID = 1L;
@@ -63,6 +65,7 @@ public class Branch implements Serializable {
     @Column(name = "address")
     private String address;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "branchId")
+    @JsonIgnore
     private Set<Inventory> inventorySet;
     @JoinColumn(name = "district_id", referencedColumnName = "code")
     @ManyToOne

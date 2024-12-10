@@ -22,34 +22,32 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class InventoryServiceImpl implements InventoryService {
-
-    @Autowired
-    private InventoryRepository inventoryRepo;
-
+    
     @Autowired
     private BranchService branchService;
-
+    
     @Autowired
     private ProductService productService;
-
+    @Autowired
+    private InventoryRepository inventoryRepo;
+    
+    @Override
+    public List<Inventory> getInventoryByBranch(String branch) {
+        return this.inventoryRepo.getInventoryByBranch(branch);
+    }
+    
     @Override
     public boolean updateProductQuantity(Map<String, String> params) {
         String branchId = params.get("branchId");
         String productId = params.get("productId");
         int availableQuantity = Integer.parseInt(params.get("availableQuantity"));
-
-        System.out.println("Ban" + branchId);
-        System.out.println("produt" + productId);
-        System.out.println("soluog" + availableQuantity);
-
+        
         Branch branch = branchService.getBrandByUserAdmin(branchId);
         Product product = productService.getProductById(Integer.parseInt(productId));
 
-        System.out.println("BRANJ" + branch);
-
         // Kiểm tra sản phẩm trong Inventory
         Inventory inventory = inventoryRepo.getInventoryByProductAndBranch(product, branch);
-
+        
         if (inventory != null) {
             // Cập nhật số lượng nếu đã có
             inventory.setAvailableQuantity(availableQuantity);
@@ -63,9 +61,15 @@ public class InventoryServiceImpl implements InventoryService {
             return inventoryRepo.updateProductQuantity(newInventory);
         }
     }
-
+    
     @Override
-    public List<Inventory> getInventoryByBranch(String branch) {
-        return this.inventoryRepo.getInventoryByBranch(branch);
+    public boolean updateInventoryQuantity(int productId, int branchId, int quantityPurchased) {
+        return this.inventoryRepo.updateInventoryQuantity(productId, branchId, quantityPurchased);
     }
+    
+    @Override
+    public boolean updateProductQuantity(Inventory i) {
+        return this.inventoryRepo.updateProductQuantity(i);
+    }
+    
 }

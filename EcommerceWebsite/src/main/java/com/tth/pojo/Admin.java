@@ -60,7 +60,7 @@ public class Admin implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 255)   
     @Column(name = "username")
     private String username;
     @Size(max = 255)

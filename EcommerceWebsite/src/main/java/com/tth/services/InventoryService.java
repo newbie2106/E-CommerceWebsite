@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 public interface InventoryService {
 
-    public boolean updateProductQuantity(@RequestParam Map<String, String> params);
+    boolean updateProductQuantity(Inventory i);
+    
+    boolean updateInventoryQuantity(int productId, int branchId, int quantityPurchased);
+
+    boolean updateProductQuantity(Map<String, String> params);
 
     List<Inventory> getInventoryByBranch(String branch);
 

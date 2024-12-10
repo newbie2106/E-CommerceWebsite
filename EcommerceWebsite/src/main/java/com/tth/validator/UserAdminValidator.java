@@ -20,7 +20,7 @@ import org.springframework.validation.Validator;
  */
 @Component
 @PropertySource("classpath:messages.properties")
-public class UserAdminValidator implements Validator{
+public class UserAdminValidator implements Validator {
 
     @Autowired
     private UserService userService;
@@ -34,7 +34,9 @@ public class UserAdminValidator implements Validator{
     public void validate(Object target, Errors errors) {
         UserAdminDTO admin = (UserAdminDTO) target;
 
-        if (admin.getUsername().equals(userService.getUserByUsername(admin.getUsername()).getUsername())) {
+        User existingUser = userService.getUserByUsername(admin.getUsername());
+
+        if (admin.getUsername().equals(existingUser.getUsername())) {
             errors.rejectValue("username", "user.username.usernameExisted");
         }
         if (admin.getUsername().isBlank()) {
@@ -49,8 +51,9 @@ public class UserAdminValidator implements Validator{
         if (!admin.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!_])[A-Za-z\\d@#$%^&+=!_]{8,}$")) {
             errors.rejectValue("password", "user.password.passwordIsNotStrong");
         }
-        if (!admin.getRePassword().matches(admin.getPassword()))
+        if (!admin.getRePassword().matches(admin.getPassword())) {
             errors.rejectValue("rePassword", "user.rePassword.rePasswordIsNotMatch");
+        }
         if (admin.getFirstName().isBlank()) {
             errors.rejectValue("firstName", "user.firstName.firstNameNotNull");
         }
@@ -63,10 +66,20 @@ public class UserAdminValidator implements Validator{
         if (admin.getAddress().isBlank()) {
             errors.rejectValue("address", "userAmin.address.addressNotNull");
         }
+        if (admin != null && existingUser != null && existingUser.getAdmin() != null) {
+            if (admin.getPersonalId().equals(existingUser.getAdmin().getEmail())) {
+                errors.rejectValue("email", "userAdmin.email.emailExisted");
+            }
+        }
         if (admin.getEmail().isBlank()) {
             errors.rejectValue("email", "userAdmin.email.emailNotNull");
         }
-        if(admin.getPersonalId().isBlank()) {
+        if (admin != null && existingUser != null && existingUser.getAdmin() != null) {
+            if (admin.getPersonalId().equals(existingUser.getAdmin().getPersonalId())) {
+                errors.rejectValue("email", "userAdmin.personalId.personalIdExisted");
+            }
+        }
+        if (admin.getPersonalId().isBlank()) {
             errors.rejectValue("personalId", "userAdmin.personalId.personalIdNotNull");
         }
         if (!admin.getPersonalId().matches("^[0-9]{9,12}$")) {

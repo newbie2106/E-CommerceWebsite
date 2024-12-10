@@ -11,25 +11,21 @@ package com.tth.DTO;
 public class BranchDTO {
 
     private int branchId;
-    private String product;
     private String address;
     private String province;
     private String district;
     private String wards;    
-    private String availableQuantity;
 
     public BranchDTO() {
     }
 
     
-    public BranchDTO(int branchId, String product, String address, String province, String district, String wards, String availableQuantity) {
+    public BranchDTO(int branchId, String address, String province, String district, String wards) {
         this.branchId = branchId;
-        this.product = product;
         this.address = address;
         this.province = province;
         this.district = district;
         this.wards = wards;
-        this.availableQuantity = availableQuantity;
     }
 
     public int getBranch() {
@@ -40,13 +36,6 @@ public class BranchDTO {
         this.branchId = branchId;
     }
 
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
-    }
 
     public String getAddress() {
         return address;
@@ -78,14 +67,6 @@ public class BranchDTO {
 
     public void setWards(String wards) {
         this.wards = wards;
-    }
-
-    public String getAvailableQuantity() {
-        return availableQuantity;
-    }
-
-    public void setAvailableQuantity(String availableQuantity) {
-        this.availableQuantity = availableQuantity;
     }
 
 

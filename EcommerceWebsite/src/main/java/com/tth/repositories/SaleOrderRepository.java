@@ -4,7 +4,9 @@
  */
 package com.tth.repositories;
 
+import com.tth.DTO.SaleOrderDTO;
 import com.tth.ENUM.ShipmentStatus;
+import com.tth.pojo.Branch;
 import com.tth.pojo.SaleOrder;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,15 @@ import java.util.Map;
  */
 public interface SaleOrderRepository {
 
+    SaleOrder getSaleOrderById(int id);
+    
     boolean AddSaleOrder(SaleOrder saleOrder);
 
+    List<SaleOrderDTO> getSaleOrderByBranchAdmin(String branchAdmin);
+    
+    SaleOrderDTO convertToSaleOrderDTO(SaleOrder saleOrder);
+    
+    List<SaleOrderDTO> getSaleOrderByUsername(String username);
+
+    void UpdateStatusSaleOrder(SaleOrder saleOrder);
 }

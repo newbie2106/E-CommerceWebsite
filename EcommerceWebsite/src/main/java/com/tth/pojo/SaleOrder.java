@@ -4,6 +4,7 @@
  */
 package com.tth.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -43,8 +45,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "SaleOrder.findByPaid", query = "SELECT s FROM SaleOrder s WHERE s.paid = :paid")})
 public class SaleOrder implements Serializable {
 
-    @OneToMany(mappedBy = "saleOrderId")
-    private Set<Shipment> shipmentSet;
+    @OneToOne(mappedBy = "saleOrder", cascade = CascadeType.ALL)
+    private Shipment shipment; // Thay đổi từ Set<Shipment> sang Shipment
+
+//    @OneToMany(mappedBy = "saleOrderId")
+//    private Set<Shipment> shipmentSet;
     @JoinColumn(name = "carrier_id", referencedColumnName = "id")
     @ManyToOne
     private Carrier carrierId;
@@ -66,6 +71,7 @@ public class SaleOrder implements Serializable {
     @Column(name = "paid")
     private Boolean paid;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "saleOrderId")
+    @JsonIgnore
     private Set<OrderDetail> orderDetailSet;
     @JoinColumn(name = "username", referencedColumnName = "username")
     @ManyToOne
@@ -77,6 +83,16 @@ public class SaleOrder implements Serializable {
     @Column(name = "note")
     private String note;
 
+    public Shipment getShipment() {
+        return shipment;
+    }
+
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
+
+    
+    
     public String getNote() {
         return note;
     }
@@ -149,7 +165,6 @@ public class SaleOrder implements Serializable {
         this.orderDetailSet = orderDetailSet;
     }
 
-
     public User getUser() {
         return username;
     }
@@ -191,14 +206,14 @@ public class SaleOrder implements Serializable {
         this.branchId = branchId;
     }
 
-    @XmlTransient
-    public Set<Shipment> getShipmentSet() {
-        return shipmentSet;
-    }
-
-    public void setShipmentSet(Set<Shipment> shipmentSet) {
-        this.shipmentSet = shipmentSet;
-    }
+//    @XmlTransient
+//    public Set<Shipment> getShipmentSet() {
+//        return shipmentSet;
+//    }
+//
+//    public void setShipmentSet(Set<Shipment> shipmentSet) {
+//        this.shipmentSet = shipmentSet;
+//    }
 
     public Carrier getCarrierId() {
         return carrierId;

@@ -15,7 +15,7 @@
 <h1 class="text-center text-info mt-1">QUẢN LÝ SẢN PHẨM</h1>
 
 
-<ul class="pagination mt-1">
+<!--<ul class="pagination mt-1">
     <c:forEach begin="1" end="${count}" var="i">
         <c:url value="/manage-products" var="pageAction">
             <c:param name="page" value="${i}"/>
@@ -24,7 +24,7 @@
             <a class="page-link" href="${pageAction}">${i}</a>
         </li>
     </c:forEach>
-</ul>
+</ul>-->
 
 <div class="row">
 

@@ -4,6 +4,7 @@
  */
 package com.tth.repositories;
 
+import com.tth.DTO.BranchDTO;
 import com.tth.pojo.Branch;
 import java.util.List;
 
@@ -20,5 +21,9 @@ public interface BranchRepository {
     public List<Branch> getBrands();
 
     public String getUsernameByBranchId(int branchId);
+    
+    List<BranchDTO> getBranchDTO();
+    
+    BranchDTO convertToBranchDTO(Branch branch);
 
 }

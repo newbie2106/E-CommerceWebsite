@@ -13,6 +13,7 @@ import com.tth.pojo.Product;
 import com.tth.pojo.SaleOrder;
 import com.tth.repositories.ProductRepository;
 import com.tth.repositories.UserRepository;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -288,8 +289,50 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         return dto;
     }
-//    @Override
-//    public List<ProductDTO> getProducts(Map<String, String> params) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
+
+    @Override
+    public String getProductInfoForPayment (String stringArray) {
+        // Chuyển đổi chuỗi các ID thành danh sách số nguyên
+        List<Integer> productIds = new ArrayList<>();
+        if (stringArray != null && !stringArray.isEmpty()) {
+            String[] ids = stringArray.split(",");
+            for (String id : ids) {
+                try {
+                    productIds.add(Integer.parseInt(id.trim()));
+                } catch (NumberFormatException e) {
+                    // Xử lý trường hợp không thể chuyển đổi ID thành số nguyên
+                    e.printStackTrace();
+                    return "";
+                }
+            }
+        }
+
+        // Tạo session và CriteriaBuilder
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder cb = s.getCriteriaBuilder();
+        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+        Root<Product> root = cq.from(Product.class);
+
+        // Lấy cả tên và giá của sản phẩm
+        cq.multiselect(root.get("name"), root.get("price"));
+
+        // Tạo predicate cho điều kiện tìm kiếm theo danh sách ID sản phẩm
+        Predicate predicate = root.get("id").in(productIds);
+        cq.where(predicate);
+
+        // Thực hiện truy vấn
+        List<Object[]> results = s.createQuery(cq).getResultList();
+
+        // Tạo chuỗi để chứa tên và giá của sản phẩm
+        List<String> productInfoList = new ArrayList<>();
+        for (Object[] result : results) {
+            String productName = (String) result[0];
+            BigDecimal productPrice = (BigDecimal) result[1];
+            productInfoList.add(productName + " - " + productPrice + " VND");
+        }
+
+        // Nối các thông tin sản phẩm thành chuỗi ngăn cách bởi ", "
+        return String.join(", ", productInfoList);
+    }
+
 }

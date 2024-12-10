@@ -21,7 +21,6 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Id</th>
                         <th>Logo</th>
                         <th>Tên sản phẩm</th>
                         <th>Thao tác</th>
@@ -31,7 +30,6 @@
                 <tbody>
                     <c:forEach items="${brands}" var="b">
                         <tr class="mt-2">
-                            <td>${b.id}</td>
                             <td class="d-flex justify-content-center align-items-center gap-3">
                                 <img class="rounded img-fluid" src="${b.logo}" width="40" alt="${b.name}">
                             </td>

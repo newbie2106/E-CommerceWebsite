@@ -8,6 +8,7 @@ import VNDCurrencyFormat from "../configs/Utils";
 import { MyUserContext } from "../App";
 import axios from "axios";
 import AddToCartNotification from "./AddToCartNotification";
+import Map from "./Map";
 
 const Home = () => {
 
@@ -39,10 +40,15 @@ const Home = () => {
   const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
   const quantity = 1;
+
+  const [address, setAddress] = useState('');
+
+
+
   // TEST THU 
   const loadRecentlyViewed = async () => {
-    if(user && user.username){
-      
+    if (user && user.username) {
+
       //const res = await axios.get(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/user/${user.username}/`);
       const res = await getRecentlyViewed(user.username);
       setRecentlyViewed(res.data);
@@ -50,8 +56,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if(user && user.username){
-      
+    if (user && user.username) {
+
       loadRecentlyViewed();
     }
   }, [user]);
@@ -59,8 +65,8 @@ const Home = () => {
 
   const addRecentlyViewed = async (productId) => {
     //await axios.post(`http://localhost:8080/EcommerceWebsite/api/recently-viewed/add/?username=${user.username}&productId=${productId}`);
-    if(user && user.username){
-      
+    if (user && user.username) {
+
       await addRecentlyViewedByUser(user.username, productId);
       loadRecentlyViewed(); // Cập nhật danh sách đã xem
     }
@@ -119,7 +125,7 @@ const Home = () => {
 
   // ===== HANDLE 
   const handleProductClick = async (productId) => {
-    if(user && user.username){
+    if (user && user.username) {
       await addRecentlyViewed(productId);
     }
     navigate(`/product/${productId}`); // Điều hướng đến trang chi tiết sản phẩm
@@ -195,17 +201,7 @@ const Home = () => {
     })
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const viewedProducts = products.slice(0, 2);
-  //       setRecentlyViewed(viewedProducts);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+
 
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -416,7 +412,9 @@ const Home = () => {
               />
               <div className="p-6 flex-grow">
                 <h2 className="text-2xl font-semibold text-blue-700 mb-2">{product.productName}</h2>
-                <p className="text-gray-600 mb-4">{product.productDescription}</p>
+                <p className="text-gray-600 line-clamp-2"> {/* Giới hạn số dòng hiển thị */}
+                  {product.description}
+                </p>
                 <div className="items-center mb-4">
                   <span className="text-xl font-bold text-blue-600">{VNDCurrencyFormat.format(product.productPrice)}</span>
                   <div className="flex justify-between items-center mb-6">

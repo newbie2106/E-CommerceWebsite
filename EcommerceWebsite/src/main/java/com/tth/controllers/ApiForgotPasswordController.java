@@ -9,12 +9,14 @@ import com.tth.pojo.User;
 import com.tth.services.EmailService;
 import com.tth.services.ForgotPasswordService;
 import com.tth.services.UserService;
+
 import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -31,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author tongh
  */
 @RestController
@@ -51,7 +52,9 @@ public class ApiForgotPasswordController {
 
     private Integer otpGenerator() {
         Random random = new Random();
-        return random.nextInt(100_000, 999_999);
+//        return random.nextInt(100_000, 999_999);
+        return 0;
+
     }
 
     @PostMapping(value = "/verifyAccount/{username}")

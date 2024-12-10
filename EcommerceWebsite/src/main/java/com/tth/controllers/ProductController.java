@@ -59,7 +59,7 @@ public class ProductController {
             try {
                 //p.setCreatedDate(new Date());
                 this.prodService.addOrUpdate(p, image);
-                return "redirect:/manage-products";
+                return "redirect:/admin-manage-products";
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
             }

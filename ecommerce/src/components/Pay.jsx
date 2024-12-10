@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp, FaTimes, FaCreditCard, FaPaypal, FaApplePay, FaMapMarkerAlt } from "react-icons/fa";
-import { createSaleOrder, fetchCartItems, getAllShippingAddresses, loadCarrier, loadDistrictsByProvinceCode, loadProvinces, loadWardsByDistrictCode, paymentVNPay } from "../configs/APIs";
+import { createSaleOrder, fetchCartItems, getAllShippingAddresses, getBranch, loadCarrier, loadDistrictsByProvinceCode, loadProvinces, loadWardsByDistrictCode, paymentMomo, paymentVNPay } from "../configs/APIs";
 import { MyUserContext } from "../App";
 import VNDCurrencyFormat from "../configs/Utils";
 import { Link, useNavigate } from "react-router-dom";
 import { BsCashCoin } from "react-icons/bs";
+import { AiOutlineUngroup } from "react-icons/ai";
 
 const OrderDetailsPage = () => {
   const [items, setItems] = useState([]);
@@ -15,6 +16,9 @@ const OrderDetailsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [isPaid, setIsPaid] = useState(false);
+  const [branch, setBranch] = useState([]);
+  const [selectedBranchId, setSelectedBranchId] = useState('');
+  const selectedBranch = branch.find((b) => b.id === selectedBranchId);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -40,7 +44,19 @@ const OrderDetailsPage = () => {
   };
 
   useEffect(() => {
+    const loadBranch = async () => {
+      const branchData = await getBranch();
+      setBranch(branchData);
+      
+    };
+   
+    loadBranch();
+  }, []);
+
+
+  useEffect(() => {
     loadChooseCarrier();
+
   }, []);
 
   const loadCartItems = async () => {
@@ -54,11 +70,7 @@ const OrderDetailsPage = () => {
     }
   }, [user.username]);
   const [shippingMethod, setShippingMethod] = useState("");
-  const [paymentInfo, setPaymentInfo] = useState({
-    cardNumber: "",
-    expirationDate: "",
-    cvv: "",
-  });
+
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [expandedItems, setExpandedItems] = useState([]);
 
@@ -72,41 +84,39 @@ const OrderDetailsPage = () => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // const handleShippingInfoChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setShippingInfo((prev) => ({ ...prev, [name]: value }));
-  // };
-
-  // const handlePaymentInfoChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setPaymentInfo((prev) => ({ ...prev, [name]: value }));
-  // };
-
   const carrierId = parseInt(shippingMethod, 10) || null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("ma" + selectedBranchId);
     // Xử lý thanh toán, gửi dữ liệu đến API
     const saleOrderRequest = {
       username: user.username,
       totalAmount: totalCost,
       isPaid: isPaid,
       note,
-      branchId: 1,
+      branchId: selectedBranchId,
       shippingAdressId: selectedAddressId,
       carrierId: carrierId,
       orderDetails: items
     };
-    if (isPaid) {
+    if (isPaid && paymentMethod === "creditCard") {
       localStorage.setItem("username", user.username);
       localStorage.setItem("selectedAddressId", selectedAddressId);
       localStorage.setItem("carrierId", carrierId);
       localStorage.setItem("items", JSON.stringify(items));
       localStorage.setItem("note", note);
+      localStorage.setItem("totalAmount", totalCost);
       const response = await paymentVNPay(totalCost);
       window.location.href = response.data.paymentUrl
-    } else {
+    } else if (isPaid && paymentMethod === "momo") {
+      console.log(saleOrderRequest)
+      const response = await paymentMomo(saleOrderRequest);
+      window.location.href = response.data.payment_url;
+    }
+    else {
       try {
+        console.log(saleOrderRequest)
         const response = await createSaleOrder(saleOrderRequest);
         alert("Đơn hàng đã được tạo thành công: " + response);
         nav("/");
@@ -267,13 +277,7 @@ const OrderDetailsPage = () => {
                       </div>
 
                       <div className="mt-6 flex justify-between">
-                        <button
-                          type="button"
-                          onClick={handleCancelChange}
-                          className="bg-gray-300 text-gray-700 hover:bg-gray-400 px-4 py-2 rounded-md transition duration-200"
-                        >
-                          Hủy bỏ
-                        </button>
+
                         <button
                           type="button"
                           onClick={handleConfirmChange}
@@ -309,6 +313,25 @@ const OrderDetailsPage = () => {
                 ))}
 
               </div>
+              <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h2 className="text-2xl font-semibold mb-4">Chọn chi nhánh</h2>
+                <select
+                  value={selectedBranchId}
+                  onChange={(e) => setSelectedBranchId(parseInt(e.target.value, 10))}
+                  className="w-full border p-2 rounded"
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Chọn chi nhánh
+                  </option>
+                  {branch.map((b) => (
+                    <option key={b.branch} value={b.branch}>
+                      Chi nhánh{b.branch}: {b.address} {b.wards} {b.district} {b.province}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-semibold mb-4">Phương thức thanh toán</h2>
@@ -336,6 +359,16 @@ const OrderDetailsPage = () => {
                     className={`flex items-center justify-center px-4 py-2 border rounded-md ${paymentMethod === "creditCard" ? "border-indigo-500 text-indigo-500" : "border-gray-300 text-gray-700"}`}
                   >
                     <FaCreditCard className="mr-2" /> Credit Card
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentMethod("momo")
+                      setIsPaid(true)
+                    }}
+                    className={`flex items-center justify-center px-4 py-2 border rounded-md ${paymentMethod === "momo" ? "border-indigo-500 text-indigo-500" : "border-gray-300 text-gray-700"}`}
+                  >
+                    <AiOutlineUngroup className="mr-2" /> Momo
                   </button>
                 </div>
               </div>

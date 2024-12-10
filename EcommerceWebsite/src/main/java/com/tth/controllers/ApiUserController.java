@@ -103,6 +103,8 @@ public class ApiUserController {
         String email = params.get("email");
         String fullName = firstName + " " + lastName;
 
+        String hashedPassword = this.passwordEncoder.encode(password);
+        
         String provinceCode = params.get("provinceCode");
         String districtCode = params.get("districtCode");
         String wardCode = params.get("wardCode");
@@ -110,7 +112,7 @@ public class ApiUserController {
         Districts district = this.districtService.getDistrictById(districtCode);
         Wards ward = this.wardService.getWardById(wardCode);
 
-        User u = new User(username, password, firstName, lastName);
+        User u = new User(username, hashedPassword, firstName, lastName);
         u.setFile(file);
         Role role = this.roleService.getRoleById(2);
         u.setRole(role);
@@ -140,7 +142,7 @@ public class ApiUserController {
             @RequestPart(required = false) MultipartFile avatar) {
 
         MultipartFile file = avatar;
-        // Fetch existing user and customer info
+        
         User existingUser = this.userService.getUserByUsername(username);
 
         if (existingUser == null) {
@@ -150,16 +152,16 @@ public class ApiUserController {
         existingUser.setFirstName(firstName);
         existingUser.setLastName(lastName);
         if (avatar != null && !avatar.isEmpty()) {
-            existingUser.setFile(avatar); // Cập nhật avatar nếu có
+            existingUser.setFile(avatar); 
         }
 
-        // Fetch existing customer info
+        
         Customer existingCustomer = this.customerService.getCustomerByUsername(username);
         if (existingCustomer == null) {
             return new ResponseEntity("Customer not found", HttpStatus.NOT_FOUND);
         }
 
-        // Update customer information
+      
         existingCustomer.setAddress(address);
         existingCustomer.setEmail(email);
         existingCustomer.setPhone(phone);
@@ -182,7 +184,7 @@ public class ApiUserController {
             existingCustomer.setWardId(ward);
         }
 
-        // Save updated user and customer information
+       
         if (this.userService.addOrUpdateUser(existingUser) && this.customerService.addUserCustomer(existingCustomer)) {
             return new ResponseEntity("Success", HttpStatus.OK);
         }
